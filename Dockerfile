@@ -18,7 +18,7 @@ USER jboss
 WORKDIR /opt/jboss/wildfly
 
 # Limit Java memory (important for Render free tiers)
-ENV JAVA_OPTS="-Xms256m -Xmx768m"
+ENV JAVA_OPTS="-Xms256m -Xmx128m"
 
 # Expose the default WildFly port
 EXPOSE 8080
