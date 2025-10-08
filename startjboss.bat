@@ -14,6 +14,6 @@ set PATH=%JAVA_HOME%\bin;%TAFJ_HOME%\bin;%PATH%;%JBOSS_HOME%\bin
 
 cd %JBOSS_HOME%\bin
 @echo off
-set "JAVA_OPTS=-Xmx256m -Xms128m"
+set "JAVA_OPTS=-Xms256m -Xmx128m"
 
 CALL standalone.bat --server-config=standalone.xml -b 0.0.0.0 -Djboss.server.base.dir=C:\R20\jboss-eap-7.2\standalone -Dhostname=OSOFUNDE-FBU
