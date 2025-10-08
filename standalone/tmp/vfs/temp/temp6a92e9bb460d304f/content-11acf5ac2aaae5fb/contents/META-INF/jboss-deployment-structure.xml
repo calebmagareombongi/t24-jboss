@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+	<deployment>
+		<!-- TOCF OFSML log4j logging is preferred !! -->
+		<exclusions>
+			<module name="org.apache.log4j" />
+			<module name="org.jboss.log4j.logmanager" />
+		</exclusions>
+		<!-- <dependencies> <module name="com.temenos.tafj" /> </dependencies> -->
+	</deployment>
+
+	<sub-deployment name="TAFJJEE_EJB.jar">
+		<exclusions>
+			<module name="org.apache.log4j" />
+			<module name="org.jboss.log4j.logmanager" />
+		</exclusions>
+	</sub-deployment>
+
+	<sub-deployment name="TAFJCobMonitor.war">
+		<exclusions>
+			<module name="org.apache.log4j" />
+		</exclusions>
+	</sub-deployment>
+
+	<sub-deployment name="TAFJEE.war">
+		<exclusions>
+			<module name="org.apache.log4j" />
+			<module name="org.jboss.log4j.logmanager" />
+		</exclusions>
+	</sub-deployment>
+
+</jboss-deployment-structure>

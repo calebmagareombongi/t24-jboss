@@ -1,0 +1,101 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.temenos.tafj</groupId>
+		<artifactId>TAFJ</artifactId>
+		<version>20.22.0</version>
+		<relativePath>../TAFJBuild/pom.xml</relativePath>
+	</parent>
+
+	<name>TAFJSanitycheck</name>
+	<description></description>
+	<artifactId>TAFJSanitycheck</artifactId>
+	<packaging>war</packaging>
+
+	<build>
+		<finalName>TAFJSanitycheck</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<attachClasses>true</attachClasses>
+					<classesClassifier>classes</classesClassifier>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJLogging</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJCommon</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJCore</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJJEE_EJBClient</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- EAP 7.0 to 7.1 upgrade use new controller client -->
+		<!-- <dependency> <groupId>org.jboss.as</groupId> <artifactId>jboss-as-controller-client</artifactId> 
+			</dependency> -->
+
+		<dependency>
+			<groupId>org.wildfly.core</groupId>
+			<artifactId>wildfly-controller</artifactId>		
+		</dependency>
+
+		<dependency>
+			<groupId>ibm</groupId>
+			<artifactId>com.ibm.ws.admin.client</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>weblogic</groupId>
+			<artifactId>wljmxclient</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	
+	</dependencies>
+
+</project>

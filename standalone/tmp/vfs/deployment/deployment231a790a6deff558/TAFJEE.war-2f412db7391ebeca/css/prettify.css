@@ -1,0 +1,87 @@
+.pln {
+	color: #000;
+}
+
+.str {
+	color: #0000d5;
+}
+
+.kwd {
+	color: #b30059;
+	font-weight: bold;
+}
+
+.com {
+	color: #080;
+	font-style: italic;
+}
+
+.typ {
+	color: #008;
+	font-weight: bold;
+}
+
+.lit {
+	color: #066;
+}
+
+.pun {
+	color: #660;
+}
+
+.opn {
+	color: #660;
+}
+
+.clo {
+	color: #660;
+}
+
+.tag {
+	color: #008;	
+}
+
+.atn {
+	color: #008;
+}
+
+.atv {
+	color: #080;
+}
+
+.dec {
+	color: #008;
+}
+
+.var {
+	color: #008;
+}
+
+.fun {
+	color: red;
+}
+/* Put a border around prettyprinted code snippets. */
+pre.prettyprint {
+	padding: 10px;
+	border: 1px solid #eee;
+	background-color: #eaeaea;
+}
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums {
+	margin: 0 0 0 40px;
+}
+
+ol.linenums li {
+	color: #BEBEC5;
+	line-height: 18px;
+	padding-left: 12px;
+	text-shadow: 0 1px 0 #FFFFFF;
+}
+
+li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8 {
+	list-style-type: normal;
+}
+/* Alternate shading for lines */
+li.L1,li.L3,li.L5,li.L7,li.L9 {
+	background: #eee;
+}

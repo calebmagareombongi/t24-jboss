@@ -1,0 +1,229 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>DBTools servlet</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="../include.xhtml" />
+
+<h:body>
+	<h:form id="dbtoolsForm">
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>DBTools servlet</h1>
+
+
+		<p:panel id="notAvailable" styleClass="info"
+			rendered="#{!dbtoolsView.available}">
+
+			<h3>Functionality not available in this environment. Add
+				DBTools.jar to your application server classpath to provide access
+				to DBTools functionality.</h3>
+
+		</p:panel>
+
+
+
+
+		<p:panel id="page" styleClass="info"
+			rendered="#{dbtoolsView.available}">
+
+			<h3>You can execute DBTools by submitting your command in the
+				field below. Please refer to DBTools documentation for more
+				information about commands.</h3>
+			<h3>If a result is produced it will be logged to the provided /
+				generated log file after command execution. Use the refresh button
+				to update the output list.</h3>
+			<h3>
+				<div class="red">DBTools command gives full database access.
+					This should be used during development and testing phase only and
+					avoided in production environment.</div>
+			</h3>
+			<h3>To completely remove DBTools functionality from your
+				deployment, simply remove DBTools.jar from your application server
+				classpath.</h3>
+
+			<h3 />
+
+			<p:panel id="tenantSelection" styleClass="info"
+				rendered="#{dbtoolsView.isMultitenant()}"
+				header="Multitenant system">
+				<h:panelGrid id="tenantGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+					<h:outputText value="Tenant ID:" />
+					<p:selectOneMenu id="tenantId" value="#{dbtoolsView.tenantId}"
+						valueChangeListener="#{dbtoolsView.selectTenant}"
+						onchange="submit()">
+						<f:selectItem itemLabel="Select tenant" itemValue="" />
+						<f:selectItems value="#{dbtoolsView.tenantIds}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="authentication" styleClass="info"
+				header="Authentication" rendered="#{dbtoolsView.renderPanel()}">
+				<h:panelGrid id="authGrid" columns="4" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<h:outputText value="User name:" />
+					<h:inputText id="UserName" name="UserName"
+						value="#{dbtoolsView.userName}"
+						validatorMessage="Only Alphabets and numbers are allowed in User name.">
+						<f:validateRegex pattern="^[\w\s\-.\@#\$%!]*$" />
+					</h:inputText>
+
+					<h:outputText value="Password:" />
+					<p:password id="Password" name="Password"
+						value="#{dbtoolsView.userPassword}"
+						validatorMessage="Password contains non supportive chars.">
+						<f:validateRegex pattern="^[\w\s\-.\@#\$%!]*$" />
+					</p:password>
+
+				</h:panelGrid>
+			</p:panel>
+
+
+
+			<p:panel id="dbtools" styleClass="info" header="DBTools command"
+				rendered="#{dbtoolsView.renderPanel()}">
+				<h:panelGrid id="logPathGrid" columns="6" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<h:outputText value="Mode:" />
+					<p:selectOneMenu id="dbToolsMode"
+						value="#{dbtoolsView.dbToolsMode}"
+						valueChangeListener="#{dbtoolsView.changeMode}"
+						onchange="submit()" update="dbtools">
+						<f:selectItems value="#{dbtoolsView.getDBToolsModeList()}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Argument:" />
+					<h:inputText id="Argument" name="Argument"
+						value="#{dbtoolsView.dbToolsCommand}" size="70"
+						validatorMessage="Argument contains non supportive chars.">
+						<!-- supported characters on Execute command -->
+						<f:validateRegex pattern="^[\w\s\-.\@#\$%'=&quot;!*)(]*$" />
+					</h:inputText>
+
+					<h:outputText value="Log file name:" />
+					<h:inputText id="LogFileName" name="LogFileName"
+						value="#{dbtoolsView.dbToolsLogFileName}"
+						validatorMessage="Only Alphabets and numbers are allowed in LogFileName">
+						<f:validateRegex pattern="^[\w\s\-.\@#\$%!]*$" />
+					</h:inputText>
+
+					<h:outputText value="Fetch all rows:"
+						rendered="#{dbtoolsView.isRenderFetchAllRows()}" />
+					<p:selectBooleanCheckbox value="#{dbtoolsView.dbToolsFetchAllRows}"
+						rendered="#{dbtoolsView.isRenderFetchAllRows()}" />
+
+				</h:panelGrid>
+
+				<h:panelGrid id="commandGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<p:commandButton id="executeCommand" global="true"
+						value="Execute command" action="#{dbtoolsView.executeCommand()}"
+						update="logsTable,dbtools" style="width:120px">
+					</p:commandButton>
+
+					<p:commandButton id="refreshLogs" global="true"
+						value="Refresh logs" action="#{dbtoolsView.loadDBToolsLogs()}"
+						update="logsTable" style="width:120px">
+					</p:commandButton>
+
+				</h:panelGrid>
+
+
+				<h:panelGrid id="msgGrid" columns="1" style="margin-bottom:10px"
+					cellpadding="5">
+					<p:messages id="msgs" showDetail="false">
+						<p:autoUpdate />
+					</p:messages>
+				</h:panelGrid>
+
+			</p:panel>
+
+
+			<p:panel id="logsTable" header="Output" styleClass="info"
+				rendered="#{dbtoolsView.renderPanel()}">
+				<h:panelGrid id="logsGrid" columns="1" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<h:outputText
+						value="DBTools log folder: #{dbtoolsView.getDBToolsInfo()}" />
+
+					<p:dataTable value="#{dbtoolsView.dbToolsLogs}" var="log"
+						rendered="#{!dbtoolsView.noLogsFound()}">
+						<p:column headerText="Log" sortBy="#{log.getFileName()}">
+							<h:outputText value="#{log.getFileName()}" />
+						</p:column>
+						<p:column headerText="Last modified"
+							sortBy="#{log.getFormattedDate()}">
+							<h:outputText value="#{log.getFormattedDate()}" />
+						</p:column>
+						<p:column headerText="Size">
+							<h:outputText value="#{log.getFileSize()}" />
+						</p:column>
+						<p:column>
+							<p:commandButton id="viewLog" global="true" value="View"
+								action="#{dbtoolsView.viewLog(log)}" update=":dbtoolsForm:page"
+								style="width:80px">
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+
+					<h:outputText value="No logs found"
+						rendered="#{dbtoolsView.noLogsFound()}" />
+
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="logFileContent" header="DBTools file" styleClass="info"
+				rendered="#{dbtoolsView.renderLogs()}">
+				<h:panelGrid id="logEntriesGrid" columns="1"
+					style="margin-bottom:10px" cellpadding="5">
+
+					<h:outputText
+						value="Log file name: #{dbtoolsView.getCurrentFile()}" />
+
+					<h:outputText
+						value="Log file path: #{dbtoolsView.getCurrentFilePath()}" />
+
+					<p:commandButton id="closeLog" global="true" value="Close log"
+						action="#{dbtoolsView.closeLog()}" update=":dbtoolsForm:page"
+						style="width:120px">
+					</p:commandButton>
+
+					<p:dataTable id="logEntriesTable" var="entry"
+						value="#{dbtoolsView.logEntries}">
+						<p:column>
+							<h:outputText value="#{entry}" />
+						</p:column>
+					</p:dataTable>
+
+				</h:panelGrid>
+			</p:panel>
+
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Yes" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</p:panel>
+
+
+	</h:form>
+</h:body>
+</html>

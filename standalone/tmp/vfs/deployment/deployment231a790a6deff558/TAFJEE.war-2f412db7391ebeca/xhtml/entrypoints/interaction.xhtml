@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv='pragma' content='no-cache' />
+<meta http-equiv='cache-control' content='no-store, no-cache' />
+
+<title>TAFJEE - Interaction</title>
+<link href="/TAFJEE/css/configuration.css" rel="stylesheet" type="text/css" />
+<link href="/TAFJEE/css/prettify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="/TAFJEE/js/prettify.js"></script>
+</head>
+
+<ui:include src="../include.xhtml" />
+
+<body onload="prettyPrint()">
+	<script src="/TAFJEE/js/header.js"></script>
+	<br />
+	<h1>TAFJEE entry points</h1>
+	<br />TAFJEE provides entry points to process OFS requests and to invoke routines with parameters.
+	<br />
+	<br />This could be done in two different ways:	
+	<br />
+	<ul>
+		<li><a href="synchronous.xhtml">Synchronously</a> by doing a Webservice or EJB invocation with TAFJClient API. </li>
+		<li><a href="asynchronous.xhtml">Asynchronously</a> by sending a JMS message with a JMS client. </li>
+	</ul>
+	<br />
+	<br/>	
+	<img src="/TAFJEE/images/TAFJEntryPoints.png" border="0"/>
+	<br/>
+	<br/>
+	<br/>
+	<table>
+	<tr>
+		<td width="10%" align="left"><a href="/TAFJEE/index.xhtml"><img src="/TAFJEE/images/prev.jpg" border="0"/>Prev</a></td>
+		<td width="80%" align="center">&nbsp;</td>
+		<td width="10%" align="right"><a href="synchronous.xhtml">Next<img src="/TAFJEE/images/next.jpg" border="0"/></a></td>
+	</tr>	
+	</table>
+</body>
+</html>

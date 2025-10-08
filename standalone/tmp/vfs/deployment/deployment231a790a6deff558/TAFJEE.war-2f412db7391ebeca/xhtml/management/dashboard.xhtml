@@ -1,0 +1,513 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Session management</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="../include.xhtml" />
+
+<f:metadata>
+	<f:event type="preRenderView"
+		listener="#{managementView.getAllSessions(false)}" />
+</f:metadata>
+
+<h:body>
+	<h:form id="sessionsForm">
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>TAFJEE Sessions Management</h1>
+
+		<h3 />
+
+		<p:panel id="mainpanel" styleClass="info">
+
+
+			<p:panel id="mbean"
+				header="Management bean configuration #{managementView.serverId}"
+				styleClass="info">
+
+				<h:panelGrid id="managementPanel" columns="4"
+					style="margin-bottom:10px" cellpadding="5">
+
+
+					<p:panel header="Server stop activities" style="margin-bottom:20px">
+						<h:panelGrid id="logoffPanel" columns="2" cellpadding="5">
+
+							<h:outputText
+								value="Logoff background sessions on container stop: " />
+
+							<p:commandButton id="logoffBatchOnDestroy"
+								value="#{managementView.logoffBatchOnDestroy ? 'Yes' : 'No '}"
+								actionListener="#{managementView.updateDialogSettings}"
+								icon="#{managementView.logoffBatchOnDestroy ? 'ui-icon-check' : 'ui-icon-close'}"
+								oncomplete="PF('settingsDialog').show()" style="width:80px"
+								update="setingDetail">
+							</p:commandButton>
+
+							<h:outputText value="Logoff online sessions on container stop: " />
+
+							<p:commandButton id="logoffOnlineOnDestroy"
+								value="#{managementView.logoffOnlineOnDestroy ? 'Yes' : 'No '}"
+								actionListener="#{managementView.updateDialogSettings}"
+								icon="#{managementView.logoffOnlineOnDestroy ? 'ui-icon-check' : 'ui-icon-close'}"
+								oncomplete="PF('settingsDialog').show()" style="width:80px"
+								update="setingDetail">
+							</p:commandButton>
+
+						</h:panelGrid>
+					</p:panel>
+
+					<p:panel header="Idle sessions cleaner" id="idleCleanerParameters"
+						style="margin-bottom:20px">
+						<h:panelGrid id="IdlePanel" columns="2" cellpadding="5">
+
+							<h:outputText value="Idle session periodic cleaner running:" />
+
+							<p:commandButton id="periodicCleanerRunning"
+								value="#{managementView.periodicCleanerRunning ? 'Yes' : 'No '}"
+								actionListener="#{managementView.updateDialogSettings}"
+								icon="#{managementView.periodicCleanerRunning ? 'ui-icon-check' : 'ui-icon-close'}"
+								oncomplete="PF('settingsDialog').show()" style="width:80px"
+								update="setingDetail">
+							</p:commandButton>
+
+							<h:outputText id="idleThresholdTxt"
+								value="Idle session detection threshold (s):" />
+
+							<p:commandButton value="#{managementView.idleThreshold}"
+								disabled="#{managementView.isIdleThresholdDisabled()}"
+								actionListener="#{managementView.updateDialogSettings}"
+								id="updateIdleThreshold" update="setingDetail"
+								oncomplete="PF('settingsDialog').show()" style="width:80px">
+							</p:commandButton>
+
+						</h:panelGrid>
+					</p:panel>
+
+					<p:panel header="Server registry" id="registrationParameters"
+						style="margin-bottom:20px">
+						<h:panelGrid id="RegistrationPanel" columns="2" cellpadding="5">
+
+							<h:outputText value="Server registry running:" />
+
+							<p:commandButton id="registrationRunning"
+								value="#{managementView.registrationRunning ? 'Yes' : 'No '}"
+								actionListener="#{managementView.updateDialogSettings}"
+								icon="#{managementView.registrationRunning ? 'ui-icon-check' : 'ui-icon-close'}"
+								oncomplete="PF('settingsDialog').show()" style="width:80px"
+								update="setingDetail">
+							</p:commandButton>
+
+							<h:outputText id="registrationIntervalTxt"
+								value="Registration frequency (s):" />
+
+							<p:commandButton value="#{managementView.registrationInterval}"
+								disabled="#{managementView.registrationRunning}"
+								actionListener="#{managementView.updateDialogSettings}"
+								id="updateRegistrationInterval" update="setingDetail"
+								oncomplete="PF('settingsDialog').show()" style="width:80px">
+							</p:commandButton>
+
+						</h:panelGrid>
+					</p:panel>
+
+					<p:panel header="Management operations" style="margin-bottom:20px">
+						<h:panelGrid id="serverRegistryPanel" columns="2" cellpadding="5">
+
+
+							<h:outputText value="Execute immediate session logoff: " />
+							<p:commandButton value="Logoff"
+								actionListener="#{managementView.updateDialogSettings}"
+								id="submitLogoff" update="setingDetail"
+								oncomplete="PF('settingsDialog').show()" style="width:80px">
+							</p:commandButton>
+
+							<h:outputText value="Change logger level: " />
+							<p:commandButton value="Logger"
+								actionListener="#{managementView.updateDialogSettings}"
+								id="changeLoggerLevel" update="setingDetail"
+								oncomplete="PF('settingsDialog').show()" style="width:80px">
+							</p:commandButton>
+
+							<h:outputText value="Send message to all servers: " />
+							<p:commandButton value="Send"
+								actionListener="#{managementView.updateDialogSettings}"
+								id="publishMessage" update="setingDetail"
+								oncomplete="PF('settingsDialog').show()" style="width:80px">
+							</p:commandButton>
+
+						</h:panelGrid>
+					</p:panel>
+
+
+				</h:panelGrid>
+
+			</p:panel>
+
+
+			<p:panel id="management" header="Sessions display" styleClass="info">
+
+				<h:panelGrid id="managementOpPanel" columns="4"
+					style="margin-bottom:10px" cellpadding="5">
+
+
+					<p:panel>
+						<h:panelGrid id="livePanel" columns="10" cellpadding="5">
+
+							<h:outputText value="Current sessions snapshot: " />
+							<p:commandButton id="currentSessionSnapshot" value="See"
+								disabled="#{managementView.pollingEnabled}"
+								actionListener="#{managementView.takeSnapshot}"
+								update="sessionsForm" style="width:80px">
+							</p:commandButton>
+
+							<h:outputText value="Background sessions live update: " />
+							<p:commandButton id="liveBatchSession"
+								value="#{managementView.liveBatchSession ? 'Yes' : 'No '}"
+								actionListener="#{managementView.updateBatchSessionLiveUpdate}"
+								icon="#{managementView.liveBatchSession ? 'ui-icon-check' : 'ui-icon-close'}"
+								update="sessionsForm" style="width:80px">
+								<p:confirm header="Confirmation"
+									message="#{managementView.liveBatchSession ? 'Stop background sessions polling ?' : 'Start background sessions polling ?'}"
+									icon="ui-icon-alert" />
+							</p:commandButton>
+
+							<h:outputText value="Online sessions live update " />
+							<p:commandButton id="liveOnlineSession"
+								value="#{managementView.liveOnlineSession ? 'Yes' : 'No '}"
+								actionListener="#{managementView.updateOnlineSessionLiveUpdate}"
+								icon="#{managementView.liveOnlineSession ? 'ui-icon-check' : 'ui-icon-close'}"
+								update="sessionsForm, server" style="width:80px">
+								<p:confirm header="Confirmation"
+									message="#{managementView.liveOnlineSession ? 'Stop online sessions polling ?' : 'Start online sessions polling ?'}"
+									icon="ui-icon-alert" />
+							</p:commandButton>
+
+							<h:outputText value="Server registry live update " />
+							<p:commandButton id="liveServerRegistry"
+								value="#{managementView.liveRegistry ? 'Yes' : 'No '}"
+								disabled="#{!managementView.registrationRunning}"
+								actionListener="#{managementView.updateServerRegistryLiveUpdate}"
+								icon="#{managementView.liveRegistry ? 'ui-icon-check' : 'ui-icon-close'}"
+								update="sessionsForm" style="width:80px">
+								<p:confirm header="Confirmation"
+									message="#{managementView.liveRegistry ? 'Stop server registry polling ?' : 'Start server registry polling ?'}"
+									icon="ui-icon-alert" />
+							</p:commandButton>
+
+							<h:outputText id="refreshIntervalTxt"
+								value="Update frequency (s):" />
+							<p:commandButton value="#{managementView.refreshInterval}"
+								actionListener="#{managementView.updateDialogSettings}"
+								disabled="#{!managementView.pollingEnabled}"
+								id="updateRefreshInterval" update="setingDetail"
+								oncomplete="PF('settingsDialog').show()" style="width:80px">
+							</p:commandButton>
+
+						</h:panelGrid>
+					</p:panel>
+
+					<h:panelGrid id="pollPanel"
+						rendered="#{managementView.pollingEnabled}">
+						<p:poll interval="#{managementView.pollingInterval}" id="polling"
+							listener="#{managementView.getAllSessions(true)}"
+							update="mainpanel" />
+					</h:panelGrid>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="server" header="Servers" styleClass="info"
+				rendered="#{managementView.liveRegistry}">
+				<p:dataTable id="serverTable" var="server"
+					rowKey="#{server.serverId}" value="#{managementView.getServers()}"
+					resizeMode="expand" draggableColumns="true" resizableColumns="true">
+
+					<p:column headerText="Server ID" sortBy="#{server.serverId}">
+						<h:outputText value="#{server.serverId}" />
+					</p:column>
+
+					<p:column headerText="Hostname" sortBy="#{server.hostName}">
+						<h:outputText value="#{server.hostName}" />
+					</p:column>
+
+					<p:column headerText="IP address" sortBy="#{server.ipAddress}">
+						<h:outputText value="#{server.ipAddress}" />
+					</p:column>
+
+					<p:column headerText="Process ID" sortBy="#{server.processId}">
+						<h:outputText value="#{server.processId}" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+
+			<p:panel id="sessions" styleClass="info"
+				rendered="#{managementView.renderBatchSessionTable() || managementView.renderOnlineSessionTable()}">
+
+				<p:panel styleClass="info">
+					<h:outputText value="Last update:" />
+					<h:outputText value="#{managementView.pollingTime}" />
+				</p:panel>
+
+				<p:panel id="batch"
+					header="#{managementView.backgroundSessionHeader}"
+					styleClass="info"
+					rendered="#{managementView.renderBatchSessionTable()}">
+
+					<p:dataTable id="batchSessionsTable" var="jsession"
+						selection="#{managementView.selectedBatchSessions}"
+						rowKey="#{jsession.sessionId}"
+						value="#{managementView.getBatchSessions()}" resizeMode="expand"
+						draggableColumns="true" resizableColumns="true">
+
+						<p:column selectionMode="multiple"
+							style="width:16px;text-align:center" />
+
+						<p:column headerText="Server ID" sortBy="#{jsession.serverId}"
+							rendered="#{managementView.liveRegistry}">
+							<h:outputText value="#{jsession.serverId}" />
+						</p:column>
+
+						<p:column headerText="Session ID" sortBy="#{jsession.sessionId}">
+							<h:outputText value="#{jsession.sessionId}" />
+						</p:column>
+
+						<p:column headerText="Thread Id" sortBy="#{jsession.threadId}">
+							<h:outputText value="#{jsession.threadId}" />
+						</p:column>
+
+						<p:column headerText="Port num" sortBy="#{jsession.portNum}">
+							<h:outputText value="#{jsession.portNum}" />
+						</p:column>
+
+						<p:column headerText="Command" sortBy="#{jsession.command}">
+							<h:outputText value="#{jsession.command}" />
+						</p:column>
+
+						<p:column headerText="Creation date"
+							sortBy="#{jsession.creationDate}">
+							<h:outputText value="#{jsession.creationDate}" />
+						</p:column>
+
+						<p:column headerText="Execution time (ms)"
+							sortBy="#{jsession.elapsedTime}">
+							<h:outputText value="#{jsession.elapsedTime}" />
+						</p:column>
+
+						<p:column headerText="Expired" sortBy="#{jsession.expired}">
+							<h:outputText value="#{jsession.expired}" />
+						</p:column>
+
+						<p:column headerText="Shutdown in progress"
+							sortBy="#{jsession.shutdownInProgress}">
+							<h:outputText value="#{jsession.shutdownInProgress}" />
+						</p:column>
+
+						<p:column headerText="Shutdown" sortBy="#{jsession.shutdown}">
+							<h:outputText value="#{jsession.shutdown}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</p:panel>
+
+				<p:panel id="online" header="#{managementView.onlineSessionHeader}"
+					styleClass="info"
+					rendered="#{managementView.renderOnlineSessionTable()}">
+
+					<h:outputText value="Last periodic cleaner execution:" />
+					<h:outputText
+						value="#{managementView.lastPeriodicCleanerExecution}" />
+
+					<p:dataTable id="onlineSessionTable" var="jsession"
+						selection="#{managementView.selectedOnlineSessions}"
+						rowKey="#{jsession.sessionId}"
+						value="#{managementView.getOnlineSessions()}" resizeMode="expand"
+						draggableColumns="true" resizableColumns="true">
+
+						<p:column selectionMode="multiple"
+							style="width:16px;text-align:center" />
+
+						<p:column headerText="Session ID" sortBy="#{jsession.sessionId}">
+							<h:outputText value="#{jsession.sessionId}" />
+						</p:column>
+
+						<p:column headerText="Thread Id" sortBy="#{jsession.threadId}">
+							<h:outputText value="#{jsession.threadId}" />
+						</p:column>
+
+						<p:column headerText="Port num" sortBy="#{jsession.portNum}">
+							<h:outputText value="#{jsession.portNum}" />
+						</p:column>
+
+						<p:column headerText="OFS source" sortBy="#{jsession.ofsSource}">
+							<h:outputText value="#{jsession.ofsSource}" />
+						</p:column>
+
+						<p:column headerText="Nb requests" sortBy="#{jsession.nbRequests}">
+							<h:outputText value="#{jsession.nbRequests}" />
+						</p:column>
+
+						<p:column headerText="Creation date"
+							sortBy="#{jsession.creationDate}">
+							<h:outputText value="#{jsession.creationDate}" />
+						</p:column>
+
+						<p:column headerText="Execution time (ms)"
+							sortBy="#{jsession.elapsedTime}">
+							<h:outputText value="#{jsession.elapsedTime}" />
+						</p:column>
+
+						<p:column headerText="Idle detection">
+							<h:outputText value="#{jsession.idleDetection}" />
+						</p:column>
+
+						<p:column headerText="Idle time (ms)"
+							sortBy="#{jsession.idleTime}">
+							<h:outputText value="#{jsession.idleTime}" />
+						</p:column>
+
+						<p:column headerText="Expired" sortBy="#{jsession.expired}">
+							<h:outputText value="#{jsession.expired}" />
+						</p:column>
+
+						<p:column headerText="Shutdown in progress"
+							sortBy="#{jsession.shutdownInProgress}">
+							<h:outputText value="#{jsession.shutdownInProgress}" />
+						</p:column>
+
+						<p:column headerText="Shutdown" sortBy="#{jsession.shutdown}">
+							<h:outputText value="#{jsession.shutdown}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</p:panel>
+
+			</p:panel>
+
+
+		</p:panel>
+
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+
+		<p:dialog header="Confirmation" widgetVar="settingsDialog"
+			showEffect="fade" hideEffect="fade" resizable="false" modal="true">
+
+			<p:ajax event="close" listener="#{managementView.handleClose}"
+				update="setingDetail" />
+
+			<p:outputPanel id="setingDetail" style="text-align:left;" border="0">
+				<p:messages id="messagesInSettingsDialog" />
+				<h:panelGrid columns="2" cellpadding="5" border="0">
+					<h:outputText value="#{managementView.confirmationMessage}"
+						rendered="#{managementView.confirmationMessageMode}" />
+					<h:outputText rendered="#{managementView.confirmationMessageMode}" />
+					<h:outputLabel for="idleThresholdTmp"
+						value="New idle sessions detection threshold (s):"
+						rendered="#{managementView.thresholdMode}" />
+					<p:inputText id="idleThresholdTmp"
+						value="#{managementView.idleThresholdTmp}" size="5"
+						onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+						rendered="#{managementView.thresholdMode}">
+					</p:inputText>
+					<h:outputLabel for="refreshIntervalTmp"
+						value="New refresh interval (s):"
+						rendered="#{managementView.refreshIntervalMode}" />
+					<p:inputText id="refreshIntervalTmp"
+						value="#{managementView.refreshIntervalTmp}" size="5"
+						onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+						rendered="#{managementView.refreshIntervalMode}">
+					</p:inputText>
+					<h:outputLabel for="immediateLogoff"
+						value="Execute immediate logoff on:"
+						rendered="#{managementView.logoffMode}" />
+					<p:selectOneMenu id="immediateLogoff"
+						value="#{managementView.immediateLogoffOption}"
+						rendered="#{managementView.logoffMode}">
+						<f:selectItem itemLabel="Select option" itemValue="" />
+						<f:selectItems value="#{managementView.logoffOptions}" />
+					</p:selectOneMenu>
+					<h:outputLabel for="registrationIntervalTmp"
+						value="New server registration interval (s):"
+						rendered="#{managementView.registrationIntervalMode}" />
+					<p:inputText id="registrationIntervalTmp"
+						value="#{managementView.registrationIntervalTmp}" size="5"
+						onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+						rendered="#{managementView.registrationIntervalMode}">
+					</p:inputText>
+					<h:outputLabel for="loggerSet" value="Logger:"
+						rendered="#{managementView.loggerLevelMode}" />
+					<p:selectOneMenu id="loggerSet"
+						value="#{managementView.loggerToSet}"
+						rendered="#{managementView.loggerLevelMode}">
+						<f:selectItem itemLabel="Select logger" itemValue="" />
+						<f:selectItems value="#{managementView.loggers}" />
+					</p:selectOneMenu>
+					<h:outputLabel for="loggerLevels" value="Level:"
+						rendered="#{managementView.loggerLevelMode}" />
+					<p:selectOneMenu id="loggerLevels"
+						value="#{managementView.loggerLevel}"
+						rendered="#{managementView.loggerLevelMode}">
+						<f:selectItem itemLabel="Select level" itemValue="" />
+						<f:selectItems value="#{managementView.logLevels}" />
+					</p:selectOneMenu>
+					<p:selectOneMenu id="managementMessages"
+						value="#{managementView.managementMessageOption}"
+						rendered="#{managementView.managementMessageMode}">
+						<p:ajax event="itemSelect" update="setingDetail"
+							listener="#{managementView.changeManagementMessageOption}" />
+						<f:selectItem itemLabel="Select option" itemValue="" />
+						<f:selectItems value="#{managementView.managementMessagesOptions}" />
+					</p:selectOneMenu>
+					<p:outputPanel id="tSADetail" style="text-align:left;" border="0"
+						rendered="#{managementView.managementMessageTSAMode}">
+						<h:outputLabel for="tsaNumber" value="Number of tSA(s):" />
+						<p:inputText id="tsaNumber" value="#{managementView.tsaNumber}"
+							size="5"
+							onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;" />
+					</p:outputPanel>
+					<p:selectOneMenu id="tenantId" value="#{managementView.tenantId}"
+						rendered="#{managementView.isMultitenant() &amp;&amp; managementView.managementMessageMode}">
+						<f:selectItem itemLabel="Select tenant" itemValue="" />
+						<f:selectItems value="#{managementView.tenantIds}" />
+					</p:selectOneMenu>
+					<p:outputLabel for="allServer" value="Apply setting to all servers"
+						rendered="#{managementView.isManagementMessage()}" />
+					<p:selectBooleanCheckbox id="allServer"
+						value="#{managementView.applyToAllServer}"
+						rendered="#{managementView.isManagementMessage()}" />
+					<h:panelGrid rendered="#{managementView.logoffMode}" columns="2"
+						rowStyleClass="error">
+						<h:outputText styleClass="ui-icon ui-icon-alert" />
+						<h:outputText value="LOGOFF CANNOT BE UNDONE" styleClass="error" />
+					</h:panelGrid>
+				</h:panelGrid>
+				<h:panelGrid columns="2" cellpadding="5" border="0">
+					<p:commandButton id="confirm" value="Confirm"
+						actionListener="#{managementView.validateSettings}"
+						oncomplete="if (args &amp;&amp; !args.validationFailed) PF('settingsDialog').hide()"
+						update="logoffOnlineOnDestroy,logoffBatchOnDestroy,periodicCleanerRunning,registrationRunning,updateRefreshInterval,updateIdleThreshold,updateRegistrationInterval,liveServerRegistry,setingDetail,allServer" />
+					<p:commandButton id="cancel" value="Cancel"
+						oncomplete="PF('settingsDialog').hide()" update="setingDetail" />
+				</h:panelGrid>
+			</p:outputPanel>
+		</p:dialog>
+	</h:form>
+</h:body>
+</html>

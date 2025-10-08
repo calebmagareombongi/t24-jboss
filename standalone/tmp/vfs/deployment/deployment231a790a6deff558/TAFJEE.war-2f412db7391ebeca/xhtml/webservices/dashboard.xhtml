@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Webservices servlet</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="../include.xhtml" />
+
+<h:body>
+	<h:form id="webserviceForm">
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>Webservices servlet</h1>
+
+		<h3>Allows OFS - CallAT - synchronous execution through JAXRS
+			invocation for system testing purpose.</h3>
+		<h3 />
+
+		<h3>
+			For more information on how to interact with TAFJEE follow link
+			<h:commandLink actionListener="#{wsView.redirect()}">
+				<f:param name="javax.portlet.faces.DirectLink" value="true" />
+				TAFJEE entry points
+		</h:commandLink>
+		</h3>
+
+		<p:panel id="page" styleClass="info">
+
+			<p:panel id="tenantSelection" styleClass="info"
+				rendered="#{wsView.isMultitenant()}" header="Multitenant system">
+				<h:panelGrid id="tenantGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+					<h:outputText value="Tenant ID:" />
+					<p:selectOneMenu id="tenantId" value="#{wsView.tenantId}"
+						valueChangeListener="#{wsView.selectTenant}" onchange="submit()">
+						<f:selectItem itemLabel="Select tenant" itemValue="" />
+						<f:selectItems value="#{wsView.tenantIds}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="input" header="Webservice execution parameters"
+				styleClass="info" rendered="#{wsView.renderPanel()}">
+
+				<h:panelGrid id="wsModeGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+					<h:outputText value="Mode:" />
+					<p:selectOneMenu id="wsMode" value="#{wsView.wsMode}"
+						valueChangeListener="#{wsView.changeMode}">
+						<f:selectItems value="#{wsView.getWebServiceType()}" />
+						<p:ajax event="change" update="webserviceForm" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+
+				<h:panelGrid id="wsGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<h:outputText value="#{wsView.getCommandLabel()}:" />
+					<p:inputText id="command" value="#{wsView.command}" size="100">
+					</p:inputText>
+
+					<h:outputText value="#{wsView.getParameterLabel()}:"
+						rendered="#{wsView.isDisplayParameters()}" />
+
+					<h:panelGrid id="parameterGrid" columns="2"
+						style="margin-bottom:10px" cellpadding="5"
+						rendered="#{wsView.isDisplayParameters()}">
+						<h:commandButton value="add" action="#{wsView.addParameter}" />
+						<h:dataTable value="#{wsView.parameters}" var="parameter">
+							<h:column>
+								<h:inputText value="#{parameter.value}">
+								</h:inputText>
+							</h:column>
+							<h:column>
+								<h:commandButton value="remove"
+									action="#{wsView.removeParameter(parameter)}" />
+							</h:column>
+						</h:dataTable>
+					</h:panelGrid>
+
+					<h:panelGrid id="buttonGrid" columns="3" style="margin-bottom:10px">
+						<p:commandButton id="executeWS" global="true"
+							value="#{wsView.getExecuteCommandLabel()}"
+							action="#{wsView.executeCommand}" style="width:120px"
+							update="webserviceForm">
+						</p:commandButton>
+					</h:panelGrid>
+
+					<p:blockUI block="page" trigger="executeWS" />
+
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="output" header="Webservice response" styleClass="info"
+				rendered="#{wsView.renderResponse()}">
+				<h:panelGrid id="response" columns="1" style="margin-bottom:10px"
+					cellpadding="5">
+					<h:outputText value="#{wsView.getResponse()}" />
+				</h:panelGrid>
+			</p:panel>
+		</p:panel>
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:viewAction action="#{tenantView.loadTenants}" />
+</f:metadata>
+
+<h:head>
+	<title>Tenants</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="include.xhtml" />
+
+<h:body>
+	<h:form id="tenantsForm">
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>TAFJEE Tenants definition</h1>
+
+		<h3>Properties displayed below might NOT reflect the current runtime configuration state
+			which has been loaded at application startup.</h3>
+		<div class="red">Application server must be restarted to make
+			use of a configuration change.</div>
+		<h3 />
+
+		<p:panel title="Configuration id" id="configIdTab"
+			rendered="#{tenantView.multiSource}">
+			<p:selectOneMenu id="configurationId"
+				value="#{tenantView.selectedConfigurationId}"
+				valueChangeListener="#{tenantView.changeConfig}" onchange="submit()">
+				<f:selectItems value="#{tenantView.configurationIds}" />
+			</p:selectOneMenu>
+		</p:panel>
+
+		<p:panel id="tenantPanel">
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton title="Save modifications" icon="ui-icon-disk"
+						update="saveModification,tenantTable,:tenantsForm:headerPanel"
+						id="saveModification" disabled="#{!tenantView.hasPendingChange()}"
+						styleClass="#{tenantView.hasPendingChange() ? 'pendingchange' : 'nochange'}"
+						actionListener="#{tenantView.applyChange}">
+						<p:confirm header="Confirmation" message="Save modifications?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+					<p:commandButton title="Reload tenants" icon="ui-icon-refresh"
+						update="tenantTable,saveModification,:tenantsForm:headerPanel"
+						actionListener="#{tenantView.loadTenants}" styleClass="nochange">
+						<p:confirm header="Confirmation" message="Reload tenants"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+					<p:commandButton title="Add new tenant" icon="ui-icon-plus"
+						update=":tenantsForm:tenantDetail"
+						oncomplete="PF('tenantDialog').show()"
+						actionListener="#{tenantView.newTenant}" styleClass="nochange">
+					</p:commandButton>
+					<p:commandButton title="Delete tenant" icon="ui-icon-trash"
+						update=":tenantsForm:tenantDetail"
+						oncomplete="PF('tenantDialog').show()"
+						actionListener="#{tenantView.deleteTenant}" styleClass="nochange">
+					</p:commandButton>
+				</f:facet>
+			</p:toolbar>
+			<p:panelGrid id="headerPanel" columns="3"
+				styleClass="panelGridCenter" layout="grid">
+				<p:column colspan="2">
+					<p:link outcome="dashboard" value="Configuration ID:"
+						styleClass="purple" />
+					<h:outputText id="configId"
+						value="#{tenantView.getConfigurationId()}" styleClass="purple" />
+				</p:column>
+				<p:column colspan="2">
+					<h:outputLabel for="configVersion" value="Configuration Version:"
+						styleClass="purple" />
+					<h:outputText id="configVersion"
+						value="#{tenantView.getCurrentConfigurationDate()}"
+						styleClass="purple" />
+				</p:column>
+				<p:column colspan="2">
+					<h:outputLabel for="user" value="User:" styleClass="purple" />
+					<h:outputText id="user" value="#{tenantView.getPrincipalName()}"
+						styleClass="purple" />
+				</p:column>
+			</p:panelGrid>
+			<p:dataTable id="tenantTable" var="tenant"
+				value="#{tenantView.tenants}" resizableColumns="true"
+				sortBy="#{tenant.id}" rowStyleClass="#{tenant.styleClass}">
+
+				<p:columns value="#{tenantView.columns}" var="column"
+					columnIndexVar="colIndex">
+					<f:facet name="header">
+						<h:outputText value="#{column.header}" />
+					</f:facet>
+					<h:outputText value="#{tenant.getProperty(column.property)}" />
+				</p:columns>
+				<p:column>
+					<p:commandButton title="Edit tenant" icon="ui-icon-pencil"
+						update=":tenantsForm:tenantDetail"
+						oncomplete="PF('tenantDialog').show()"
+						actionListener="#{tenantView.editSelectedTenant(tenant)}"
+						styleClass="nochange" rendered="#{!tenant.isNewTenant()}">
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:dialog header="Tenant" widgetVar="tenantDialog" showEffect="fade"
+				hideEffect="fade" resizable="false" modal="true" id="tenantDialogId">
+
+				<p:ajax event="close" listener="#{tenantView.handleClose}" />
+
+				<p:outputPanel id="tenantDetail" style="text-align:left;" border="0">
+
+					<p:messages id="messagesInTenantDialog" />
+
+					<h:outputText id="tenantUpdateMode"
+						value="#{tenantView.tenantUpdateMode}" />
+
+					<h:panelGrid columns="2" cellpadding="5" border="0">
+						<h:outputLabel for="Id" value="Id:"
+							rendered="#{!tenantView.deleteMode &amp;&amp; !tenantView.editMode}" />
+						<h:outputText id="Id" value="#{tenantView.selectedTenant.id}"
+							rendered="#{!tenantView.selectedTenant.isNewTenant()}" />
+						<h:inputText id="idIn" value="#{tenantView.selectedTenant.id}"
+							rendered="#{tenantView.selectedTenant.isNewTenant()}" />
+						<p:selectOneMenu id="tenantIdSelect"
+							value="#{tenantView.selectedTenantId}"
+							rendered="#{tenantView.deleteMode}">
+							<f:selectItem itemLabel="Tenant id" itemValue="" />
+							<f:selectItems value="#{tenantView.tenantIds}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+					<h:panelGrid columns="2" cellpadding="5" border="0"
+						rendered="#{tenantView.editMode}">
+						<p:dataTable id="tenantPropertiesTable" var="property"
+							value="#{tenantView.selectedTenantProperties}"
+							resizableColumns="true" sortBy="#{tenant.id}"
+							rowStyleClass="#{tenant.styleClass}">
+							<p:column headerText="Key" sortBy="#{property.key}">
+								<h:outputText value="#{property.key}" />
+							</p:column>
+							<p:column headerText="Value" sortBy="#{property.value}">
+								<h:inputText value="#{property.value}"
+									rendered="#{!property.immutable}" size="50"/>
+								<h:outputText value="#{property.value}"
+									rendered="#{property.immutable}" />
+							</p:column>
+						</p:dataTable>
+					</h:panelGrid>
+					<h:panelGrid columns="2" cellpadding="5" border="0">
+						<p:commandButton id="confirm" value="Confirm"
+							update="tenantTable,messagesInTenantDialog,:tenantsForm:saveModification"
+							actionListener="#{tenantView.updateTenant}"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('tenantDialog').hide()" />
+						<p:commandButton id="cancel" value="Cancel"
+							update="tenantTable,:tenantsForm:saveModification"
+							actionListener="#{tenantView.updateTenant}"
+							oncomplete="PF('tenantDialog').hide()" />
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Yes" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</p:panel>
+	</h:form>
+</h:body>
+</html>

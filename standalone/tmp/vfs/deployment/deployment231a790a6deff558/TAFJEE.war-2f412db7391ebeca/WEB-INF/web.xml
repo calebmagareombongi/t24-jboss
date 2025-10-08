@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>TAFJEE</display-name>
+	<welcome-file-list>
+		<welcome-file>index.xhtml</welcome-file>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml</param-value>
+	</context-param>
+
+	<error-page>
+    		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+    		<location>/xhtml/expired.xhtml</location>
+	</error-page>
+
+	<env-entry>
+		<env-entry-name>trunEjbLookup</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>java:global/TAFJJEE_EAR/TAFJJEE_EJB/TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanLocal</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>managementEjbLookup</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>java:global/TAFJJEE_EAR/TAFJJEE_EJB/TafjManagementBean!com.temenos.tafj.sb.JSessionManagementBeanLocal</env-entry-value>
+	</env-entry>
+	<resource-ref id="ResourceRef_jmsConnectionFactory">
+		<description>Used to get connections to JMS for OFS queues</description>
+		<res-ref-name>jms/TAFJQueueConnectionFactory</res-ref-name>
+		<res-type>javax.jms.ConnectionFactory</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<resource-ref id="ResourceRef_t24ExecQueue">
+		<description>OFS queue</description>
+		<res-ref-name>jms/t24EXECQueue</res-ref-name>
+		<res-type>javax.jms.Queue</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+
+	<!-- Data sources declaration -->
+	<resource-ref>
+		<description>Used to get connections from T24 jdbc pool</description>
+		<res-ref-name>jdbc/t24DataSource</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<resource-ref>
+		<description>Used to get connections from T24 jdbc pool</description>
+		<res-ref-name>jdbc/t24LockingDataSource</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+
+	<!-- Security template - basic authentication - configuration to secure 
+		the webApp -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>TAFJEE</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>TAFJAdmin</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>TAFJEE</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>TAFJUser</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-role>
+		<role-name>TAFJAdmin</role-name>
+	</security-role>
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>TAFJRealm</realm-name>
+	</login-config>
+
+
+</web-app>

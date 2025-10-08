@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  <jboss-web xmlns="http://www.jboss.com/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee http://www.jboss.org/j2ee/schema/jboss-web_7_2.xsd"
+           version="7.1">-->
+<jboss-web>           
+	<resource-ref>
+		<res-ref-name>jms/TAFJQueueConnectionFactory</res-ref-name>
+		<res-type>javax.jms.ConnectionFactory</res-type>
+		<jndi-name>java:/ConnectionFactory</jndi-name>
+	</resource-ref>
+	<resource-ref>
+		<res-ref-name>jms/t24EXECQueue</res-ref-name>
+		<res-type>javax.jms.Queue</res-type>
+		<jndi-name>java:/queue/t24EXECQueue</jndi-name>
+	</resource-ref>
+	<resource-ref>
+		<res-ref-name>jdbc/t24DataSource</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<jndi-name>java:/jdbc/t24DS</jndi-name>
+	</resource-ref>
+	<resource-ref>
+		<res-ref-name>jdbc/t24LockingDataSource</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<jndi-name>java:/jdbc/t24LockingDS</jndi-name>
+	</resource-ref>
+	<!-- A template configuration to secure the webApp 
+	<security-domain>TAFJRealm</security-domain>
+	-->
+</jboss-web>

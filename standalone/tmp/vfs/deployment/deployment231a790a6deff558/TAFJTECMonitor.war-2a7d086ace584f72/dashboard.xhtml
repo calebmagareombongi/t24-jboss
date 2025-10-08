@@ -1,0 +1,2304 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<!--  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>T24 TEC Monitor</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+	<script type="text/javascript">
+	    var MY_VALUE = "XXXX";
+		var backGround = document.createElement("canvas");
+		var snapshots = document.createElement("canvas");
+		var FM = '\uF8FE';
+		//var cboMetrics = document.createElement("canvas");
+		//var buffer = document.createElement("canvas");
+		var timeUnit  = 3; //number of times 10 seconds
+		var timeSlices = [];
+		var scales = [];
+		var scaleDelta = 0; // to scroll the scales if too many
+		var scaleScrollRight = false;
+		var scaleScrollLeft = false;
+		var metrics = [];
+		var metricsColor = ["rgb(255, 255, 0)", "rgb(0, 255, 255)", "rgb(255, 0, 255)"];
+		var scalesColor = ["rgb(120, 120, 0)", "rgb(0, 120, 120)", "rgb(120, 0, 120)"]; // same as metrics, but darker
+		var STEP = 3; // calculated based on timeUnit
+		var SPEED = 800;  // in millis
+		// must match the canvas size
+		var WIDTH = 800;
+		var HEIGHT = 400;
+		var GRIDSIZE = HEIGHT / 12;
+		var SNAPSHOTSIZE = 25; // Size of the metrics snapshots.
+		var delta = 0; // used for moving the grid.
+		var firstDataPos = 0; // used for moving data
+		var barGradient = null;
+		var zoomTime = -1;
+		var zoomMetricIdx = -1;
+		var fullDay = 24 * 60 * 60 * 1000;
+		var snapshotFrameX = 0;    // just to erase the preceeding border in snapshots
+		var snapshotFrameY = 0;    // just to erase the preceeding border in snapshots
+		var currentSnapshot = -1;  // the currently selected snapshot.
+		var cboMetricsVisible = false;
+		var currentMetric = -1; // the currently selected metric.
+		var underlineTop = -1;  // for underlining metrics
+		var underlineLeft = -1; // for underlining metrics
+		var underlineLength = -1; // for underlining metrics
+		var currentCboSnapshot = -2; // -1 = none, 0 - 11 type, -2 : nothing selected
+		var snapshotCboFrameX = 0;    // just to erase the preceeding border in snapshots
+		var snapshotCboFrameY = 0;    // just to erase the preceeding border in snapshots
+		var cachedMetricDetails = new Object();  // act like a hashMap of metric details
+		var cvDetailsMouseIsDown = false;
+		var currentDrillDownValue = 0;
+		
+		var nbClick = 0;
+		var lastClickTime = 0;
+		
+		// **************************************
+		var NOW = new Object(); // This is the top right time
+		var LIVE = true;
+		// **************************************
+
+		function load() {
+			NOW.time = -1;
+			NOW.date = -1;
+			var url = window.location;
+			initializeBean([{name:'url', value:url}]);
+			
+			STEP = GRIDSIZE * SPEED / (10000 * timeUnit);
+			//alert("STEP = " + STEP)
+//			buffer.width = WIDTH;
+//			buffer.height = HEIGHT;
+			prepareBackGround();
+			prepareMetricsSnapshots();
+			// delta is the number of period to step back in time.
+			getServerData([{name:'now', value:-1},  {name:'date', value:-1}, {name:'period', value:timeUnit*10000}]);
+			
+			
+			
+			setInterval(timedGetServerData, 5000);
+			setInterval(timedRefresh, SPEED);
+			//		setInterval(getData, SPEED * GRIDSIZE / STEP);
+			
+			var canvas = document.getElementById("graph");
+			var ctx = canvas.getContext("2d");
+			
+			canvas.onclick = function(e) {
+				try{
+				  var rect = this.getBoundingClientRect(),   // get abs. position of canvas
+			      x = e.clientX - rect.left,             // adjust mouse-position
+			      y = e.clientY - rect.top;
+				  refresh(x, y);
+				} catch (error) {
+					alert("1 " + error);
+				}
+			};
+				
+			canvas = document.getElementById("scales");
+			canvas.onclick = function(e) {
+				try{
+				  var rect = this.getBoundingClientRect(),   // get abs. position of canvas
+			      x = e.clientX - rect.left,             // adjust mouse-position
+			      y = e.clientY - rect.top;
+				  scrollScales(x, y);
+				} catch (error) {
+					alert("10 " + error);
+				}
+			};
+			
+			
+			initMouseActivity();
+
+		}
+
+		var debugIdx = 0;
+		function debug(info){
+			debugIdx++;
+			var current =document.getElementById("debug").innerHTML; 
+			current = debugIdx + " " + info + "&lt;br&gt;" + current;
+			document.getElementById("debug").innerHTML=current;
+		}
+		
+		
+		var timeLineMouseIsDown = false;
+		var dragOffset = new Object();
+		
+		function initMouseActivity(){
+			dragOffset.x=0;
+			dragOffset.y=0;
+		
+			var canvas = document.getElementById("timeLine");
+			canvas.onmousedown = function(e){
+				dragOffset.x = e.x;
+			    dragOffset.y = e.y;
+
+			    timeLineMouseIsDown = true;
+			    
+			}
+			
+			var dx = 0;
+			
+			canvas.onmouseup = function(e){
+			    timeLineMouseIsDown = false;
+			    //var dx =  e.x - dragOffset.x;
+			    var tu = timeUnit * 10000;
+			    var diff = parseInt(tu / GRIDSIZE * dx);
+			    //document.getElementById("hNow").innerHTML=diff;
+			    dx = 0;
+			    if (diff != 0){
+			    	setNow(NOW.time - parseInt(diff/tu)*tu, NOW.date);
+			    	//document.getElementById("hNow").innerHTML=NOW;
+			    	getServerData([{name:'now', value:NOW.time}, {name:'date', value:NOW.date}, {name:'period', value:timeUnit*10000}]);
+			    }
+				
+			}
+			
+			canvas.onmousemove = function(e){
+				try{
+			    	if(!timeLineMouseIsDown) return;
+				    dx =  e.x - dragOffset.x;
+				    var tu = timeUnit * 10000;
+				    var diff = parseInt(tu / GRIDSIZE * dx);
+				    
+				    var time = NOW.time - parseInt(diff/tu)*tu;
+					if (0 > time){
+						time += fullDay;
+					}else if (time > fullDay){
+						time -= fullDay;
+					}
+				    //document.getElementById("hNow").innerHTML=formatTime(time);
+				    setLive(false);
+				    //document.getElementById("hNow").innerHTML=time;
+				    drawTimeLine(dx % GRIDSIZE, time);
+					//alert(dx + ":" + dy);		    
+				    return false;
+				}catch(error){
+			    	alert("2 " + error);	
+			    }
+			}
+
+			// Set up touch events for mobile, etc
+			canvas.addEventListener("touchstart", function (e) {
+			     mousePos = getTouchPos(canvas, e);
+			     var touch = e.touches[0];
+			     var mouseEvent = new MouseEvent("mousedown", {
+			          clientX: touch.clientX,
+			          clientY: touch.clientY
+			     });
+			     canvas.dispatchEvent(mouseEvent);
+			}, false);
+			
+			
+			canvas.addEventListener("touchend", function (e) {
+				 var mouseEvent = new MouseEvent("mouseup", {});
+				  canvas.dispatchEvent(mouseEvent);
+				}, false);
+			
+			
+			
+			canvas.addEventListener("touchmove", function (e) {
+			    var touch = e.touches[0];
+			    var mouseEvent = new MouseEvent("mousemove", {
+			        clientX: touch.clientX,
+			        clientY: touch.clientY
+			    });
+			    canvas.dispatchEvent(mouseEvent);
+			}, false);
+
+			
+			// Prevent scrolling when touching the canvas
+			document.body.addEventListener("touchstart", function (e) {
+			  if (e.target == canvas) {
+				  // not working on my android phone
+				  e.preventDefault();
+			  }
+			}, false);
+			
+			document.body.addEventListener("touchend", function (e) {
+			  if (e.target == canvas) {
+				// not working on my android phone
+				  e.preventDefault();
+			  }
+			}, false);
+			
+			document.body.addEventListener("touchmove", function (e) {
+    			if (e.target == canvas) {
+    				// not working on my android phone
+				  e.preventDefault();
+ 			    }
+			}, false);
+			
+			
+			
+			
+			var cvDetails = document.getElementById("details");
+			cvDetails.onmousedown = function(e){
+				var rect = this.getBoundingClientRect(),   // get abs. position of canvas
+			    x = e.clientX - rect.left,             // adjust mouse-position
+			    y = e.clientY - rect.top;
+				if (x > 115){
+					if (250 > x){
+						if (y > 54){
+							if (76 > y){
+								cvDetailsMouseIsDown = true;
+							}
+						}
+					}
+				}
+			}
+			
+			cvDetails.onmouseup = function(e){
+				if (cvDetailsMouseIsDown){
+					cvDetailsMouseIsDown = false;
+					var rect = this.getBoundingClientRect(),   // get abs. position of canvas
+				    x = e.clientX - rect.left,             // adjust mouse-position
+				    y = e.clientY - rect.top;
+					if (x > 115){
+						if (250 > x){
+							if (y > 54){
+								if (76 > y){
+									var top = 0;
+									if (metrics[metricDetailId].sumOrAvg == "avg"){
+										metrics[metricDetailId].sumOrAvg = "sumOfCount";
+										top = 44; // Y position of the portion of image in imgTogger
+									} else if (metrics[metricDetailId].sumOrAvg == "sumOfCount"){
+										metrics[metricDetailId].sumOrAvg = "sum";
+										top = 0; // Y position of the portion of image in imgTogger
+									} else {
+										metrics[metricDetailId].sumOrAvg = "avg";
+										top = 22; // Y position of the portion of image in imgTogger
+									}
+									
+									var ctxDetails = cvDetails.getContext("2d");
+									var img=document.getElementById("imgToggle");
+									ctxDetails.clearRect(105,44,135,22);
+									ctxDetails.drawImage(img,0,top,135,22,105,44,135,22);
+									// finally refresh the graph. Needs to be done if not in "live mode"
+									forceRefresh();
+									saveSettings();
+									//refresh(true);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+
+		
+		
+		// Get the position of a touch relative to the canvas
+		function getTouchPos(canvasDom, touchEvent) {
+		  var rect = canvasDom.getBoundingClientRect();
+		  return {
+		    x: touchEvent.touches[0].clientX - rect.left,
+		    y: touchEvent.touches[0].clientY - rect.top
+		  };
+		}
+		
+		
+		/*
+		* Get to "live" mode
+		*/
+		function setLiveMode(){
+			setLive(true);
+			timedGetServerData();
+		}
+
+		function formatTime( millis){
+			try {
+				var seconds = parseInt(millis / 1000);
+				var hours = parseInt(seconds / (60 * 60) );
+				seconds -= (hours * 60 * 60);
+				var minutes = parseInt(seconds / (60) );
+				seconds -= (minutes  * 60);
+				if (10 > hours){
+					hours = "0" + hours;
+				}
+				if (10 > minutes){
+					minutes = "0" +minutes;
+				}
+				if (10 > seconds){
+					seconds = "0" + seconds;
+				}
+				return hours + ":" + minutes + ":" + seconds		 
+			} catch (error) {
+				alert("3 " + error);
+			}
+			
+		}
+		
+		
+		function timedGetServerData() {
+			if (!LIVE){
+				return;
+			}
+			try {
+				getServerData([{name:'now', value:-1}, {name:'date', value:-1}, {name:'period', value:timeUnit*10000}]);
+			} catch (error) {
+				alert("4 " + error);
+			}
+		}
+		
+		
+		function timedRefresh() {
+			if (!LIVE){
+				return;
+			}
+			try {
+				refresh();
+			} catch (error) {
+				alert("5 " + error);
+			}
+		}
+
+		
+		
+		function drawBackGround(destination2DCtx, dontIncrementDelta) {
+			deltaLimit = GRIDSIZE;
+			try {
+				if (timeSlices != null){
+					deltaLimit = GRIDSIZE - (timeUnit - (timeSlices[timeSlices.length - 1].size)) * (GRIDSIZE / timeUnit);
+					//debug("timeSlices[timeSlices.length - 1].size = " + (timeSlices[timeSlices.length - 1].size));
+				}
+
+				if (arguments.length == 1){
+					delta += STEP;
+	
+					if (delta > deltaLimit){
+						delta = deltaLimit;
+					}else if (deltaLimit - (GRIDSIZE / timeUnit) > (delta + STEP)) {
+						// running late !
+						delta = deltaLimit;
+					}
+				}
+				destination2DCtx.drawImage(backGround,  -delta, 0);
+			} catch (error) {
+				//alert("6 " + error);
+			}
+		}
+
+		function refresh(mX, mY) {
+			try{
+				var mouseX = -1;
+				var mouseY = -1;
+				
+				var canvas = document.getElementById("graph");
+				var ctx = canvas.getContext("2d");
+				if (arguments.length == 2){
+					mouseX = mX;
+					mouseY = mY;
+				}else if (arguments.length == 1){
+					drawBackGround(ctx, false);
+				}else {
+					drawBackGround(ctx);
+					drawTimeLine(0, NOW.time);
+				}
+				// go throw all the metrics. If the type is >= 0 then something needs to be shown.
+				// first, we need to know how many "bar" we have as it will
+				// define the bar size.
+				var nbBars = 0;
+				var metricCounter = 0;
+				for (var metricIdx in metrics){
+					if (metrics[metricIdx].type >= 9){
+						if (11 >= metrics[metricIdx].type){
+							// this is a bar
+							nbBars++;
+						}
+					}
+				}
+				if (0 > mouseX){
+					// First, draw the bars (behind), and then the lines
+					var barNumber = 0;
+					for (var metricIdx in metrics){
+						if (metrics[metricIdx].type >= 0){
+							if (metrics[metricIdx].type >= 9){
+								if (11 >= metrics[metricIdx].type){
+									if (drawBarSerie(ctx, metricIdx, metrics[metricIdx].type, barNumber, nbBars, mouseX, mouseY)){
+										return true;
+									}
+									drawScale(metricIdx, metricCounter);
+									metricCounter++;
+									barNumber++;
+								}
+							}
+						}
+					}
+					// draw the lines
+					for (var metricIdx in metrics){
+						if (metrics[metricIdx].type >= 0){
+							if (9 > metrics[metricIdx].type){
+								if (drawLineSerie(ctx, metricIdx, metrics[metricIdx].type, mouseX, mouseY)){
+									return true;
+								}
+								drawScale(metricIdx, metricCounter);
+								metricCounter++;
+							}
+						}
+					}
+				
+					
+
+				}else{
+					// In moueClick detection, inverse the process. first the shapes (triangel, square, ...) then the bars
+					// draw the lines
+					for (var metricIdx in metrics){
+						if (metrics[metricIdx].type >= 0){
+							if (9 > metrics[metricIdx].type){
+								if (drawLineSerie(ctx, metricIdx, metrics[metricIdx].type, mouseX, mouseY)){
+									return true;
+								}
+							}
+						}
+					}
+					// Then, draw the bars (behind)
+					var barNumber = 0;
+					for (var metricIdx in metrics){
+						if (metrics[metricIdx].type >= 0){
+							if (metrics[metricIdx].type >= 9){
+								if (11 >= metrics[metricIdx].type){
+									if (drawBarSerie(ctx, metricIdx, metrics[metricIdx].type, barNumber, nbBars, mouseX, mouseY)){
+										return true;
+									}
+									barNumber++;
+								}
+							}
+						}
+					}
+				}
+			}catch(error){
+				alert(error);
+			}
+		}
+
+		/*
+		* Ask the data, recalculate the scales.
+		*/
+		function forceRefresh(){
+			getServerData([{name:'now', value:NOW.time}, {name:'date', value:NOW.date}, {name:'period', value:timeUnit*10000}]);
+		}
+		
+		/*
+		* Set the time / date to inital values
+		* and force a refresh
+		*/
+		function changeTenant(){
+			NOW.time = -1;
+			NOW.date = -1;
+			forceRefresh();
+		}
+		
+		
+		// return the showTECItemRecord
+		function returnOfGetTECItemRecord(xhr, status, args) {
+			try {
+				var record = args.record;
+				var id = args.id;
+				var recordArray = record.split(FM);
+				// Store those informations in cache so no need to fetch them anymore.
+				metricDetail = new Object();
+				metricDetail.description = recordArray[0];
+				metricDetail.metricType = recordArray[2];
+				
+				cachedMetricDetails[metricDetailId] = metricDetail;
+
+				displayMetricDetails(recordArray[0], recordArray[2], metrics[metricDetailId].sumOrAvg);
+			} catch (error) {
+				alert("7 " + error);
+			}
+		}
+		
+		/*
+		* Display the metric details.
+		*/
+		function displayMetricDetails(description, metricType, sumOrAvg) {
+			try {
+				var cvDetails = document.getElementById("details");
+				var ctxDetails = cvDetails.getContext("2d");
+				font = 15;
+				lineHeight = 15; // this is guess and check as far as I know
+				var top = 15;
+				ctxDetails.clearRect(0, 0, WIDTH, 100);
+				ctxDetails.font = '18px Arial';
+				ctxDetails.textAlign = 'left';
+	
+				ctxDetails.fillText(description, 5, top); // title
+				ctxDetails.font = '15px Arial';
+				top += 22;
+				ctxDetails.textAlign = 'right';
+				ctxDetails.fillText("Metric Type : ", 100, top); 
+				ctxDetails.textAlign = 'left';
+				ctxDetails.fillText(metricType, 105, top); 
+				top += 22;
+				ctxDetails.textAlign = 'right';
+				ctxDetails.fillText("Value type : ", 100, top); 
+				
+				var imgTop = 0;
+				if (sumOrAvg == "avg"){
+					imgTop = 22; // Y position of the portion of image in imgTogger
+				}else if (sumOrAvg == "sumOfCount"){
+					imgTop = 44; // Y position of the portion of image in imgTogger
+				} else{
+					imgTop = 0;
+				}
+				var img=document.getElementById("imgToggle");
+				ctxDetails.drawImage(img,0,imgTop,135,22,105,44,135,22);
+				
+				if (zoomMetricIdx == metricDetailId){
+					top += 22;
+					ctxDetails.textAlign = 'right';
+					ctxDetails.fillText("Current value : ", 100, top); 
+					ctxDetails.textAlign = 'left';
+					ctxDetails.fillText(Math.round(currentDrillDownValue), 105, top);
+				}
+				
+				
+			} catch (error) {
+				alert("7 " + error);
+			}
+
+		}
+		
+		
+		// call back once the record is updated
+		function updatedTECItemRecord(xhr, status, args) {
+			try {
+				// available :
+				// .id
+				// .status (1 = success, -1 = locked, 0 = error)
+				var status = args.status;
+			//	debug("updatedTECItemRecord : " + status)
+			} catch (error) {
+				alert("7 " + error);
+			}
+		}
+		
+
+		/*
+		* Save the list of Metrics and the type associated
+		* in a format METRIC.NAME:TYPE:"sum|avg",METRIC.NAME2:TYPE2:"sum|avg",METRIC.NAMEn:TYPEn:"sum|avg"
+		*/
+		function getSettings() {
+			try{
+			    var decodedCookie = decodeURIComponent(document.cookie);
+			    var ca = decodedCookie.split(';');
+			    for(var oneBlock in ca) {
+			    	var block = ca[oneBlock];	
+					idx = block.indexOf("metrics=");
+			    	if (idx >= 0) {
+			            var savedMetrics = block.substring(idx + "metrics=".length, block.length);
+			            var aSavedMetrics = savedMetrics.split(',');
+			            for (var oneSavedMetric in aSavedMetrics){
+			            	var aOneSavedMetric = aSavedMetrics[oneSavedMetric].split(":");
+			            	var oneSavedMetricName = aOneSavedMetric[0];
+			            	var oneSavedMetricType = aOneSavedMetric[1];
+			            	var oneSavedMetricSumOrAvg = "sum";
+			            	if (aOneSavedMetric.length > 2){
+			            		oneSavedMetricSumOrAvg = aOneSavedMetric[2];
+			            	}
+							for (var oneMetric in metrics){
+								if (metrics[oneMetric].name == oneSavedMetricName){
+									metrics[oneMetric].type = oneSavedMetricType;
+									metrics[oneMetric].sumOrAvg = oneSavedMetricSumOrAvg;
+									break;
+								}
+							}
+			            }
+			            break;
+			        }
+			    }
+			}catch(error){
+				alert("getSettings() " + error);
+			}
+		}
+		
+		function saveSettings(){
+			try{	
+				toSave = "";
+				for (var oneMetric in metrics){
+					oneInfo = metrics[oneMetric].name + ":" + metrics[oneMetric].type + ":" + metrics[oneMetric].sumOrAvg;
+					if (toSave.length > 0){
+						toSave += ",";
+					}
+					toSave += oneInfo;
+				}
+				document.cookie = "metrics=" + toSave + ";path=/";
+			}catch(error){
+				alert("saveSettings() " + error);
+			}
+		}
+		
+		
+		
+		// method where all the metrics are initialised
+		function returnOfGetMetricNames(xhr, status, args) {
+			try {
+				var datas = args.names;
+				var metricNames = datas.split("|");
+				for (var idx in metricNames){
+					var oneMetric = new Object();
+					oneMetric.name = metricNames[idx];
+					oneMetric.caption = toCaption(oneMetric.name);
+					oneMetric.type = -1;
+					// Default value the very first time (no cookie yet)
+					if (oneMetric.name == "MONITOR.FETCH.TIME"){
+						oneMetric.type = 0; // yellow triangle
+					}
+					oneMetric.sumOrAvg = "sum"; // default
+					metrics.push(oneMetric);
+				}
+				/*
+				* Load the last metrics settings from cookie
+				*/
+				getSettings();
+				/*
+				* Go, Draw them
+				*/
+				drawMetrics();
+				/*
+				* Aand ask for the data again
+				*/
+				forceRefresh();
+			} catch (error) {
+				alert("7 " + error);
+			}
+		}
+		
+		
+		function toCaption(oneString){
+			var words = oneString.split(".");
+			var caption = "";
+			for (var idx in words){
+				var oneWord = words[idx];
+					oneWord = oneWord.slice(0,1).toUpperCase() + oneWord.slice(1, oneWord.length).toLowerCase();
+				if (idx > 0){
+					caption = caption+ " ";
+				}
+				caption = caption + oneWord;
+			}
+			return caption;
+		}
+		
+		function initDone(xhr, status, args){
+			
+		}
+		
+		function dataAvailable(xhr, status, args) {
+			try {
+				if (metrics.length == 0){
+					getMetricNames(); // assync
+					return;
+				}
+				var datas = args.slices;
+				var dataArray = datas.split("|");
+				var max = [];
+				var oldLastTime = -1;
+				if (timeSlices.length > 0){
+					oldLastTime = timeSlices[timeSlices.length - 1].time;
+				}
+				// clear all
+				timeSlices = [];
+				var first = true;
+				for (var oneDataIdx in dataArray){
+					//alert("oneData = " + oneData);
+					oneDataArray = dataArray[oneDataIdx].split("/");
+					//alert("oneDataArray = " + oneDataArray);
+					var oneTimeSlice = new Object();
+					
+					oneTimeSlice.date = parseInt(oneDataArray[0]);
+					oneTimeSlice.time = parseInt(oneDataArray[1]);
+					oneTimeSlice.size = parseInt(oneDataArray[2]);
+					var values = oneDataArray[3].split("\\");
+
+					oneTimeSlice.values = values;
+					// To calculate the average
+					var nbValues = oneDataArray[4].split("\\"); 
+					oneTimeSlice.nbValues = nbValues;
+
+					if (first){
+						for (var i=0; values.length > i; i++){
+							var displayValue = "sum";
+							if (metrics.length > i){
+								displayValue = metrics[i].sumOrAvg;
+							}
+							if (displayValue == "sumOfCount"){
+								max[i] = nbValues[i];
+							}else if (displayValue == "avg"){
+								max[i] = values[i] / oneIfZero(nbValues[i]);
+							}else{
+								max[i] = values[i];
+							}
+						}
+						first = false;
+					}else{
+						for (var i=0; values.length > i; i++){
+							var tmpVal = 0;
+							var displayValue = "sum";
+							if (metrics.length > i){
+								displayValue = metrics[i].sumOrAvg;
+							}
+							if (displayValue == "sumOfCount"){
+								tmpVal = parseInt(nbValues[i]);
+							}else if (displayValue == "avg"){
+								tmpVal = parseInt(values[i]) / oneIfZero(nbValues[i]);
+							}else{
+								tmpVal = parseInt(values[i]);
+							}
+							if (tmpVal > parseInt(max[i])){
+								max[i] = tmpVal;
+							}
+						}
+					}
+
+					timeSlices.push(oneTimeSlice);
+				}
+				
+				
+				
+				// Resolve the scale steps
+				defineScales(max);
+				
+				if (NOW.time > timeSlices[timeSlices.length - 1].time ){
+					if (NOW.date >= timeSlices[timeSlices.length - 1].date ){
+						setLive(true);
+					}
+				}
+
+				if (oldLastTime != timeSlices[timeSlices.length - 1].time){
+					delta = 0; // new time
+				}
+				
+				setNow(timeSlices[timeSlices.length - 1].time, timeSlices[timeSlices.length - 1].date);
+
+				if (!LIVE){		
+					refresh();
+				}
+				
+			} catch (error) {
+				//location.reload(true);
+				alert("8 " + error);
+			}
+		}
+
+		function oneIfZero(value){
+			var intVal = parseInt(value);
+			if (intVal == 0){
+				return 1;
+			}
+			return intVal;
+		}
+		
+		
+	    // Resolve the scales for all data series
+		function defineScales(maxArray){
+	    	try{
+		    	scales = [];
+		    	for(var idx in maxArray){
+			    	var oneScale = new Object();
+			    	var max = parseInt(maxArray[idx]);
+					var units = [1,2,5];
+					var pow10 = 1;
+					var done = false;
+					for (var powidx = 0; 10 > powidx; powidx++){
+						for (var unitIdx = 0; 3 > unitIdx; unitIdx++){
+							var test = pow10 * units[unitIdx] * 6;
+							if (test > max){
+								// we found it
+								if (oneScale.max != test){
+									oneScale.max = test;
+									oneScale.factor = HEIGHT / test;
+								}
+								
+								scales.push(oneScale);
+								done = true;
+								break;
+							}
+						}
+						if (done){
+							break;
+						}
+						pow10 *= 10;
+					}
+		    	}
+		
+			} catch (error) {
+				alert("9 " + error);
+			}
+		}
+		
+		function drawLineSerie(destination2DCtx, metricIdx, metricType, mouseX, mouseY) {
+			if (scales.length == 0){
+				return;
+			}
+			try{
+				var value = 0;
+				var unscaledValue = 0;
+				var clickDetection = false;
+				if (mouseX >= 0) {
+					// we have mouseX and mouseY, this means we are here just to detect the click for the drilldown)
+					clickDetection = true;
+				}
+				var displayValue = metrics[metricIdx].sumOrAvg;
+
+				var posX = WIDTH + (GRIDSIZE-delta); // to make it mooving all the time.
+				var lineColor = metricsColor[metricType % 3];
+				var lineType = parseInt(metricType / 3);
+				if (!clickDetection){
+					destination2DCtx.strokeStyle = lineColor;
+					destination2DCtx.lineWidth = 2;
+					destination2DCtx.lineJoin = destination2DCtx.lineCap = 'round';
+				
+					posX = WIDTH + (GRIDSIZE-delta);
+					// draw the line
+					destination2DCtx.beginPath();
+					if (displayValue == "sumOfCount"){
+						unscaledValue = parseInt(timeSlices[timeSlices.length - 1].nbValues[metricIdx]);
+					}else{
+						unscaledValue = parseInt(timeSlices[timeSlices.length - 1].values[metricIdx]);
+				    }
+					// If average
+					if (displayValue == "avg"){
+						unscaledValue = unscaledValue / oneIfZero(timeSlices[timeSlices.length - 1].nbValues[metricIdx]);
+					}
+					value = scales[metricIdx].factor * unscaledValue;
+					
+					var previousX = posX - GRIDSIZE / 2;
+					var previousY = HEIGHT - value;
+					destination2DCtx.moveTo(posX - GRIDSIZE / 2, HEIGHT - value);
+					for (var idx = timeSlices.length - 2; idx >= 0; idx--) {
+						posX -= GRIDSIZE;
+						if (displayValue == "sumOfCount"){
+							unscaledValue = parseInt(timeSlices[idx].nbValues[metricIdx]);
+						}else{
+							unscaledValue = parseInt(timeSlices[idx].values[metricIdx]);
+						}
+						// If average
+						if (displayValue == "avg"){
+							unscaledValue = unscaledValue / oneIfZero(timeSlices[idx].nbValues[metricIdx]);
+						}
+						
+						value = scales[metricIdx].factor * unscaledValue;
+						
+						var mediumY = (previousY + HEIGHT - value) / 2;
+						var mediumX = posX;
+						destination2DCtx.quadraticCurveTo(previousX - 10, previousY, mediumX, mediumY);
+						destination2DCtx.quadraticCurveTo(posX - GRIDSIZE / 2 + 10, HEIGHT - value, posX - GRIDSIZE / 2, HEIGHT - value);
+						previousX = posX - GRIDSIZE / 2;
+						previousY = HEIGHT - value;
+						
+					}
+					destination2DCtx.stroke();
+				}
+				// draw the "shapes"
+				posX = WIDTH + (GRIDSIZE-delta);
+				if (displayValue == "sumOfCount"){
+					unscaledValue = parseInt(timeSlices[timeSlices.length - 1].nbValues[metricIdx]);
+				}else{
+					unscaledValue = parseInt(timeSlices[timeSlices.length - 1].values[metricIdx]);
+			    }
+				// If average
+				if (displayValue == "avg"){
+					unscaledValue = unscaledValue / oneIfZero(timeSlices[timeSlices.length - 1].nbValues[metricIdx]);
+				}
+				value = scales[metricIdx].factor * unscaledValue;
+				
+				var border="black";
+				if (!clickDetection){
+					var highLight = false;
+					if (zoomMetricIdx == metricIdx){
+						if (timeSlices[timeSlices.length - 1].time == zoomTime){
+							highLight = true;
+						}
+					}
+					if (highLight){
+						destination2DCtx.shadowBlur = 10;
+						destination2DCtx.shadowColor = 'rgb(100, 0, 0)';
+						border = "red";
+						if (currentMetric == metricIdx &amp;&amp; currentDrillDownValue != unscaledValue){
+							/* occures when we change the sum / avg */
+							currentDrillDownValue = unscaledValue;
+							showMetricDetails();
+						}
+					}else{
+						destination2DCtx.shadowBlur = 0;
+					}
+				}			
+				if (lineType == 0){
+					triangle(destination2DCtx, posX - GRIDSIZE / 2, HEIGHT - value, 20, lineColor, border, clickDetection);
+				}else if (lineType == 1){
+					square(destination2DCtx, posX - GRIDSIZE / 2, HEIGHT - value, 20, lineColor, border, clickDetection);
+				}else{
+					circle(destination2DCtx, posX - GRIDSIZE / 2, HEIGHT - value, 20, lineColor, border, clickDetection);
+				}
+				if (clickDetection){
+					if (destination2DCtx.isPointInPath(mouseX, mouseY)) {
+						zoomTime = timeSlices[timeSlices.length - 1].time;
+						zoomMetricIdx = metricIdx;
+						document.getElementById("zoomTitle").innerHTML=metrics[zoomMetricIdx].caption + " : " + formatTime(zoomTime);
+						refresh(true);
+						getServerDrillDown([{name:'name', value:metrics[zoomMetricIdx].name}, {name:'date', value:timeSlices[timeSlices.length - 1].date}, {name:'time', value:timeSlices[timeSlices.length - 1].time}, {name:'period', value:timeUnit*10000}]);
+						currentDrillDownValue = unscaledValue;
+						currentMetric = zoomMetricIdx;
+						showMetricDetails();
+						return true;
+					}
+				}
+				destination2DCtx.moveTo(posX - GRIDSIZE / 2, HEIGHT - value);
+				for (var idx = timeSlices.length - 2; idx >= 0; idx--) {
+					posX -= GRIDSIZE;
+					if (displayValue == "sumOfCount"){
+						unscaledValue = parseInt(timeSlices[idx].nbValues[metricIdx]);
+					}else{
+						unscaledValue = parseInt(timeSlices[idx].values[metricIdx]);
+					}
+					// If average
+					if (displayValue == "avg"){
+						unscaledValue = unscaledValue / oneIfZero(timeSlices[idx].nbValues[metricIdx]);
+					}
+					value = scales[metricIdx].factor * unscaledValue;
+					
+					border = "black";
+					if (!clickDetection){
+						var highLight = false;
+						if (zoomMetricIdx == metricIdx){
+							if (timeSlices[idx].time == zoomTime){
+								highLight = true;
+							}
+						}
+						if (highLight){
+							destination2DCtx.shadowBlur = 10;
+							destination2DCtx.shadowColor = 'rgb(100, 0, 0)';
+							border = "red";
+							if (currentMetric == metricIdx &amp;&amp; currentDrillDownValue != unscaledValue){
+								/* occures when we change the sum / avg */
+								currentDrillDownValue = unscaledValue;
+								showMetricDetails();
+							}
+						}else{
+							destination2DCtx.shadowBlur = 0;
+						}
+					}
+					
+					
+					if (lineType == 0){
+						triangle(destination2DCtx, posX - GRIDSIZE / 2, HEIGHT - value, 20, lineColor, border, clickDetection);
+					}else if (lineType == 1){
+						square(destination2DCtx, posX - GRIDSIZE / 2, HEIGHT - value, 20, lineColor, border, clickDetection);
+					}else{
+						circle(destination2DCtx, posX - GRIDSIZE / 2, HEIGHT - value, 20, lineColor, border, clickDetection);
+					}
+					if (clickDetection){
+						if (destination2DCtx.isPointInPath(mouseX, mouseY)) {
+							zoomTime = timeSlices[idx].time;
+							zoomMetricIdx = metricIdx;
+							document.getElementById("zoomTitle").innerHTML=metrics[zoomMetricIdx].caption + " : " + formatTime(zoomTime);
+	
+							refresh(true);
+							getServerDrillDown([{name:'name', value:metrics[zoomMetricIdx].name}, {name:'date', value:timeSlices[idx].date}, {name:'time', value:timeSlices[idx].time}, {name:'period', value:timeUnit*10000}]);
+							currentDrillDownValue = unscaledValue;
+							currentMetric = zoomMetricIdx;
+							showMetricDetails();
+							return true;
+						}
+					}
+				}
+				return false;
+			}catch(error){
+				alert("25 : " + error);
+			}
+		}
+
+		function drawBarSerie(destination2DCtx, metricIdx, metricType, barNumber, totalBars, mouseX, mouseY) {
+			if (scales.length == 0){
+				return;
+			}
+			try{
+				var value = 0;
+				var unscaledValue = 0;
+				var clickDetection = false;
+				if (mouseX >= 0) {
+					// we have mouseX and mouseY, this means we are here just to detect the click for the drilldown)
+					clickDetection = true;
+				}
+				
+				var displayValue = metrics[metricIdx].sumOrAvg;
+				
+	//			if (barGradient == null) {
+	//				barGradient = destination2DCtx.createLinearGradient(0, 0, 0,
+	//						400);
+	//				barGradient.addColorStop(0, 'rgb(200, 120, 0)');
+	//				barGradient.addColorStop(1, 'rgb(0, 120, 255)');
+	//			}
+				var barWidth = GRIDSIZE / totalBars;
+				var barXDelta = barWidth * barNumber;
+				var barColor = metricsColor[metricType % 3];
+				
+				
+				destination2DCtx.font = '10px Arial';
+				destination2DCtx.textAlign = 'left';
+				
+				if (clickDetection){
+					destination2DCtx.lineWidth = 0;
+				}else{
+					destination2DCtx.lineWidth = 1;
+					destination2DCtx.strokeStyle = 'black';
+				}
+				//destination2DCtx.lineJoin = destination2DCtx.lineCap = 'round';
+				//destination2DCtx.shadowBlur = 5;
+				//destination2DCtx.shadowColor = 'rgb(100, 0, 0)';
+				if (timeSlices.length > 1) {
+					if (!clickDetection){
+						var highLight = false;
+						if (zoomMetricIdx == metricIdx){
+							if (timeSlices[timeSlices.length - 1].time == zoomTime){
+								highLight = true;
+							}
+						}
+						if (highLight){
+							destination2DCtx.shadowBlur = 10;
+							destination2DCtx.shadowColor = 'rgb(100, 0, 0)';
+							destination2DCtx.lineWidth = 2;
+							destination2DCtx.strokeStyle = 'red';
+						}else{
+							destination2DCtx.shadowBlur = 0;
+							destination2DCtx.lineWidth = 1;
+							destination2DCtx.strokeStyle = 'black';
+						}
+					}
+						
+					//posX = WIDTH + delta;
+					//posX = WIDTH + (timeUnit - data[data.length - 1].size) * (GRIDSIZE / timeUnit);
+					posX = WIDTH + (GRIDSIZE-delta); // to make it mooving all the time.
+					//posX = GRIDSIZE + data[data.length - 1].size;
+					destination2DCtx.fillStyle = barColor;
+					destination2DCtx.beginPath();
+					
+					if (displayValue == "sumOfCount"){
+						unscaledValue = parseInt(timeSlices[timeSlices.length - 1].nbValues[metricIdx]);
+					}else{
+						unscaledValue = parseInt(timeSlices[timeSlices.length - 1].values[metricIdx]);
+				    }
+					// If average
+					if (displayValue == "avg"){
+						unscaledValue = unscaledValue / oneIfZero(timeSlices[timeSlices.length - 1].nbValues[metricIdx]);
+					}
+					value = scales[metricIdx].factor * unscaledValue;
+					
+					if (highLight){
+						if (currentMetric == metricIdx &amp;&amp; currentDrillDownValue != unscaledValue){
+							/* occures when we change the sum / avg */
+							currentDrillDownValue = unscaledValue;
+							showMetricDetails();
+						}
+					}
+					
+
+					
+					if (!clickDetection){
+						destination2DCtx.fillRect(posX-GRIDSIZE+1 + barXDelta , HEIGHT, barWidth, -value);
+					}
+					destination2DCtx.rect(posX-GRIDSIZE+1+barXDelta, HEIGHT, barWidth, -value);
+					destination2DCtx.stroke();
+					
+					if (clickDetection){
+						if (destination2DCtx.isPointInPath(mouseX, mouseY)) {
+							zoomTime = timeSlices[timeSlices.length - 1].time;
+							zoomMetricIdx = metricIdx;
+							document.getElementById("zoomTitle").innerHTML=metrics[zoomMetricIdx].caption + " : " + formatTime(zoomTime);
+	
+							refresh(true);
+							getServerDrillDown([{name:'name', value:metrics[zoomMetricIdx].name}, {name:'date', value:timeSlices[timeSlices.length - 1].date}, {name:'time', value:timeSlices[timeSlices.length - 1].time}, {name:'period', value:timeUnit*10000}]);
+							currentDrillDownValue = unscaledValue;
+							currentMetric = zoomMetricIdx;
+							showMetricDetails();
+							
+							
+							return true;
+						}
+					}
+	
+					
+					
+					for (var idx = timeSlices.length - 2; idx >= 0; idx--) {
+						if (posX > 0){
+							if (!clickDetection){
+								var highLight = false;
+								if (zoomMetricIdx == metricIdx){
+									if (timeSlices[idx].time == zoomTime){
+										highLight = true;
+									}
+								}
+								if (highLight){
+									destination2DCtx.shadowBlur = 10;
+									destination2DCtx.shadowColor = 'rgb(100, 0, 0)';
+									destination2DCtx.lineWidth = 2;
+									destination2DCtx.strokeStyle = 'red';
+								}else{
+									destination2DCtx.shadowBlur = 0;
+									destination2DCtx.lineWidth = 1;
+									destination2DCtx.strokeStyle = 'black';
+								}
+							}
+							posX -= GRIDSIZE;
+							destination2DCtx.fillStyle = barColor;
+							destination2DCtx.beginPath();
+
+							if (displayValue == "sumOfCount"){
+								unscaledValue = parseInt(timeSlices[idx].nbValues[metricIdx]);
+							}else{
+								unscaledValue = parseInt(timeSlices[idx].values[metricIdx]);
+						    }
+							// If average
+							if (displayValue == "avg"){
+								unscaledValue = unscaledValue / oneIfZero(timeSlices[idx].nbValues[metricIdx]);
+							}
+							value = scales[metricIdx].factor * unscaledValue;
+							
+							
+							if (highLight){
+								if (currentMetric == metricIdx &amp;&amp; currentDrillDownValue != unscaledValue){
+									/* occures when we change the sum / avg */
+									currentDrillDownValue = unscaledValue;
+									showMetricDetails();
+								}
+							}
+							
+							if (!clickDetection){
+								destination2DCtx.fillRect(posX-GRIDSIZE+1+barXDelta, HEIGHT, barWidth, -value);
+							}
+							destination2DCtx.rect(posX-GRIDSIZE+1+barXDelta, HEIGHT, barWidth, -value);
+
+							
+							destination2DCtx.stroke();
+							if (clickDetection){
+								if (destination2DCtx.isPointInPath(mouseX, mouseY)) {
+									zoomTime = timeSlices[idx].time;
+									zoomMetricIdx = metricIdx;
+									document.getElementById("zoomTitle").innerHTML=metrics[zoomMetricIdx].caption + " : " + formatTime(zoomTime);
+	                                // refresh to show the borders.
+	                                // no need to redraw background or whatever
+									refresh(true);
+									getServerDrillDown([{name:'name', value:metrics[zoomMetricIdx].name}, {name:'date', value:timeSlices[idx].date}, {name:'time', value:timeSlices[idx].time}, {name:'period', value:timeUnit*10000}]);
+									currentDrillDownValue = unscaledValue;
+									currentMetric = zoomMetricIdx;
+									showMetricDetails();
+									return true;
+								}
+							}
+							
+							
+						}else{
+							break;
+						}
+					}
+				}
+				return false;
+			}catch(error){
+				alert("26 : " + error);
+			}
+		}
+
+		// --------------------------------------
+		// set NOW, ensure it is in range and
+		// redraw the time line.
+		function setNow(time, date){
+			if (0 > time){
+				time += fullDay;
+				date -= 1;
+			}else if (time > fullDay){
+				time -= fullDay;
+				date += 1;
+			}
+			NOW.time = time;
+			NOW.date = date;
+			if (this.LIVE){
+				document.getElementById("liveFlag").style.visibility='visible';
+				document.getElementById("notLiveFlag").style.visibility='hidden';
+			}else{
+				document.getElementById("liveFlag").style.visibility='hidden';
+				document.getElementById("notLiveFlag").style.visibility='visible';
+			}
+			document.getElementById("hNow").innerHTML=formatTime(NOW.time);
+			drawTimeLine(0, NOW.time);
+		}
+		
+		// --------------------------------------
+		// Change the live flag
+		// TODO : Show picture accordingly.
+		function setLive(value){
+			this.LIVE = value;
+			if (!value){
+				delta = 0;
+			}
+		}
+		
+		// --------------------------------------
+		// Change tje time unit, recalculate the STEP, and NOW
+		function setTimeUnit(value){
+			timeUnit = value;
+			STEP = GRIDSIZE * SPEED / (10000 * timeUnit);
+			var newNOW = parseInt(NOW.time / (timeUnit * 10000)) * timeUnit * 10000;
+			setNow(newNOW, NOW.date);
+			getServerData([{name:'now', value:NOW.time}, {name:'date', value:NOW.date}, {name:'period', value:timeUnit*10000}]);
+		}
+		
+		// --------------------------------------
+		// invoked from UI (comboBox)
+		function changeTimeUnit(){
+			try {
+				var eID = document.getElementById("timeUnit"); 
+				value = eID.options[eID.selectedIndex].value;
+				setTimeUnit(value);
+			} catch (error) {
+				alert("10 " + error);
+			}
+		}
+		
+		// draw a equilateral triangle centered on x, y
+		function triangle(ctx, x, y, size, fill, stroke, clickDetection){
+			ctx.fillStyle = fill;
+			ctx.strokeStyle = stroke;
+			
+			var size2 = size / 2;
+			var h = parseInt(Math.sqrt((size * size) - (size2 * size2)));
+			var h2 = parseInt(h / 2);
+			
+			y += h2;
+			x-=size2;
+			if (clickDetection){
+				ctx.lineWidth = 0;
+			}else{
+				ctx.lineWidth = 2;
+			}
+			ctx.beginPath();
+		    ctx.moveTo(x,y);
+		    
+		    ctx.lineTo(x+size, y);
+		    ctx.lineTo(x+size2, y-h);
+		    ctx.lineTo(x, y);
+		    if (!clickDetection){
+		    	ctx.fill();
+		    }
+			ctx.stroke();
+		}
+		
+		// draw a square centered on x, y
+		function square(ctx, x, y, size, fill, stroke, clickDetection){
+			ctx.fillStyle = fill;
+			ctx.strokeStyle = stroke;
+			
+			var size2 = size / 2;
+			
+			y -= size2;
+			x-=size2;
+			ctx.beginPath();
+			if (clickDetection){
+				ctx.lineWidth = 0;
+			}else{
+				ctx.lineWidth = 2;
+			}
+			ctx.rect(x, y, size, size);
+			if (!clickDetection){
+		    	ctx.fill();
+			}
+			ctx.stroke();
+		}
+		
+		function circle(ctx, x, y, diameter, fill, stroke, clickDetection){
+			ctx.fillStyle = fill;
+			ctx.strokeStyle = stroke;
+			if (clickDetection){
+				ctx.lineWidth = 0;
+			}else{
+				ctx.lineWidth = 2;
+			}
+			ctx.beginPath();
+			var ray = diameter/2;
+			ctx.arc(x, y, ray, 0, 2 * Math.PI, false);
+			if (!clickDetection){
+		    	ctx.fill();
+			}
+			ctx.stroke();
+		}
+		
+		// create a in-memory cancas having all the possible snapshots (enable and disabled)
+		function prepareMetricsSnapshots(){
+			
+			snapshots.width = 6 * 40 + 220;
+			snapshots.height = 4 * 40 + 40;
+			var ctxSnapshots = snapshots.getContext("2d");
+			ctxSnapshots.lineWidth = 2;
+			var X = 10;
+			for(var disabled = 0; 1 >= disabled; disabled++){
+				
+				var yellow = "rgb(255, 255, 0)";
+				var blue = "rgb(0, 255, 255)";
+				var violet = "rgb(255, 0, 255)";
+			    var black = 'rgb(0, 0, 0)';
+				if (disabled == 1){
+					yellow = "rgb(200, 200, 200)";
+					blue = "rgb(200, 200, 200)";
+					violet = "rgb(200, 200, 200)"
+					black = "rgb(100, 100, 100)"
+				}
+				
+				X = disabled * 200 + 10;
+				var Y = 20;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.moveTo(X,Y);
+				ctxSnapshots.lineTo(X+SNAPSHOTSIZE, Y);
+				ctxSnapshots.stroke();
+				triangle(ctxSnapshots, X+(SNAPSHOTSIZE/2), Y, SNAPSHOTSIZE, yellow, black);
+				
+				X += 40;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.moveTo(X,Y);
+				ctxSnapshots.lineTo(X+SNAPSHOTSIZE, Y);
+				ctxSnapshots.stroke();
+				triangle(ctxSnapshots, X+(SNAPSHOTSIZE/2), Y, SNAPSHOTSIZE, blue, black);
+	
+				X += 40;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.moveTo(X,Y);
+				ctxSnapshots.lineTo(X+SNAPSHOTSIZE, Y);
+				ctxSnapshots.stroke();
+				triangle(ctxSnapshots, X+(SNAPSHOTSIZE/2), Y, SNAPSHOTSIZE, violet, black);
+				
+				
+				X = disabled * 200 + 10;
+				Y += 40;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.moveTo(X,Y);
+				ctxSnapshots.lineTo(X+SNAPSHOTSIZE, Y);
+				ctxSnapshots.stroke();
+				square(ctxSnapshots, X+(SNAPSHOTSIZE/2), Y, SNAPSHOTSIZE - 8, yellow, black);
+				
+				X += 40;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.moveTo(X,Y);
+				ctxSnapshots.lineTo(X+SNAPSHOTSIZE, Y);
+				ctxSnapshots.stroke();
+				square(ctxSnapshots, X+(SNAPSHOTSIZE/2), Y, SNAPSHOTSIZE - 8, blue, black);
+	
+				X += 40;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.moveTo(X,Y);
+				ctxSnapshots.lineTo(X+SNAPSHOTSIZE, Y);
+				ctxSnapshots.stroke();
+				square(ctxSnapshots, X+(SNAPSHOTSIZE/2), Y, SNAPSHOTSIZE - 8, violet, black);
+				
+				
+				X = disabled * 200 + 10;
+				Y += 40;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.moveTo(X,Y);
+				ctxSnapshots.lineTo(X+SNAPSHOTSIZE, Y);
+				ctxSnapshots.stroke();
+				circle(ctxSnapshots, X+(SNAPSHOTSIZE/2), Y, SNAPSHOTSIZE - 8, yellow, black);
+				
+				X += 40;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.moveTo(X,Y);
+				ctxSnapshots.lineTo(X+SNAPSHOTSIZE, Y);
+				ctxSnapshots.stroke();
+				circle(ctxSnapshots, X+(SNAPSHOTSIZE/2), Y, SNAPSHOTSIZE - 8, blue, black);
+	
+				X += 40;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.moveTo(X,Y);
+				ctxSnapshots.lineTo(X+SNAPSHOTSIZE, Y);
+				ctxSnapshots.stroke();
+				circle(ctxSnapshots, X+(SNAPSHOTSIZE/2), Y, SNAPSHOTSIZE - 8, violet, black);
+				
+				
+				X = disabled * 200 + 10;
+				Y += 38;
+				ctxSnapshots.lineWidth = 1;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.fillStyle = yellow;
+				ctxSnapshots.strokeStyle =  black;
+				ctxSnapshots.rect(X, Y+SNAPSHOTSIZE/2, SNAPSHOTSIZE/3, -SNAPSHOTSIZE/2);
+				ctxSnapshots.rect(X + SNAPSHOTSIZE/3*2, Y+SNAPSHOTSIZE/2, SNAPSHOTSIZE/3, -SNAPSHOTSIZE * 3/4);
+			    ctxSnapshots.fill();
+				ctxSnapshots.stroke();
+				ctxSnapshots.beginPath();
+				ctxSnapshots.fillStyle = 'rgb(125, 125, 125)';
+				ctxSnapshots.rect(X + SNAPSHOTSIZE/3, Y+SNAPSHOTSIZE/2, SNAPSHOTSIZE/3, -SNAPSHOTSIZE * 1/3);
+				ctxSnapshots.fill();
+				ctxSnapshots.stroke();
+				
+				X += 40;
+				ctxSnapshots.lineWidth = 1;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.fillStyle = blue;
+				ctxSnapshots.strokeStyle =  black;
+				ctxSnapshots.rect(X, Y+SNAPSHOTSIZE/2, SNAPSHOTSIZE/3, -SNAPSHOTSIZE/2);
+				ctxSnapshots.rect(X + SNAPSHOTSIZE/3*2, Y+SNAPSHOTSIZE/2, SNAPSHOTSIZE/3, -SNAPSHOTSIZE * 3/4);
+			    ctxSnapshots.fill();
+				ctxSnapshots.stroke();
+				ctxSnapshots.beginPath();
+				ctxSnapshots.fillStyle = 'rgb(125, 125, 125)';
+				ctxSnapshots.rect(X + SNAPSHOTSIZE/3, Y+SNAPSHOTSIZE/2, SNAPSHOTSIZE/3, -SNAPSHOTSIZE * 1/3);
+				ctxSnapshots.fill();
+				ctxSnapshots.stroke();
+				
+				X += 40;
+				ctxSnapshots.lineWidth = 1;
+				ctxSnapshots.beginPath();
+				ctxSnapshots.fillStyle = violet;
+				ctxSnapshots.strokeStyle =  black;
+				ctxSnapshots.rect(X, Y+SNAPSHOTSIZE/2, SNAPSHOTSIZE/3, -SNAPSHOTSIZE/2);
+				ctxSnapshots.rect(X + SNAPSHOTSIZE/3*2, Y+SNAPSHOTSIZE/2, SNAPSHOTSIZE/3, -SNAPSHOTSIZE * 3/4);
+			    ctxSnapshots.fill();
+				ctxSnapshots.stroke();
+				ctxSnapshots.beginPath();
+				ctxSnapshots.fillStyle = 'rgb(125, 125, 125)';
+				ctxSnapshots.rect(X + SNAPSHOTSIZE/3, Y+SNAPSHOTSIZE/2, SNAPSHOTSIZE/3, -SNAPSHOTSIZE * 1/3);
+				ctxSnapshots.fill();
+				ctxSnapshots.stroke();
+			}
+		}
+		
+		function showMetricDetails(){
+			try{
+				metricDetailId = currentMetric;
+				if (cachedMetricDetails.hasOwnProperty(metricDetailId)){
+					// This is already in the cache.
+					metricDetail = cachedMetricDetails[metricDetailId];
+					displayMetricDetails(metricDetail.description, metricDetail.metricType, metrics[metricDetailId].sumOrAvg);
+				}else{
+					getTECItemRecord([{name:'id', value:metrics[currentMetric].name}]);
+				}
+			}catch(error){
+				alert("28 " + error);
+			}
+		}
+		
+		function showComboMetrics(x, y){
+			// Draw all the metrics
+			try{
+				
+				var cboMetrics = document.getElementById("cboMetrics");
+				cboMetrics.width = 3 * 40 + 20;
+				cboMetrics.height = 4 * 40 + 40;
+				var ctxCbo = cboMetrics.getContext("2d");
+				ctxCbo.fillStyle = 'white';
+				ctxCbo.fillRect(0, 0, cboMetrics.width, cboMetrics.height);
+				
+				var X = 10;
+				var Y = 10;
+				
+				for(var snapShotType = 0; 12 > snapShotType; snapShotType++){
+					var enabled = true;
+					for (var oneMetric in metrics){
+						if (metrics[oneMetric].type == snapShotType){
+							enabled = false;
+							break;
+						}
+					}
+					drawMetricSnapshot(ctxCbo, X, Y, snapShotType, enabled, 26, 26);
+					X += 40;
+					if (X > 120){
+						X = 10;
+						Y += 40;
+					}
+				}
+				
+				ctxCbo.font = '16px Arial';
+				ctxCbo.fillStyle = "black";
+				ctxCbo.fillText("None", 10, 186);
+					
+				cboMetrics.style.position='absolute';
+				cboMetrics.style.left = x + "px"
+				cboMetrics.style.top = y + "px"
+				cboMetrics.style.border ="2px solid";
+				cboMetrics.style.visibility='visible';
+				cboMetrics.style.zIndex=20000;
+				cboMetricsVisible = true;
+			}catch(error){
+				alert(error);
+			}
+		}
+		
+		
+		
+		// Draw all the metric snapshots.
+		function drawMetrics(){
+			// Create (prepare) the combo box for the metrics
+			try{
+			var cboMetrics = document.getElementById("cboMetrics");
+			cboMetrics.width = 3 * 40 + 20;
+			cboMetrics.height = 4 * 40 + 40;
+			var ctxCbo = cboMetrics.getContext("2d");
+			ctxCbo.fillStyle = 'white';
+			ctxCbo.fillRect(0, 0, cboMetrics.width, cboMetrics.height);
+
+			
+			
+
+			cboMetrics.onmousemove = function(e){
+				try{
+					var cboMetrics = document.getElementById("cboMetrics");
+					// check if on a picture.
+					var SNAPSHOTSIZE2 = parseInt(SNAPSHOTSIZE / 2)
+					var rect = cboMetrics.getBoundingClientRect();   // get abs. position of canvas
+					var mouseX = parseInt(e.clientX - rect.left) - SNAPSHOTSIZE2 ;            // adjust mouse-position
+					var mouseY = parseInt(e.clientY - rect.top);
+					
+					if (mouseY > 170){
+						// the "None"
+						var ctxCboMetrics = cboMetrics.getContext("2d");
+						ctxCboMetrics.lineWidth = 2;
+						ctxCboMetrics.strokeStyle = 'rgb(125, 0,0)';
+						snapshotCboFrameX = 5;
+						snapshotCboFrameY = 165;
+						ctxCboMetrics.beginPath();
+						ctxCboMetrics.rect(snapshotCboFrameX, snapshotCboFrameY, cboMetrics.width - 10, SNAPSHOTSIZE+ 4);
+						ctxCboMetrics.stroke();
+						currentCboSnapshot = -1;
+						return 0;
+					}else{
+						var mX = 10;
+						var mY = 20;
+						//debug("Mouse : " + mouseX + "," + mouseY);
+						for(var oneMetricType = 0; 12 > oneMetricType; oneMetricType++){
+							//debug("zone : " + mX + "," + mY);
+							if (mouseX >= mX - SNAPSHOTSIZE2){
+								if ((mX + SNAPSHOTSIZE2) >= mouseX){
+									
+									if (mouseY >= mY - SNAPSHOTSIZE2) {
+										if (mY + SNAPSHOTSIZE2 >= mouseY){
+											
+											var ctxCboMetrics = cboMetrics.getContext("2d");
+											ctxCboMetrics.imageSmoothingEnabled = false;
+											ctxCboMetrics.webkitImageSmoothingEnabled = false;
+											ctxCboMetrics.mozImageSmoothingEnabled = false;
+											ctxCboMetrics.msImageSmoothingEnabled = false;
+											ctxCboMetrics.oImageSmoothingEnabled = false;
+											if (snapshotCboFrameX > 0){
+												
+												// erase the preceeding
+												ctxCboMetrics.lineWidth = 2;
+												ctxCboMetrics.strokeStyle = 'white';
+												ctxCboMetrics.beginPath();
+												if(currentCboSnapshot == -1){
+													ctxCboMetrics.rect(snapshotCboFrameX, snapshotCboFrameY, cboMetrics.width - 10, SNAPSHOTSIZE+ 4);
+												}else{
+													ctxCboMetrics.rect(snapshotCboFrameX, snapshotCboFrameY, SNAPSHOTSIZE+4, -(SNAPSHOTSIZE+4));
+												}
+												ctxCboMetrics.stroke();
+											}
+											for (var oneMetric in metrics){
+												if (metrics[oneMetric].type == oneMetricType){
+													snapshotCboFrameX = 0;
+													snapshotCboFrameY = 0;
+													currentCboSnapshot = -2;
+													return 0;
+												}
+											}
+											ctxCboMetrics.lineWidth = 2;
+											ctxCboMetrics.strokeStyle = 'rgb(125, 0,0)';
+											snapshotCboFrameX = mX-2;
+											snapshotCboFrameY = mY+SNAPSHOTSIZE2+2;
+											ctxCboMetrics.beginPath();
+											ctxCboMetrics.rect(snapshotCboFrameX, snapshotCboFrameY, SNAPSHOTSIZE+ 4, -(SNAPSHOTSIZE+4));
+											ctxCboMetrics.stroke();
+											currentCboSnapshot = oneMetricType;
+											return 0;
+										}
+									
+									}
+								}
+							} 
+							mX += 40;
+							if (mX > 120){
+								mX = 10;
+								mY += 40;
+							}
+						}
+					}
+					
+					if (snapshotCboFrameX > 0){
+						var ctxCboMetrics = cboMetrics.getContext("2d");
+						ctxCboMetrics.imageSmoothingEnabled = false;
+						ctxCboMetrics.webkitImageSmoothingEnabled = false;
+						ctxCboMetrics.mozImageSmoothingEnabled = false;
+						ctxCboMetrics.msImageSmoothingEnabled = false;
+						ctxCboMetrics.oImageSmoothingEnabled = false;
+						// erase the border
+						ctxCboMetrics.lineWidth = 2;
+						ctxCboMetrics.strokeStyle = 'white';
+						ctxCboMetrics.beginPath();
+						if(currentCboSnapshot == -1){
+							ctxCboMetrics.rect(snapshotCboFrameX, snapshotCboFrameY, cboMetrics.width - 10, SNAPSHOTSIZE+ 4);
+						}else{
+							ctxCboMetrics.rect(snapshotCboFrameX, snapshotCboFrameY, SNAPSHOTSIZE+4, -(SNAPSHOTSIZE+4));
+						}
+						ctxCboMetrics.stroke();
+						snapshotCboFrameX = 0;
+						snapshotCboFrameY = 0;
+						currentCboSnapshot = -2;
+					}
+				}catch(error){
+					alert("mouse move " + error);
+				}
+
+			}
+
+			
+			// draw the metrics (first time)
+			var cvMetrics = document.getElementById("metrics");
+			drawAllMetricsSnapshots(cvMetrics);
+			
+			cboMetrics.onmouseup = function(e){
+				try{
+					if (currentSnapshot >= 0){
+						if (currentCboSnapshot >= -1){
+							metrics[currentSnapshot].type = currentCboSnapshot;
+							// Hide the combo
+							cboMetrics.style.visibility='hidden';
+							cboMetricsVisible = false;
+							currentCboSnapshot = -2;
+							// hide the focus frame - combo
+							var ctxCboMetrics = cboMetrics.getContext("2d");
+							ctxCboMetrics.lineWidth = 2;
+							ctxCboMetrics.strokeStyle = 'white';
+							ctxCboMetrics.beginPath();
+							ctxCboMetrics.rect(snapshotCboFrameX, snapshotCboFrameY, SNAPSHOTSIZE+4, -(SNAPSHOTSIZE+4));
+							ctxCboMetrics.stroke();
+							snapshotCboFrameX = 0;
+							snapshotCboFrameY = 0;
+							
+							// Refresh all pictures. (easier than figuring out which one)
+							drawAllMetricsSnapshots(document.getElementById("metrics"));
+							
+							// hide the focus frame - metrics
+							var ctxMetrics = cvMetrics.getContext("2d");
+							ctxMetrics.lineWidth = 2;
+							ctxMetrics.strokeStyle = 'white';
+							ctxMetrics.beginPath();
+							ctxMetrics.rect(snapshotFrameX, snapshotFrameY, SNAPSHOTSIZE+4, -(SNAPSHOTSIZE+4));
+							ctxMetrics.stroke();
+							snapshotFrameX = 0;
+							snapshotFrameY = 0;
+							// finally refresh the graph. Needs to be done if not in "live mode"
+							refresh(true);
+							/*
+							* Persist the information in cookie
+							*/
+							saveSettings();
+							
+						}
+					}
+				}catch(error){
+					alert("cvMetrics.onmouseup :" + error);
+				}
+			}
+
+			
+			cvMetrics.onmouseup = function(e){
+				try{
+					var rect = cvMetrics.getBoundingClientRect();
+					if ((e.clientX - rect.left) > (rect.width - 20)){
+						var clickTime = new Date().getTime();
+						if (lastClickTime == 0){
+							lastClickTime = clickTime;
+							nbClick++;
+						}else{
+							if (500 > (clickTime - lastClickTime)){
+								nbClick++;
+							}else{
+								nbClick = 0;
+							}
+							if (nbClick > 6){
+								// Toggle the simulation mode.
+								document.getElementById("simulationCheckBox").style.visibility='visible';
+							}
+							lastClickTime = clickTime;
+						}
+					}
+				
+					if (currentSnapshot >= 0){
+						currentCboSnapshot = -2;
+						if(!cboMetricsVisible){
+							showComboMetrics(e.clientX + window.pageXOffset , e.clientY + window.pageYOffset);
+						}else{
+							var cboMetrics = document.getElementById("cboMetrics");
+							cboMetrics.style.visibility='hidden';
+							cboMetricsVisible = false;
+						}
+					}else if (currentMetric >= 0){
+						showMetricDetails();
+					}
+					
+				}catch(error){
+					alert(error);
+				}
+			}
+			
+			
+			cvMetrics.onmousemove = function(e){
+				try{
+					if (cboMetricsVisible){
+						return;
+					}
+					var cvMetrics = document.getElementById("metrics");
+					// check if on a picture.
+					var SNAPSHOTSIZE2 = parseInt(SNAPSHOTSIZE / 2)
+					var rect = cvMetrics.getBoundingClientRect();   // get abs. position of canvas
+					var mouseX = parseInt(e.clientX - rect.left) - SNAPSHOTSIZE2 ;            // adjust mouse-position
+					var mouseY = parseInt(e.clientY - rect.top);
+					
+					var mX = 10;
+					var mY = 20;
+					//debug("Mouse : " + mouseX + "," + mouseY);
+					var done = false;
+					var ctxMetrics = cvMetrics.getContext("2d");
+					for(var oneMetric in metrics){
+						//debug("zone : " + mX + "," + mY);
+						if (mouseX >= mX - SNAPSHOTSIZE2){
+							if ((mX + SNAPSHOTSIZE2) >= mouseX){
+								if (mouseY >= mY - SNAPSHOTSIZE2) {
+									if (mY + SNAPSHOTSIZE2 >= mouseY){
+
+										hideMetricFocus(ctxMetrics);
+										if (oneMetric != currentMetric){
+											hideSnapshotFocus(ctxMetrics);
+											
+											ctxMetrics.lineWidth = 2;
+											ctxMetrics.strokeStyle = 'rgb(125, 0,0)';
+											snapshotFrameX = mX-2;
+											snapshotFrameY = mY+SNAPSHOTSIZE2-3;
+											ctxMetrics.beginPath();
+											ctxMetrics.rect(snapshotFrameX, snapshotFrameY, SNAPSHOTSIZE+ 4, -(SNAPSHOTSIZE+4));
+											ctxMetrics.stroke();
+											currentSnapshot = oneMetric;
+										}
+										return 0;
+									}
+								}
+							}
+						} 
+						if (!done){
+							ctxMetrics.font = '16px Arial';
+							ctxMetrics.textAlign = 'left';
+							var textWidth = ctxMetrics.measureText(metrics[oneMetric].caption).width;
+							// test for text
+							if (mouseX >= mX + SNAPSHOTSIZE){
+								if ((mX + SNAPSHOTSIZE + textWidth + 10) >= mouseX){
+									if (mouseY >= mY - SNAPSHOTSIZE2 + 2) {
+										if (mY + SNAPSHOTSIZE2 - 5 >= mouseY){
+											
+											hideSnapshotFocus(ctxMetrics);
+											if (oneMetric != currentMetric){
+												hideMetricFocus(ctxMetrics);
+												
+												ctxMetrics.lineWidth = 2;
+												ctxMetrics.strokeStyle = 'rgb(0, 0, 125)';
+												
+												underlineTop = mY+3;
+												underlineLeft = mX + SNAPSHOTSIZE + 10;
+												underlineLength = textWidth;
+												ctxMetrics.beginPath();
+												ctxMetrics.moveTo(underlineLeft, underlineTop);
+												ctxMetrics.lineTo(underlineLeft + textWidth, underlineTop);
+												ctxMetrics.stroke();
+												currentMetric = oneMetric;
+											}
+											return 0;
+										}
+									}
+								}
+							} 
+						}
+						mY += 30;
+						if (mY > 170){
+							mY = 20;
+							mX += 220;
+						}
+					}
+
+					hideSnapshotFocus(ctxMetrics);
+					hideMetricFocus(ctxMetrics);
+
+				}catch(error){
+					alert("mouse move " + error);
+				}
+				
+				//	debug("X = " + e.x);
+			}
+			
+			}catch(error){
+				alert("draw metrics ... : " + error);
+			}
+			
+		}
+
+		function hideSnapshotFocus(ctx){
+			if (snapshotFrameX > 0){
+				ctx.imageSmoothingEnabled = false;
+				ctx.webkitImageSmoothingEnabled = false;
+				ctx.mozImageSmoothingEnabled = false;
+				ctx.msImageSmoothingEnabled = false;
+				ctx.oImageSmoothingEnabled = false;
+				ctx.lineWidth = 2;
+				ctx.strokeStyle = 'white';
+				ctx.beginPath();
+				ctx.rect(snapshotFrameX, snapshotFrameY, SNAPSHOTSIZE+4, -(SNAPSHOTSIZE+4));
+				ctx.stroke();
+				snapshotFrameX = -1;
+				snapshotFrameY = -1;
+				currentSnapshot = -1;
+			}
+		}
+		
+		function hideMetricFocus(ctx){
+			if (underlineLeft > 0){
+				ctx.imageSmoothingEnabled = false;
+				ctx.webkitImageSmoothingEnabled = false;
+				ctx.mozImageSmoothingEnabled = false;
+				ctx.msImageSmoothingEnabled = false;
+				ctx.oImageSmoothingEnabled = false;
+				ctx.lineWidth = 2;
+				ctx.strokeStyle = 'white';
+				ctx.beginPath();
+				ctx.moveTo(underlineLeft, underlineTop);
+				ctx.lineTo(underlineLeft + underlineLength, underlineTop);
+				ctx.stroke();
+				underlineLeft = -1;
+				underlineTop = -1;
+				underlineLength = -1;
+				currentMetric = -1;
+			}
+		}
+		
+		
+		function drawAllMetricsSnapshots(destCanvas){
+			
+			var ctxMetrics = destCanvas.getContext("2d");
+			ctxMetrics.clearRect(0, 0, destCanvas.width, destCanvas.height);
+			ctxMetrics.font = '16px Arial';
+			ctxMetrics.textAlign = 'left';
+			var mX = 10;
+			var mY = 4;
+			for(var oneMetric in metrics){
+				
+				if (metrics[oneMetric].type >= 0){
+					// show the snapshot.
+					ctxMetrics.fillStyle = 'rgb(0,0,0)';
+					drawMetricSnapshot(ctxMetrics, mX , mY, metrics[oneMetric].type, true, 26, 26);
+				}else{
+					ctxMetrics.fillStyle = 'rgb(150,150,150)';
+				}
+				ctxMetrics.fillText(metrics[oneMetric].caption, mX + 35, mY+16);
+				mY += 30;
+				if (mY > 170){
+					mY = 4;
+					mX += 220;
+				}
+			}
+		}
+		
+		function drawMetricSnapshot(destCtx, x, y, snapshotId, enabled, sizeX, sizeY){
+			var mX = parseInt(snapshotId) % 3;
+			var mY = parseInt(snapshotId / 3);
+			var delta = 0;
+			if (!enabled){
+				delta = 200;
+			}
+			//debug(snapshotId + " : (" + mX + ", " + mY + ")");
+			destCtx.drawImage(snapshots, mX * 40 + 10 + delta, mY * 40 + 10, 26, 26,
+					x, y, sizeX, sizeY);
+		}
+		
+		
+		function drawScale(metricIdx, metricCounter) {
+			if (scales.length == 0){
+				return;
+			}
+			try{
+				var canvas = document.getElementById("scales");
+				var ctx = canvas.getContext("2d");
+			
+				
+				ctx.font = '9px Arial';
+				ctx.textAlign = 'center';
+				var scaleColor = scalesColor[metrics[metricIdx].type % 3];
+				ctx.fillStyle = scaleColor;
+				ctx.strokeStyle = scaleColor;
+				ctx.lineWidth = 1;
+
+				var bigWidth = 20;
+				var leftShift = metricCounter *(bigWidth+10); // need place for the numbers
+				leftShift += scaleDelta;
+				var smallWidth = 10;
+
+				//canvas.width = (metricCounter +1) * (bigWidth+10);
+				
+				var val = scales[metricIdx].max;
+				
+				ctx.beginPath();
+				var step = scales[metricIdx].max / 6;
+				if (metricCounter > 0){
+					ctx.clearRect(leftShift, 0, leftShift+bigWidth, 454);
+				}else{
+					ctx.clearRect(0, 0, 200, 504);
+					scaleScrollRight = false;
+				}
+				drawMetricSnapshot(ctx, leftShift+2, 32, metrics[metricIdx].type, true, 18, 18);
+				var centerLineX = leftShift + bigWidth /2;
+				for (var y = 52; 450 > y; y +=66.66){
+					if (y == 52){
+						ctx.moveTo(centerLineX, y + 12);
+						ctx.lineTo(centerLineX, y+54);
+					}else{
+						ctx.moveTo(centerLineX, y);
+						ctx.lineTo(centerLineX, y+54);
+					}
+				}
+				ctx.lineTo(centerLineX, 452);  // Last segment (bottom)
+				var big = true;
+				for (var y = 52; 450 > y; y +=33.333){
+					var txtVal = val.toString();
+					if (txtVal.length >= 5){
+						txtVal = txtVal.substring(0,txtVal.length -3) + " K";
+					}
+					if (big){
+						if (y == 52){
+							ctx.fillText(txtVal, centerLineX , 62);
+						}else{
+							ctx.fillText(txtVal, centerLineX, y-2);
+						}
+						ctx.moveTo(leftShift, y);
+						ctx.lineTo(leftShift + bigWidth, y);
+						val -= step;
+					}else{
+						ctx.moveTo(leftShift + (bigWidth - smallWidth)/2, y);
+						ctx.lineTo(leftShift + (bigWidth + smallWidth)/2, y);
+					}
+					big = !big;
+					
+				}
+				// Last, no need to specify 0
+				ctx.moveTo(leftShift , 452);
+				ctx.lineTo(leftShift + bigWidth, 452);
+				ctx.stroke();
+	
+				var pX = 0;
+				var pY = 0;
+			    // draw the scroll buttons (left)
+			    pX = 2;
+				pY = 455;
+			    if (0 > scaleDelta){
+					ctx.fillStyle = 'rgb(150,150,150)';
+					ctx.strokeStyle = 'rgb(0,0,0)'
+					pX = 2;
+					pY = 455;
+					ctx.fillRect(pX,pY,15,15); 
+					ctx.beginPath();
+					ctx.fillStyle = 'rgb(255,255,255)';
+					// draw a triangle
+					ctx.lineTo(pX+12, pY+2);
+					ctx.lineTo(pX+12, pY+13);
+					ctx.lineTo(pX+3, pY+8);
+					ctx.lineTo(pX+12, pY+2);
+					ctx.stroke();
+					ctx.fill();
+					scaleScrollLeft = true;
+			    }else{
+			    	ctx.clearRect(pX,pY,16,16);
+			    	scaleScrollLeft = false;
+			    }
+				pX = 85;
+				pY = 455;
+				
+			    if ((leftShift + bigWidth)>=100){
+			    	if (!scaleScrollRight){
+						ctx.fillStyle = 'rgb(150,150,150)';
+						ctx.fillRect(pX,pY,16,16); 
+						// draw a triangle
+						ctx.beginPath();
+						ctx.fillStyle = 'rgb(255,255,255)';
+						ctx.lineTo(pX+3, pY+2);
+						ctx.lineTo(pX+3, pY+13);
+						ctx.lineTo(pX+13, pY+8);
+						ctx.lineTo(pX+2, pY+2);
+						ctx.stroke();
+						ctx.fill();
+						scaleScrollRight = true;
+			    	}
+			    }
+			
+			}catch(error){
+				alert("11"  + error);
+			}
+			
+		}
+		
+		function scrollScales(x, y){
+			if (y >= 455){
+				if (470 >= y){
+					// this is somewhere down.
+					if (scaleScrollLeft){
+						if (x >= 2){
+							if (17 >= x){
+								// scroll left
+								scaleDelta += 10;
+								if (scaleDelta > 0){
+									scaleDelta = 0;
+								}
+								refresh(-1,-1);
+								return;
+							}
+						}
+					}
+					if (scaleScrollRight){
+						if (x >= 85){
+							if (102 >= x){
+								// scroll left
+								scaleDelta -= 10;
+	
+								refresh(-1,-1);
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
+		function drawTimeLine(deltaX, time){
+			var canvas = document.getElementById("timeLine");
+			var ctx = canvas.getContext("2d");
+			var localDelta = delta - GRIDSIZE/2 - deltaX;
+			if (!LIVE){
+				localDelta = GRIDSIZE/2 - deltaX ;
+			}
+			//var time = NOW;
+			
+			x = WIDTH;
+			y = 0;
+			font = 15;
+			lineHeight = 15; // this is guess and check as far as I know
+			ctx.clearRect(0, 0, WIDTH, 100);
+			ctx.font = font + 'px Arial';
+			ctx.textAlign = 'right';
+			for (var x = WIDTH; x > 0; x -= GRIDSIZE) {
+				ctx.save();
+				ctx.translate(x - localDelta, y);
+				ctx.rotate(-Math.PI / 4);
+				ctx.fillText(formatTime(time), 0, lineHeight / 2);
+				time -= timeUnit * 10000;
+				if (0 > time){
+					time += fullDay;
+				}else if (time > fullDay){
+					time -= fullDay;
+				}
+				ctx.restore();
+			}
+		}
+		
+		
+		
+		function prepareBackGround() {
+			var bgWidth = WIDTH + 3*GRIDSIZE;
+			var bgHeight = HEIGHT;
+			try {
+				backGround.width = bgWidth;
+				backGround.height = bgHeight;
+				//var grid = document.getElementById("grid");
+				var ctx = backGround.getContext("2d");
+				ctx.imageSmoothingEnabled = false;
+				ctx.webkitImageSmoothingEnabled = false;
+				ctx.mozImageSmoothingEnabled = false;
+				ctx.msImageSmoothingEnabled = false;
+				ctx.oImageSmoothingEnabled = false;
+				//ctx.clearRect(0, 0, grid.width, grid.height);
+				ctx.fillStyle = 'rgb(100, 100, 100)';
+				ctx.fillRect(0, 0, bgWidth, bgHeight);
+				ctx.strokeStyle = 'rgb(0, 200, 0)';
+				ctx.beginPath();
+				for (var idx = bgWidth; idx > 0; idx -= GRIDSIZE) {
+					ctx.moveTo(idx, 0);
+					ctx.lineTo(idx, bgHeight);
+				}
+				for (var idx = bgHeight; idx > 0; idx -= GRIDSIZE) {
+					ctx.moveTo(0, idx);
+					ctx.lineTo(bgWidth, idx);
+				}
+				ctx.stroke();
+
+			} catch (error) {
+				alert("12 " + error);
+			}
+		}
+
+
+		function drawOnCanvas() {
+			try {
+				var canvas = document.getElementById("graph");
+				var ctx = canvas.getContext("2d");
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.fillStyle = 'rgb(200, 0, 0)';
+			} catch (error) {
+				alert("1 " + error);
+			}
+		}
+	
+	</script>
+</h:head>
+
+<ui:include src="include.xhtml" />
+
+<h:body onload="load();">
+	<h:form id="form1">
+
+		<p:growl id="notifications" />
+
+		<p:remoteCommand name="initializeBean"
+			actionListener="#{tecmonitor.initialize()}"
+			oncomplete="initDone(xhr, status, args);" />
+
+		<p:remoteCommand name="getServerData"
+			actionListener="#{tecmonitor.tick()}"
+			oncomplete="dataAvailable(xhr, status, args);" />
+
+		<p:remoteCommand name="getTECItemRecord"
+			actionListener="#{tecmonitor.getTECItemRecord()}"
+			oncomplete="returnOfGetTECItemRecord(xhr, status, args);" />
+
+		<p:remoteCommand name="updateTECItemRecord"
+			actionListener="#{tecmonitor.updateTECItemRecord()}"
+			oncomplete="updatedTECItemRecord(xhr, status, args);" />
+
+		<p:remoteCommand name="getMetricNames"
+			actionListener="#{tecmonitor.getMetricNames()}"
+			oncomplete="returnOfGetMetricNames(xhr, status, args);" />
+
+
+		<img id="imgToggle" src="resources/images/toggle3.png" style="position: absolute;visibility: hidden"/>
+
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 900px">
+					<div style="height: 550px; width: 900px; background-color: white">
+						<h:graphicImage value="/resources/images/logo.png"
+							onclick="document.location.href='/TAFJEE/index.xhtml'" />
+						
+						<div id="simulationCheckBox" style="position: absolute; left: 610px; top: 10px; width: 200px; background-color: yellow; visibility: hidden">
+						 	    <h:outputText value="  Simulation mode : " style="font-family:Arial" />
+	        					<p:selectBooleanCheckbox value="#{tecmonitor.simulationMode}">
+	            					<p:ajax update="notifications" listener="#{tecmonitor.notifySimulation}" />
+	        					</p:selectBooleanCheckbox>
+						
+						</div>
+						
+						<h3 style="font-size:18px; font-family:Arial; text-align: right; position: absolute; left: 340px; top: 53px; width: 150px">Time unit :</h3>
+
+						<select id="timeUnit" style="font-size:14px; font-family:Arial; position: absolute; left: 500px; top: 65px"
+						    onchange="changeTimeUnit()">
+							<option value="1">10 seconds</option>
+							<option value="3" selected="selected">30 seconds</option>
+							<option value="6">1 minute</option>
+							<option value="180">30 minutes</option>
+							<option value="360">1 hour</option>
+						</select>
+
+						<h3 id="hNow" style="font-size:18px; font-family:Arial; border: 2px solid; text-align: center; position: absolute; left: 640px; top: 53px; width: 120px"
+						title="Time of top-right column.">Now</h3>
+
+						<img id="liveFlag" src="resources/images/live.gif" style="position: absolute; left: 780px; top: 79px; visibility: visible"/>
+						<img id="notLiveFlag" src="resources/images/notLive.gif" style="position: absolute; left: 780px; top: 79px; visibility: hidden"
+						title="Click to come back to live mode"
+						onclick="setLiveMode();"/>
+
+						<canvas id="graph" width="800" height="400"
+							style="border: 2px solid; position: absolute; left: 10px; top: 100px">Your browser does not support HTML5 Canvas.</canvas>
+						<canvas id="scales" width="100" height="504"
+							style="border: none; position: absolute; left: 815px; top: 50px">Your browser does not support HTML5 Canvas.</canvas>
+						<canvas id="timeLine" width="800" height="100"
+							style="border: none; position: absolute; left: 10px; top: 510px"
+							title="Time line, scroll left/right to move in time. &#10;Going in 'future' brings back the live mode">Your browser does not support HTML5 Canvas.</canvas>
+
+					</div>
+				</td>
+				<td>
+					<div id="metricsAndDetails" style="height: 550px; width: 920px; background-color: white">
+						<canvas id="cboMetrics" width="200" height="150"
+							style="border: 2px solid; position: absolute; left: 500px; top: 100px; visibility: hidden; zIndex: 20000; background-color: red" />
+
+						<p:accordionPanel multiple="true" activeIndex="0,1" id="mainpanel">
+							<p:tab title="Metrics">
+								<div style="height: 200px">
+									<canvas id="metrics" width="900px" height="200px"
+										style="border: 2px solid; position: absolute; left: 10px; top: 10px">Your browser does not support HTML5 Canvas.</canvas>
+
+								</div>
+							</p:tab>
+							<p:tab title="Details">
+								<div style="height: 90px">
+									<canvas id="details" width="890px" height="90px"
+										style="border: 2px solid; position: absolute; left: 10px; top: 10px; padding-top: 10px; padding-left: 10px">Your browser does not support HTML5 Canvas.</canvas>
+								</div>
+							</p:tab>
+							<p:tab title="Multi-tenants" rendered="#{tecmonitor.isMultitenant()}">
+								<div style="height: 60px">
+									<canvas id="multitenant" width="900px" height="60px"
+										style="border: 2px solid; position: absolute; left: 10px; top: 10px">Your browser does not support HTML5 Canvas.</canvas>								
+  								    <p:selectOneMenu id="tenantId" value="#{tecmonitor.tenantId}" style="margin-top: 10px" onchange="changeTenant()">
+									   <f:selectItem itemLabel="Select tenant" itemValue="" />
+									   <f:selectItems value="#{tecmonitor.tenantIds}" />
+									</p:selectOneMenu>
+								</div>
+							</p:tab>
+						</p:accordionPanel>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</h:form>
+
+
+	<h:form id="drilldownForm">
+		<p:remoteCommand name="getServerDrillDown" immediate="false"
+			actionListener="#{tecmonitor.updateDrillDown}" update="tblDrillDown" />
+
+  <!-- 	 <h5 id="debug">debug</h5> -->     	 
+		<h3 id="zoomTitle" style="font-size:18px; font-family:Arial;"></h3>
+		<p:fieldset style="margin-bottom:20px;font-size:14px; font-family:Arial">
+			<p:dataTable id="tblDrillDown" var="tableContent" stickyHeader="true"
+				value="#{tecmonitor.drillDown}"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+				paginator="true" rows="30" style="margin-bottom:20px"
+				resizableColumns="true"
+				tableStyle="width:auto;table-layout: auto">
+				<f:facet name="{Exporters}">
+					<h:panelGroup>
+						<h:commandLink>
+							<p:graphicImage value="/resources/images/pdf.png" width="24"/>
+							<p:dataExporter type="pdf" target="tblDrillDown" fileName="TECData"/>
+						</h:commandLink>
+
+						<h:commandLink>
+							<p:graphicImage value="/resources/images/csv.png" width="24"/>
+							<p:dataExporter type="csv" target="tblDrillDown" fileName="TECData" />
+						</h:commandLink>
+					</h:panelGroup>
+				</f:facet>
+				<p:columns value="#{tecmonitor.columns}" var="column">
+					<f:facet name="header">
+						<h:outputText value="#{column.header}"/>
+					</f:facet>
+					<h:outputText value="#{tableContent.getValue(column.property)}" />
+				</p:columns>
+			</p:dataTable>
+		</p:fieldset>
+	</h:form>
+</h:body>
+
+</html>

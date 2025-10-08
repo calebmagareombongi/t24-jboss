@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Logger servlet</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="../include.xhtml" />
+
+<h:body>
+	<h:form id="loggerForm">
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>Logger servlet</h1>
+
+		<h3>You can change log level and view log file content. Please
+			refer to TAFJTrace configuration file and to TAFJ documentation for
+			more information.</h3>
+		<h3 />
+
+		<p:messages id="msgs" />
+
+
+		<p:panel id="page" styleClass="info">
+
+			<p:panel id="tenantSelection" styleClass="info"
+				rendered="#{loggerView.isMultitenant()}" header="Multitenant system">
+				<h:panelGrid id="tenantGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+					<h:outputText value="Tenant ID:" />
+					<p:selectOneMenu id="tenantId" value="#{loggerView.tenantId}"
+						valueChangeListener="#{loggerView.selectTenant}"
+						onchange="submit()">
+						<f:selectItem itemLabel="Select tenant" itemValue="" />
+						<f:selectItems value="#{loggerView.tenantIds}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="logPaths" styleClass="info"
+				header="Configuration and paths"
+				rendered="#{loggerView.renderPanel()}">
+				<h:panelGrid id="logPathGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<h:outputText value="Configuration file:" />
+					<h:outputText value="#{loggerView.getConfFilePath()}" />
+
+					<h:outputText value="TAFJ log directory:" />
+					<h:outputText value="#{loggerView.getLogDirectoryPath()}" />
+
+					<h:outputText value="T24 log directory:" />
+					<h:outputText value="#{loggerView.getT24LogDirectoryPath()}" />
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="changeConfiguration"
+				header="Change logger configuration" styleClass="info"
+				rendered="#{loggerView.renderChangeLogLevel()}">
+
+
+				<h3>Changing log level to more verbose value reduces
+					performance drastically. This should be avoided in production
+					environment.</h3>
+
+				<h:panelGrid id="changeLevelGrid" columns="2"
+					style="margin-bottom:10px" cellpadding="5">
+
+					<h:outputText
+						value="Runtime change, apply log level values provided below instead of TAFJTrace configuration." />
+					<p:commandButton id="changeLevel" global="true"
+						value="Change level" action="#{loggerView.changeLevel}"
+						update="loggerTable" style="width:120px">
+						<p:confirm header="Confirmation" message="Change log level?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+
+					<h:outputText
+						value="Revert modifed log level values to configuration provided in TAFJTrace configuration." />
+					<p:commandButton id="reset" value="Reload configuration"
+						action="#{loggerView.reloadConfiguration}" update="loggerTable"
+						style="width:120px">
+						<p:confirm header="Confirmation"
+							message="Reload default log configuration?" icon="ui-icon-alert" />
+					</p:commandButton>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="loggerTable" header="Available loggers"
+				styleClass="info" rendered="#{loggerView.renderPanel()}">
+				<h:panelGrid id="loggerGrid" columns="3" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<h:dataTable value="#{loggerView.loggers}" var="logger">
+						<h:column>
+							<h:outputText value="#{logger.name}" />
+						</h:column>
+						<h:column>
+							<p:selectOneMenu value="#{logger.level}">
+								<f:selectItems value="#{loggerView.logLevels}" />
+							</p:selectOneMenu>
+						</h:column>
+						<h:column>
+							<p:commandButton id="viewLog" global="true" value="View"
+								action="#{loggerView.viewLog(logger)}" update=":loggerForm:page"
+								style="width:80px">
+							</p:commandButton>
+						</h:column>
+					</h:dataTable>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="logFileContent" header="Log file" styleClass="info"
+				rendered="#{loggerView.renderLogs()}">
+				<h:panelGrid id="logsGrid" columns="1" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<h:outputText value="#{loggerView.getSelectedLogFile()}" />
+
+					<p:commandButton id="closeLogs" global="true" value="Close log"
+						action="#{loggerView.closeLogs()}" update=":loggerForm:page"
+						style="width:100px">
+					</p:commandButton>
+
+					<p:dataTable id="logsTable" var="log" value="#{loggerView.logs}">
+						<p:column filterBy="#{log}" filterMatchMode="contains">
+							<h:outputText value="#{log}" />
+						</p:column>
+					</p:dataTable>
+
+				</h:panelGrid>
+			</p:panel>
+		</p:panel>
+
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+
+	</h:form>
+</h:body>
+</html>

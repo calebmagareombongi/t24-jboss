@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>TAFJEE - Interaction</title>
+<link href="/TAFJEE/css/tafj.css" rel="stylesheet" type="text/css" />
+<link href="/TAFJEE/css/prettify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="/TAFJEE/js/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+	<script src="/TAFJEE/js/header.js"></script>
+	<br />
+	<h1>TAFJEE entry points</h1>
+	<h2 id="SYNCWEB">Synchronous invocation - Webservice</h2>	
+	<li><a href="/TAFJEE/xhtml/webservices/dashboard.xhtml">Webservices</a>
+	<br />
+	<br />
+	<br />
+	Webservice invocation is deployment agnostic. The call is done through
+	the HTTP channel of the application server.
+	<br />
+	<typ>TAFJJEEClientFactory</typ>
+	arguments to get a webservice client are the server hostname and the
+	http port of the application server.
+	<br /> In case of secured webservice, user name and password have to
+	be set at client level.
+	<pre class="prettyprint">
+//Get a Webservice client from server 10.21.2.94
+TAFJJEEClient client = TAFJJEEClientFactory.getWebServiceClient("10.21.2.94", "8080");
+		
+//Process an OFS request, method argument is the OFS request
+String response = client.processOFS("ENQUIRY.SELECT,,INPUTT/123456,%CURRENCY");
+		
+//Invoke a subroutine, method arguments are the Subroutine name and an array of subroutine parameters 
+String[] response = client.callAt("EXCHRATE", new String[] { "1", "CHF", "500", "GBP", "", "", "", "", "", "" }); 	
+
+//Execute a program in background. A TRunCallObject instance is used to setup the invocation parameters (command and optional user input datas).
+//It returns a TRunCallObject which contains the response status (0 success / 1 failure) and eventual program output. 
+import com.temenos.tafj.sb.TRunCallObject;
+//Execute program and get response back
+TRunCallObject response = client.trun(new TRunCallObject("PROGRAM.NAME ARG1 ARG2"));
+
+//In case of secured services, setup username and password for the BASIC Authentication
+client.setUser("tafj");
+client.setPassword("tafjSecretPassword");
+
+	</pre>
+	<table border="0">
+		<tr>
+			<td><img src="/TAFJEE/images/WebServiceInteraction.png"
+				border="0" /></td>
+			<td valign="top"><br /> <br /> <br /> <br /> <br /> <br />
+				<br /> <br /> <br /> <br /> The client application classpath
+				must contain <b>JAX-RS and JSon client libraries</b>. <br /> <br />
+				<br /> <br /> <br /> <br /> <br /> <br /> <br /> JAXRS
+				libraries can be extracted from <b>TAFJJEE_EAR.ear/TAFJRestServices.war/WEB-INF/lib</b>.
+			</td>
+		</tr>
+	</table>
+	<br />
+	<br />
+	<table>
+		<tr>
+			<td width="10%" align="left"><a href="synchronous.html"><img
+					src="/TAFJEE/images/prev.jpg" border="0" />Prev</a></td>
+			<td width="80%" align="center">&nbsp</td>
+			<td width="10%" align="right" text-align="center"><a
+				href="ejb.html">Next<img src="/TAFJEE/images/next.jpg"
+					border="0" /></a></td>
+		</tr>
+	</table>
+</body>
+</html>

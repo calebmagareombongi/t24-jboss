@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="TAFJWebSocket" version="3.0">
+	<display-name>TAFJWebSocket</display-name>
+
+	<env-entry>
+		<env-entry-name>T24ApiEjbLookup</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>java:global/TAFJJEE_EAR/TAFJJEE_EJB/StatefulApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanStatefulLocal</env-entry-value>
+	</env-entry>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>TAFJWebSocket</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>TAFJAdmin</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-role>
+		<role-name>TAFJAdmin</role-name>
+	</security-role>
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>TAFJRealm</realm-name>
+	</login-config>
+
+</web-app>

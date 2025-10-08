@@ -1,0 +1,96 @@
+BODY {
+	background-color: "#FFFFFF";
+	leftmargin: "0";
+	topmargin: "0";
+	font-family: Arial;
+	font-size: 11pt;
+}
+
+h1 {
+	font-family: Arial;
+	font-size: 16pt;
+	font-weight: bold;
+}
+
+h2 {
+	font-family: Arial;
+	font-size: 13pt;
+	font-weight: bold;
+	color: #5D0D7D
+}
+
+ul {
+	font-family: Arial;
+	font-size: 11pt
+}
+
+input {
+	font-family: Arial;
+	font-size: 8pt;
+	font-weight: bold
+}
+
+td {
+	font-family: Arial;
+	font-size: 11pt
+}
+
+h3 {
+	font-family: Arial;
+	font-size: 12pt;
+	font-weight: bold
+}
+
+h4 {
+	font-family: Arial;
+	font-size: 11pt;
+	font-weight: bold;
+	color: #FF0000
+}
+
+typ {
+	font-family: Times New Roman;
+	font-size: 10pt;
+	font-weight: bold;
+	color: #008;
+}
+
+.red {
+	font-family: Arial;
+	font-size: 12pt;
+	font-weight: bold;
+	color: #FF0000
+}
+
+.purple {
+	font-family: Arial;
+	font-size: 13pt;
+	font-weight: bold;
+	color: #5D0D7D
+}
+
+.margin {
+	margin-bottom: 100px;
+}
+
+.panelGridCenter {
+	margin: 0 auto;
+}
+
+.pendingchange {
+	color: #c09853 !important;
+	background-color: #fcf8e3 !important;
+	border-color: #fbeed5;
+}
+
+.nochange {
+	color: #3a87ad !important;
+	background-color: #d9edf7 !important;
+	border-color: #bce8f1;
+}
+
+.highlight {
+	color: #b94a48 !important;
+	background-color: #f2dede !important;
+	border-color: #eed3d7;
+}

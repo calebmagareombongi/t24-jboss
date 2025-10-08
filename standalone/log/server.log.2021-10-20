@@ -1,0 +1,677 @@
+2021-10-20 21:55:33,789 INFO  [org.jboss.modules] (main) JBoss Modules version 1.8.6.Final-redhat-00001
+2021-10-20 21:55:34,419 INFO  [org.jboss.msc] (main) JBoss MSC version 1.4.5.Final-redhat-00001
+2021-10-20 21:55:34,428 INFO  [org.jboss.threads] (main) JBoss Threads version 2.3.2.Final-redhat-1
+2021-10-20 21:55:34,567 INFO  [org.jboss.as] (MSC service thread 1-2) WFLYSRV0049: JBoss EAP 7.2.0.GA (WildFly Core 6.0.11.Final-redhat-00001) starting
+2021-10-20 21:55:34,569 DEBUG [org.jboss.as.config] (MSC service thread 1-2) Configured system properties:
+	awt.toolkit = sun.awt.windows.WToolkit
+	file.encoding = UTF-8
+	file.encoding.pkg = sun.io
+	file.separator = \
+	hostname = OSOFUNDE-FBU
+	java.awt.graphicsenv = sun.awt.Win32GraphicsEnvironment
+	java.awt.printerjob = sun.awt.windows.WPrinterJob
+	java.class.path = C:\R20\jboss-eap-7.2\jboss-modules.jar
+	java.class.version = 52.0
+	java.endorsed.dirs = C:\R20\jdk1.8.0_211\jre\lib\endorsed
+	java.ext.dirs = C:\R20\jdk1.8.0_211\jre\lib\ext;C:\Windows\Sun\Java\lib\ext
+	java.home = C:\R20\jdk1.8.0_211\jre
+	java.io.tmpdir = C:\Users\User\AppData\Local\Temp\
+	java.library.path = C:\R20\jdk1.8.0_211\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\R20\jdk1.8.0_211\bin;C:\R20\TAFJ\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\dotnet\;C:\Users\User\AppData\Local\Microsoft\WindowsApps;;C:\R20\jboss-eap-7.2\bin;.
+	java.net.preferIPv4Stack = true
+	java.runtime.name = Java(TM) SE Runtime Environment
+	java.runtime.version = 1.8.0_211-b12
+	java.specification.name = Java Platform API Specification
+	java.specification.vendor = Oracle Corporation
+	java.specification.version = 1.8
+	java.util.logging.manager = org.jboss.logmanager.LogManager
+	java.vendor = Oracle Corporation
+	java.vendor.url = http://java.oracle.com/
+	java.vendor.url.bug = http://bugreport.sun.com/bugreport/
+	java.version = 1.8.0_211
+	java.vm.info = mixed mode
+	java.vm.name = Java HotSpot(TM) 64-Bit Server VM
+	java.vm.specification.name = Java Virtual Machine Specification
+	java.vm.specification.vendor = Oracle Corporation
+	java.vm.specification.version = 1.8
+	java.vm.vendor = Oracle Corporation
+	java.vm.version = 25.211-b12
+	javax.management.builder.initial = org.jboss.as.jmx.PluggableMBeanServerBuilder
+	jboss.bind.address = 0.0.0.0
+	jboss.home.dir = C:\R20\jboss-eap-7.2
+	jboss.host.name = desktop-tskpgdc
+	jboss.modules.dir = C:\R20\jboss-eap-7.2\modules
+	jboss.modules.system.pkgs = org.jboss.byteman
+	jboss.node.name = node1
+	jboss.qualified.host.name = desktop-tskpgdc
+	jboss.server.base.dir = C:\R20\jboss-eap-7.2\standalone
+	jboss.server.config.dir = C:\R20\jboss-eap-7.2\standalone\configuration
+	jboss.server.data.dir = C:\R20\jboss-eap-7.2\standalone\data
+	jboss.server.deploy.dir = C:\R20\jboss-eap-7.2\standalone\data\content
+	jboss.server.log.dir = C:\R20\jboss-eap-7.2\standalone\log
+	jboss.server.name = desktop-tskpgdc
+	jboss.server.persist.config = true
+	jboss.server.temp.dir = C:\R20\jboss-eap-7.2\standalone\tmp
+	line.separator = 
+
+	logging.configuration = file:C:\R20\jboss-eap-7.2\standalone\configuration/logging.properties
+	module.path = C:\R20\jboss-eap-7.2\modules
+	org.jboss.boot.log.file = C:\R20\jboss-eap-7.2\standalone\log\server.log
+	org.jboss.resolver.warning = true
+	os.arch = amd64
+	os.name = Windows 10
+	os.version = 10.0
+	path.separator = ;
+	program.name = standalone.bat
+	sun.arch.data.model = 64
+	sun.boot.class.path = C:\R20\jdk1.8.0_211\jre\lib\resources.jar;C:\R20\jdk1.8.0_211\jre\lib\rt.jar;C:\R20\jdk1.8.0_211\jre\lib\sunrsasign.jar;C:\R20\jdk1.8.0_211\jre\lib\jsse.jar;C:\R20\jdk1.8.0_211\jre\lib\jce.jar;C:\R20\jdk1.8.0_211\jre\lib\charsets.jar;C:\R20\jdk1.8.0_211\jre\lib\jfr.jar;C:\R20\jdk1.8.0_211\jre\classes
+	sun.boot.library.path = C:\R20\jdk1.8.0_211\jre\bin
+	sun.cpu.endian = little
+	sun.cpu.isalist = amd64
+	sun.desktop = windows
+	sun.io.unicode.encoding = UnicodeLittle
+	sun.java.command = C:\R20\jboss-eap-7.2\jboss-modules.jar -mp C:\R20\jboss-eap-7.2\modules org.jboss.as.standalone -Djboss.home.dir=C:\R20\jboss-eap-7.2 --server-config=standalone.xml -b 0.0.0.0 -Djboss.server.base.dir=C:\R20\jboss-eap-7.2\standalone -Dhostname=OSOFUNDE-FBU
+	sun.java.launcher = SUN_STANDARD
+	sun.jnu.encoding = Cp1252
+	sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+	sun.os.patch.level = 
+	sun.stderr.encoding = cp437
+	sun.stdout.encoding = cp437
+	tafj.home = C:\R20\TAFJ
+	temenos.log.api = LOG4J2
+	user.country = CA
+	user.dir = C:\R20\jboss-eap-7.2\bin
+	user.home = C:\Users\User
+	user.language = en
+	user.name = User
+	user.script = 
+	user.timezone = America/New_York
+	user.variant = 
+2021-10-20 21:55:34,569 DEBUG [org.jboss.as.config] (MSC service thread 1-2) VM Arguments: -Dprogram.name=standalone.bat -Xms2G -Xmx4G -XX:MaxPermSize=450M -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Dtafj.home=C:\R20\TAFJ -Djboss.node.name=node1 -Dfile.encoding=UTF-8 -Dtemenos.log.api=LOG4J2 -verbose:gc -Xloggc:C:\R20\jboss-eap-7.2\standalone\log\gc.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=3M -XX:-TraceClassUnloading -Dorg.jboss.boot.log.file=C:\R20\jboss-eap-7.2\standalone\log\server.log -Dlogging.configuration=file:C:\R20\jboss-eap-7.2\standalone\configuration/logging.properties 
+2021-10-20 21:55:35,381 INFO  [org.wildfly.security] (ServerService Thread Pool -- 28) ELY00001: WildFly Elytron version 1.6.1.Final-redhat-00001
+2021-10-20 21:55:35,977 INFO  [org.jboss.as.controller.management-deprecated] (Controller Boot Thread) WFLYCTL0028: Attribute 'security-realm' in the resource at address '/core-service=management/management-interface=http-interface' is deprecated, and may be removed in a future version. See the attribute description in the output of the read-resource-description operation to learn more about the deprecation.
+2021-10-20 21:55:35,994 INFO  [org.jboss.as.controller.management-deprecated] (ServerService Thread Pool -- 27) WFLYCTL0028: Attribute 'security-realm' in the resource at address '/subsystem=undertow/server=default-server/https-listener=https' is deprecated, and may be removed in a future version. See the attribute description in the output of the read-resource-description operation to learn more about the deprecation.
+2021-10-20 21:55:37,222 INFO  [org.jboss.as.server] (Controller Boot Thread) WFLYSRV0039: Creating http management service using socket-binding (management-http)
+2021-10-20 21:55:37,238 INFO  [org.xnio] (MSC service thread 1-7) XNIO version 3.6.5.Final-redhat-00001
+2021-10-20 21:55:37,243 INFO  [org.xnio.nio] (MSC service thread 1-7) XNIO NIO Implementation Version 3.6.5.Final-redhat-00001
+2021-10-20 21:55:37,263 INFO  [org.jboss.as.clustering.infinispan] (ServerService Thread Pool -- 52) WFLYCLINF0001: Activating Infinispan subsystem.
+2021-10-20 21:55:37,272 INFO  [org.wildfly.iiop.openjdk] (ServerService Thread Pool -- 51) WFLYIIOP0001: Activating IIOP Subsystem
+2021-10-20 21:55:37,280 INFO  [org.jboss.as.connector] (MSC service thread 1-1) WFLYJCA0009: Starting JCA Subsystem (WildFly/IronJacamar 1.4.11.Final-redhat-00001)
+2021-10-20 21:55:37,282 INFO  [org.jboss.as.jsf] (ServerService Thread Pool -- 59) WFLYJSF0007: Activated the following JSF Implementations: [main]
+2021-10-20 21:55:37,291 INFO  [org.wildfly.extension.microprofile.config.smallrye._private] (ServerService Thread Pool -- 63) WFLYCONF0001: Activating WildFly MicroProfile Config Subsystem
+2021-10-20 21:55:37,297 INFO  [org.jboss.as.security] (ServerService Thread Pool -- 72) WFLYSEC0002: Activating Security Subsystem
+2021-10-20 21:55:37,299 INFO  [org.wildfly.extension.microprofile.health.smallrye] (ServerService Thread Pool -- 64) WFLYHEALTH0001: Activating Eclipse MicroProfile Health Subsystem
+2021-10-20 21:55:37,316 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-3) WFLYUT0003: Undertow 2.0.15.Final-redhat-00001 starting
+2021-10-20 21:55:37,327 INFO  [org.jboss.remoting] (MSC service thread 1-6) JBoss Remoting version 5.0.8.Final-redhat-1
+2021-10-20 21:55:37,352 WARN  [org.jboss.as.txn] (ServerService Thread Pool -- 74) WFLYTX0013: The node-identifier attribute on the /subsystem=transactions is set to the default value. This is a danger for environments running multiple servers. Please make sure the attribute value is unique.
+2021-10-20 21:55:37,363 INFO  [org.wildfly.extension.microprofile.opentracing] (ServerService Thread Pool -- 65) WFLYTRACEXT0001: Activating MicroProfile OpenTracing Subsystem
+2021-10-20 21:55:37,365 INFO  [org.jboss.as.naming] (ServerService Thread Pool -- 66) WFLYNAM0001: Activating Naming Subsystem
+2021-10-20 21:55:37,374 INFO  [org.jboss.as.security] (MSC service thread 1-1) WFLYSEC0001: Current PicketBox version=5.0.3.Final-redhat-3
+2021-10-20 21:55:37,380 INFO  [org.jboss.as.webservices] (ServerService Thread Pool -- 76) WFLYWS0002: Activating WebServices Extension
+2021-10-20 21:55:37,387 INFO  [org.wildfly.extension.io] (ServerService Thread Pool -- 53) WFLYIO001: Worker 'default' has auto-configured to 16 core threads with 128 task threads based on your 8 available processors
+2021-10-20 21:55:37,390 INFO  [org.jboss.as.jaxrs] (ServerService Thread Pool -- 54) WFLYRS0016: RESTEasy version 3.6.1.SP2-redhat-00001
+2021-10-20 21:55:37,400 INFO  [org.jboss.as.mail.extension] (MSC service thread 1-5) WFLYMAIL0002: Unbound mail session [java:jboss/mail/Default]
+2021-10-20 21:55:37,401 INFO  [org.jboss.as.connector.subsystems.datasources] (ServerService Thread Pool -- 44) WFLYJCA0004: Deploying JDBC-compliant driver class org.h2.Driver (version 1.4)
+2021-10-20 21:55:37,453 INFO  [org.jboss.as.connector.deployers.jdbc] (MSC service thread 1-8) WFLYJCA0018: Started Driver service with driver-name = h2
+2021-10-20 21:55:37,474 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 75) WFLYUT0014: Creating file handler for path 'C:\R20\jboss-eap-7.2/welcome-content' with options [directory-listing: 'false', follow-symlink: 'false', case-sensitive: 'true', safe-symlink-paths: '[]']
+2021-10-20 21:55:37,495 INFO  [org.jboss.as.naming] (MSC service thread 1-7) WFLYNAM0003: Starting Naming Service
+2021-10-20 21:55:37,496 INFO  [org.jboss.as.mail.extension] (MSC service thread 1-6) WFLYMAIL0001: Bound mail session [java:jboss/mail/Default]
+2021-10-20 21:55:37,526 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-8) WFLYUT0012: Started server default-server.
+2021-10-20 21:55:37,540 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-8) WFLYUT0018: Host default-host starting
+2021-10-20 21:55:37,542 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-7) WFLYJCA0010: Unbound data source [java:/jdbc/t24Axis2DS]
+2021-10-20 21:55:37,543 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-8) WFLYJCA0010: Unbound data source [java:/jdbc/t24DS]
+2021-10-20 21:55:37,543 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-7) WFLYJCA0099: Unbound non-transactional data source: java:/jdbc/t24LockingDS
+2021-10-20 21:55:37,543 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-5) WFLYJCA0099: Unbound non-transactional data source: java:/jdbc/t24RODS
+2021-10-20 21:55:37,608 INFO  [org.jboss.as.ejb3] (MSC service thread 1-6) WFLYEJB0482: Strict pool mdb-strict-max-pool is using a max instance size of 32 (per class), which is derived from the number of CPUs on this host.
+2021-10-20 21:55:37,610 INFO  [org.jboss.as.ejb3] (MSC service thread 1-7) WFLYEJB0481: Strict pool slsb-strict-max-pool is using a max instance size of 128 (per class), which is derived from thread worker pool sizing.
+2021-10-20 21:55:37,640 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-3) WFLYJCA0098: Bound non-transactional data source: java:/jdbc/t24RODS
+2021-10-20 21:55:37,640 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-5) WFLYJCA0098: Bound non-transactional data source: java:/jdbc/t24LockingDS
+2021-10-20 21:55:38,032 INFO  [org.jboss.as.patching] (MSC service thread 1-7) WFLYPAT0050: JBoss EAP cumulative patch ID is: base, one-off patches include: none
+2021-10-20 21:55:38,060 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-3) WFLYSRV0027: Starting deployment of "TAFJJEE_EAR.ear" (runtime-name: "TAFJJEE_EAR.ear")
+2021-10-20 21:55:38,060 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-8) WFLYSRV0027: Starting deployment of "TAFJSpoolerPlugins.rar" (runtime-name: "TAFJSpoolerPlugins.rar")
+2021-10-20 21:55:38,060 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0027: Starting deployment of "BrowserWeb.war" (runtime-name: "BrowserWeb.war")
+2021-10-20 21:55:38,060 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-5) WFLYSRV0027: Starting deployment of "axis2.war" (runtime-name: "axis2.war")
+2021-10-20 21:55:38,064 INFO  [org.jboss.as.server.deployment.scanner] (MSC service thread 1-7) WFLYDS0013: Started FileSystemDeploymentService for directory C:\R20\jboss-eap-7.2\standalone\deployments
+2021-10-20 21:55:38,822 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-2) WFLYUT0006: Undertow HTTP listener default listening on 0.0.0.0:8085
+2021-10-20 21:55:38,842 INFO  [org.wildfly.extension.messaging-activemq] (MSC service thread 1-2) WFLYMSGAMQ0001: AIO wasn't located on this platform, it will fall back to using pure Java NIO.
+2021-10-20 21:55:38,917 INFO  [org.jboss.as.ejb3] (MSC service thread 1-8) WFLYEJB0493: EJB subsystem suspension complete
+2021-10-20 21:55:38,989 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-2) WFLYJCA0001: Bound data source [java:/jdbc/t24Axis2DS]
+2021-10-20 21:55:38,990 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-2) WFLYJCA0001: Bound data source [java:/jdbc/t24DS]
+2021-10-20 21:55:39,094 INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 78) AMQ221000: live Message Broker is starting with configuration Broker Configuration (clustered=false,journalDirectory=C:\R20\jboss-eap-7.2\standalone\data\activemq\journal,bindingsDirectory=C:\R20\jboss-eap-7.2\standalone\data\activemq\bindings,largeMessagesDirectory=C:\R20\jboss-eap-7.2\standalone\data\activemq\largemessages,pagingDirectory=C:\R20\jboss-eap-7.2\standalone\data\activemq\paging)
+2021-10-20 21:55:39,148 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-4) WFLYSRV0207: Starting subdeployment (runtime-name: "TAFJWebSocket.war")
+2021-10-20 21:55:39,148 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-5) WFLYSRV0207: Starting subdeployment (runtime-name: "TAFJSanitycheck.war")
+2021-10-20 21:55:39,149 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-2) WFLYSRV0207: Starting subdeployment (runtime-name: "TAFJCobMonitor.war")
+2021-10-20 21:55:39,150 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-8) WFLYSRV0207: Starting subdeployment (runtime-name: "TAFJRestServices.war")
+2021-10-20 21:55:39,151 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-8) WFLYSRV0207: Starting subdeployment (runtime-name: "TAFJJEE_EJB.jar")
+2021-10-20 21:55:39,151 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-4) WFLYSRV0207: Starting subdeployment (runtime-name: "TAFJEEMonitoring.war")
+2021-10-20 21:55:39,152 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-4) WFLYSRV0207: Starting subdeployment (runtime-name: "TAFJConfiguration.war")
+2021-10-20 21:55:39,153 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-4) WFLYSRV0207: Starting subdeployment (runtime-name: "TAFJTECMonitor.war")
+2021-10-20 21:55:39,154 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-4) WFLYSRV0207: Starting subdeployment (runtime-name: "TAFJJEE_MDB.jar")
+2021-10-20 21:55:39,154 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-4) WFLYSRV0207: Starting subdeployment (runtime-name: "TAFJEE.war")
+2021-10-20 21:55:39,189 INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 78) AMQ221013: Using NIO Journal
+2021-10-20 21:55:39,299 INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 78) AMQ221057: Global Max Size is being adjusted to 1/2 of the JVM max size (-Xmx). being defined as 1,908,932,608
+2021-10-20 21:55:39,335 INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 78) AMQ221043: Protocol module found: [artemis-server]. Adding protocol support for: CORE
+2021-10-20 21:55:39,338 INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 78) AMQ221043: Protocol module found: [artemis-hornetq-protocol]. Adding protocol support for: HORNETQ
+2021-10-20 21:55:39,406 INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 78) AMQ221034: Waiting indefinitely to obtain live lock
+2021-10-20 21:55:39,406 INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 78) AMQ221035: Live Server Obtained live lock
+2021-10-20 21:55:39,777 INFO  [org.wildfly.iiop.openjdk] (MSC service thread 1-1) WFLYIIOP0009: CORBA ORB Service started
+2021-10-20 21:55:39,960 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-5) WFLYUT0006: Undertow HTTPS listener https listening on 0.0.0.0:8443
+2021-10-20 21:55:40,088 INFO  [org.jboss.ws.common.management] (MSC service thread 1-8) JBWS022052: Starting JBossWS 5.2.4.Final-redhat-00001 (Apache CXF 3.2.5.redhat-00001) 
+2021-10-20 21:55:40,318 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry jaxb-api.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jaxb-impl-2.1.7.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,319 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry activation.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jaxb-impl-2.1.7.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,320 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry jsr173_1.0_api.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jaxb-impl-2.1.7.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,322 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry jaxb1-impl.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jaxb-impl-2.1.7.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,322 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry jaxb-api.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jaxb-xjc-2.1.7.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,322 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry jaxb-impl.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jaxb-xjc-2.1.7.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,323 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry jsr173_1.0_api.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jaxb-xjc-2.1.7.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,323 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry activation.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jaxb-xjc-2.1.7.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,324 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry jaxws-rt.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jaxws-tools-2.1.3.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,324 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry jaxb-xjc.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jaxws-tools-2.1.3.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,324 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry relaxngDatatype.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jaxws-tools-2.1.3.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,325 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry bcel.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jibx-bind-1.2.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,326 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry jibx-run.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jibx-bind-1.2.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,326 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry xpp3.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jibx-bind-1.2.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,327 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry stax-api.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jibx-bind-1.2.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,327 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry wstx-asl.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jibx-bind-1.2.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,328 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry xpp3.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jibx-run-1.2.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,329 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry stax-api.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jibx-run-1.2.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,330 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry wstx-asl.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/jibx-run-1.2.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,331 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry activation.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/mail-1.4.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,346 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry xercesImpl.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/xalan-2.7.0.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,346 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry xml-apis.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/xalan-2.7.0.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:40,347 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-7) WFLYSRV0059: Class Path entry serializer.jar in /C:/R20/jboss-eap-7.2/bin/content/axis2.war/WEB-INF/lib/xalan-2.7.0.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,154 INFO  [org.wildfly.extension.messaging-activemq] (MSC service thread 1-7) WFLYMSGAMQ0016: Registered HTTP upgrade for activemq-remoting protocol handled by http-acceptor-throughput acceptor
+2021-10-20 21:55:42,154 INFO  [org.wildfly.extension.messaging-activemq] (MSC service thread 1-1) WFLYMSGAMQ0016: Registered HTTP upgrade for activemq-remoting protocol handled by http-acceptor acceptor
+2021-10-20 21:55:42,154 INFO  [org.wildfly.extension.messaging-activemq] (MSC service thread 1-5) WFLYMSGAMQ0016: Registered HTTP upgrade for activemq-remoting protocol handled by http-acceptor acceptor
+2021-10-20 21:55:42,154 INFO  [org.wildfly.extension.messaging-activemq] (MSC service thread 1-2) WFLYMSGAMQ0016: Registered HTTP upgrade for activemq-remoting protocol handled by http-acceptor-throughput acceptor
+2021-10-20 21:55:42,265 INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 78) AMQ221007: Server is now live
+2021-10-20 21:55:42,266 INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 78) AMQ221001: Apache ActiveMQ Artemis Message Broker version 2.6.3.redhat-00014 [default, nodeID=8204f353-80cf-11eb-8115-61e38b57a7e2] 
+2021-10-20 21:55:42,284 INFO  [org.wildfly.extension.messaging-activemq] (MSC service thread 1-1) WFLYMSGAMQ0006: Unbound messaging object to jndi name java:jboss/DefaultJMSConnectionFactory
+2021-10-20 21:55:42,290 INFO  [org.wildfly.extension.messaging-activemq] (ServerService Thread Pool -- 111) WFLYMSGAMQ0002: Bound messaging object to jndi name java:/ConnectionFactory
+2021-10-20 21:55:42,293 WARN  [org.apache.activemq.artemis.jms.server] (ServerService Thread Pool -- 92) AMQ122005: Invalid "host" value "0.0.0.0" detected for "http-connector" connector. Switching to "DESKTOP-TSKPGDC". If this new address is incorrect please manually configure the connector to use the proper one.
+2021-10-20 21:55:42,294 INFO  [org.wildfly.extension.messaging-activemq] (ServerService Thread Pool -- 92) WFLYMSGAMQ0002: Bound messaging object to jndi name java:jboss/exported/jms/RemoteConnectionFactory
+2021-10-20 21:55:42,323 INFO  [org.jboss.as.connector.deployment] (MSC service thread 1-7) WFLYJCA0007: Registered connection factory java:/JmsXA
+2021-10-20 21:55:42,325 INFO  [org.jboss.as.connector.deployment] (MSC service thread 1-1) WFLYJCA0011: Unbound JCA ConnectionFactory [java:/JmsXA]
+2021-10-20 21:55:42,338 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry jaxb-api.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/channels.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,338 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry jaxb-impl.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/channels.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,339 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry jaxb-libs.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/channels.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,339 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry jaxb-xjc.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/channels.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,339 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry connector.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/channels.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,340 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry com.ibm.mq.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/channels.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,342 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry dom.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/channels.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,342 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry sax.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/channels.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,349 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry bcprov-jdk14-133.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/encryption.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,374 INFO  [org.apache.activemq.artemis.ra] (MSC service thread 1-7) AMQ151007: Resource adaptor started
+2021-10-20 21:55:42,374 INFO  [org.jboss.as.connector.services.resourceadapters.ResourceAdapterActivatorService$ResourceAdapterActivator] (MSC service thread 1-7) IJ020002: Deployed: file://RaActivatoractivemq-ra
+2021-10-20 21:55:42,375 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry dom.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/ofsml.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,376 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry sax.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/ofsml.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,376 INFO  [org.jboss.as.connector.deployment] (MSC service thread 1-1) WFLYJCA0002: Bound JCA ConnectionFactory [java:/JmsXA]
+2021-10-20 21:55:42,376 INFO  [org.wildfly.extension.messaging-activemq] (MSC service thread 1-2) WFLYMSGAMQ0002: Bound messaging object to jndi name java:jboss/DefaultJMSConnectionFactory
+2021-10-20 21:55:42,378 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry jakarta-regexp-1.2.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/publisher.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,378 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry com.ibm.mq.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/publisher.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,378 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry connector.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/publisher.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,379 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry com.ibm.mq.pcf.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/publisher.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,380 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry dom.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/tcclient.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,380 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry sax.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/tcclient.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,381 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry tlog4jappenders.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/tcclient.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,381 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry jline.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/tcclient.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,381 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry log4j-1.2.13.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/tcommon.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,382 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry mx4j-impl.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/tcommon.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,382 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry mx4j-jmx.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/tcommon.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,382 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry jms.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/tcommonjms.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,382 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry fscontext.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/tcommonjms.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,383 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry bcprov-jdk14-133.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/tcsecurity.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,384 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry serializer.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/xalan.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:42,387 WARN  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0059: Class Path entry serializer.jar in /C:/R20/jboss-eap-7.2/bin/content/BrowserWeb.war/WEB-INF/lib/xsltc.jar  does not point to a valid jar for a Class-Path reference.
+2021-10-20 21:55:43,940 WARN  [org.jboss.as.jsf] (MSC service thread 1-1) WFLYJSF0005: Unknown JSF version 'NONE'.  Default version 'main' will be used instead.
+2021-10-20 21:55:43,941 WARN  [org.jboss.as.jsf] (MSC service thread 1-5) WFLYJSF0005: Unknown JSF version 'NONE'.  Default version 'main' will be used instead.
+2021-10-20 21:55:43,945 WARN  [org.jboss.as.jsf] (MSC service thread 1-1) WFLYJSF0005: Unknown JSF version 'NONE'.  Default version 'main' will be used instead.
+2021-10-20 21:55:43,947 WARN  [org.jboss.as.jsf] (MSC service thread 1-5) WFLYJSF0005: Unknown JSF version 'NONE'.  Default version 'main' will be used instead.
+2021-10-20 21:55:43,949 WARN  [org.jboss.as.jsf] (MSC service thread 1-8) WFLYJSF0005: Unknown JSF version 'NONE'.  Default version 'main' will be used instead.
+2021-10-20 21:55:44,291 INFO  [org.jboss.weld.deployer] (MSC service thread 1-3) WFLYWELD0003: Processing weld deployment TAFJJEE_EAR.ear
+2021-10-20 21:55:44,366 WARN  [org.jboss.as.jaxrs] (MSC service thread 1-8) WFLYRS0018: Explicit usage of Jackson annotation in a JAX-RS deployment; the system will disable JSON-B processing for the current deployment. Consider setting the 'resteasy.preferJacksonOverJsonB' property to 'false' to restore JSON-B.
+2021-10-20 21:55:44,378 INFO  [org.jboss.as.connector.deployment] (MSC service thread 1-2) WFLYJCA0007: Registered connection factory java:/eis/PrintHold
+2021-10-20 21:55:44,378 INFO  [org.jboss.as.connector.deployment] (MSC service thread 1-6) WFLYJCA0011: Unbound JCA ConnectionFactory [java:/eis/PrintHold]
+2021-10-20 21:55:44,379 INFO  [org.jboss.as.connector.deployers.RADeployer] (MSC service thread 1-2) IJ020002: Deployed: file:/C:/R20/jboss-eap-7.2/standalone/tmp/vfs/temp/temp7cf77838314cc14a/content-2534773056de619a/contents/
+2021-10-20 21:55:44,383 INFO  [org.jboss.as.connector.deployment] (MSC service thread 1-5) WFLYJCA0002: Bound JCA ConnectionFactory [java:/eis/PrintHold]
+2021-10-20 21:55:44,443 INFO  [org.infinispan.factories.GlobalComponentRegistry] (MSC service thread 1-7) ISPN000128: Infinispan version: Infinispan 'Estrella Galicia' 9.3.3.Final-redhat-00001
+2021-10-20 21:55:44,528 INFO  [org.hibernate.validator.internal.util.Version] (MSC service thread 1-3) HV000001: Hibernate Validator 6.0.14.Final-redhat-00001
+2021-10-20 21:55:44,980 INFO  [org.jboss.weld.deployer] (MSC service thread 1-5) WFLYWELD0003: Processing weld deployment TAFJWebSocket.war
+2021-10-20 21:55:45,010 INFO  [org.jboss.weld.deployer] (MSC service thread 1-7) WFLYWELD0003: Processing weld deployment TAFJEE.war
+2021-10-20 21:55:45,021 INFO  [org.jboss.as.clustering.infinispan] (ServerService Thread Pool -- 79) WFLYCLINF0002: Started client-mappings cache from ejb container
+2021-10-20 21:55:45,041 INFO  [org.jboss.weld.deployer] (MSC service thread 1-1) WFLYWELD0003: Processing weld deployment TAFJConfiguration.war
+2021-10-20 21:55:45,042 INFO  [org.jboss.weld.deployer] (MSC service thread 1-2) WFLYWELD0003: Processing weld deployment TAFJCobMonitor.war
+2021-10-20 21:55:45,044 INFO  [org.jboss.weld.deployer] (MSC service thread 1-4) WFLYWELD0003: Processing weld deployment TAFJSanitycheck.war
+2021-10-20 21:55:45,046 INFO  [org.jboss.weld.deployer] (MSC service thread 1-6) WFLYWELD0003: Processing weld deployment TAFJJEE_MDB.jar
+2021-10-20 21:55:45,049 INFO  [org.jboss.weld.deployer] (MSC service thread 1-3) WFLYWELD0003: Processing weld deployment TAFJRestServices.war
+2021-10-20 21:55:45,061 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-3) WFLYEJB0473: JNDI bindings for session bean named 'ManagementResource' in deployment unit 'subdeployment "TAFJRestServices.war" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJRestServices/ManagementResource!com.temenos.tafj.services.ManagementResource
+	java:app/TAFJRestServices/ManagementResource!com.temenos.tafj.services.ManagementResource
+	java:module/ManagementResource!com.temenos.tafj.services.ManagementResource
+	ejb:TAFJJEE_EAR/TAFJRestServices/ManagementResource!com.temenos.tafj.services.ManagementResource
+	java:global/TAFJJEE_EAR/TAFJRestServices/ManagementResource
+	java:app/TAFJRestServices/ManagementResource
+	java:module/ManagementResource
+
+2021-10-20 21:55:45,061 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-1) WFLYEJB0473: JNDI bindings for session bean named 'ConfigurationService' in deployment unit 'subdeployment "TAFJConfiguration.war" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJConfiguration/ConfigurationService!com.temenos.configuration.boundary.ConfigurationService
+	java:app/TAFJConfiguration/ConfigurationService!com.temenos.configuration.boundary.ConfigurationService
+	java:module/ConfigurationService!com.temenos.configuration.boundary.ConfigurationService
+	ejb:TAFJJEE_EAR/TAFJConfiguration/ConfigurationService!com.temenos.configuration.boundary.ConfigurationService
+	java:global/TAFJJEE_EAR/TAFJConfiguration/ConfigurationService
+	java:app/TAFJConfiguration/ConfigurationService
+	java:module/ConfigurationService
+
+2021-10-20 21:55:45,064 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-4) WFLYEJB0473: JNDI bindings for session bean named 'SanityCheckBean' in deployment unit 'subdeployment "TAFJSanitycheck.war" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJSanitycheck/SanityCheckBean!com.temenos.tafj.sanitycheck.SanityCheckBean
+	java:app/TAFJSanitycheck/SanityCheckBean!com.temenos.tafj.sanitycheck.SanityCheckBean
+	java:module/SanityCheckBean!com.temenos.tafj.sanitycheck.SanityCheckBean
+	ejb:TAFJJEE_EAR/TAFJSanitycheck/SanityCheckBean!com.temenos.tafj.sanitycheck.SanityCheckBean
+	java:global/TAFJJEE_EAR/TAFJSanitycheck/SanityCheckBean
+	java:app/TAFJSanitycheck/SanityCheckBean
+	java:module/SanityCheckBean
+
+2021-10-20 21:55:45,065 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-2) WFLYEJB0473: JNDI bindings for session bean named 'CobMonitorBean' in deployment unit 'subdeployment "TAFJCobMonitor.war" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJCobMonitor/CobMonitorBean!com.temenos.tafj.monitor.cob.CobMonitorBean
+	java:app/TAFJCobMonitor/CobMonitorBean!com.temenos.tafj.monitor.cob.CobMonitorBean
+	java:module/CobMonitorBean!com.temenos.tafj.monitor.cob.CobMonitorBean
+	ejb:TAFJJEE_EAR/TAFJCobMonitor/CobMonitorBean!com.temenos.tafj.monitor.cob.CobMonitorBean
+	java:global/TAFJJEE_EAR/TAFJCobMonitor/CobMonitorBean
+	java:app/TAFJCobMonitor/CobMonitorBean
+	java:module/CobMonitorBean
+
+2021-10-20 21:55:45,080 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-3) WFLYEJB0473: JNDI bindings for session bean named 'CallAtResource' in deployment unit 'subdeployment "TAFJRestServices.war" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJRestServices/CallAtResource!com.temenos.tafj.services.CallAtResource
+	java:app/TAFJRestServices/CallAtResource!com.temenos.tafj.services.CallAtResource
+	java:module/CallAtResource!com.temenos.tafj.services.CallAtResource
+	ejb:TAFJJEE_EAR/TAFJRestServices/CallAtResource!com.temenos.tafj.services.CallAtResource
+	java:global/TAFJJEE_EAR/TAFJRestServices/CallAtResource
+	java:app/TAFJRestServices/CallAtResource
+	java:module/CallAtResource
+
+2021-10-20 21:55:45,082 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-3) WFLYEJB0473: JNDI bindings for session bean named 'OFSResource' in deployment unit 'subdeployment "TAFJRestServices.war" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJRestServices/OFSResource!com.temenos.tafj.services.OFSResource
+	java:app/TAFJRestServices/OFSResource!com.temenos.tafj.services.OFSResource
+	java:module/OFSResource!com.temenos.tafj.services.OFSResource
+	ejb:TAFJJEE_EAR/TAFJRestServices/OFSResource!com.temenos.tafj.services.OFSResource
+	java:global/TAFJJEE_EAR/TAFJRestServices/OFSResource
+	java:app/TAFJRestServices/OFSResource
+	java:module/OFSResource
+
+2021-10-20 21:55:45,082 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-3) WFLYEJB0473: JNDI bindings for session bean named 'TRunResource' in deployment unit 'subdeployment "TAFJRestServices.war" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJRestServices/TRunResource!com.temenos.tafj.services.TRunResource
+	java:app/TAFJRestServices/TRunResource!com.temenos.tafj.services.TRunResource
+	java:module/TRunResource!com.temenos.tafj.services.TRunResource
+	ejb:TAFJJEE_EAR/TAFJRestServices/TRunResource!com.temenos.tafj.services.TRunResource
+	java:global/TAFJJEE_EAR/TAFJRestServices/TRunResource
+	java:app/TAFJRestServices/TRunResource
+	java:module/TRunResource
+
+2021-10-20 21:55:45,087 INFO  [org.jboss.weld.deployer] (MSC service thread 1-6) WFLYWELD0003: Processing weld deployment TAFJTECMonitor.war
+2021-10-20 21:55:45,094 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-6) WFLYEJB0473: JNDI bindings for session bean named 'TECMonitorBean' in deployment unit 'subdeployment "TAFJTECMonitor.war" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJTECMonitor/TECMonitorBean!com.temenos.tafj.monitor.tec.TECMonitorBean
+	java:app/TAFJTECMonitor/TECMonitorBean!com.temenos.tafj.monitor.tec.TECMonitorBean
+	java:module/TECMonitorBean!com.temenos.tafj.monitor.tec.TECMonitorBean
+	ejb:TAFJJEE_EAR/TAFJTECMonitor/TECMonitorBean!com.temenos.tafj.monitor.tec.TECMonitorBean
+	java:global/TAFJJEE_EAR/TAFJTECMonitor/TECMonitorBean
+	java:app/TAFJTECMonitor/TECMonitorBean
+	java:module/TECMonitorBean
+
+2021-10-20 21:55:45,106 INFO  [org.jboss.weld.deployer] (MSC service thread 1-8) WFLYWELD0003: Processing weld deployment TAFJJEE_EJB.jar
+2021-10-20 21:55:45,147 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'TafjManagementBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TafjManagementBean!com.temenos.tafj.sb.JSessionManagementBean
+	java:app/TAFJJEE_EJB/TafjManagementBean!com.temenos.tafj.sb.JSessionManagementBean
+	java:module/TafjManagementBean!com.temenos.tafj.sb.JSessionManagementBean
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/TafjManagementBean!com.temenos.tafj.sb.JSessionManagementBean
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TafjManagementBean!com.temenos.tafj.sb.JSessionManagementBean
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TafjManagementBean!com.temenos.tafj.sb.JSessionManagementBeanLocal
+	java:app/TAFJJEE_EJB/TafjManagementBean!com.temenos.tafj.sb.JSessionManagementBeanLocal
+	java:module/TafjManagementBean!com.temenos.tafj.sb.JSessionManagementBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TafjManagementBean!com.temenos.tafj.sb.JSessionManagementBeanLocal
+
+2021-10-20 21:55:45,212 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'ApiProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/ApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanRemote
+	java:app/TAFJJEE_EJB/ApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanRemote
+	java:module/ApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/ApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/ApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/ApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanLocal
+	java:app/TAFJJEE_EJB/ApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanLocal
+	java:module/ApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/ApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanLocal
+
+2021-10-20 21:55:45,228 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'OFSProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/OFSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/OFSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/OFSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/OFSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/OFSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/OFSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/OFSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/OFSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/OFSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+
+2021-10-20 21:55:45,229 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'AAEXTProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/AAEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/AAEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/AAEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/AAEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/AAEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/AAEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/AAEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/AAEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/AAEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+
+2021-10-20 21:55:45,232 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'TCIBProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TCIBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/TCIBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/TCIBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/TCIBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TCIBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TCIBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/TCIBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/TCIBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TCIBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+
+2021-10-20 21:55:45,236 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'SEATProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/SEATProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/SEATProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/SEATProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/SEATProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/SEATProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/SEATProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/SEATProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/SEATProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/SEATProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+
+2021-10-20 21:55:45,237 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'ARCMOBProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/ARCMOBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/ARCMOBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/ARCMOBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/ARCMOBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/ARCMOBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/ARCMOBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/ARCMOBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/ARCMOBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/ARCMOBProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+
+2021-10-20 21:55:45,237 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'ApiContainerProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/ApiContainerProcessingBean!com.temenos.tafj.sb.APIProcessingBeanLocal
+	java:app/TAFJJEE_EJB/ApiContainerProcessingBean!com.temenos.tafj.sb.APIProcessingBeanLocal
+	java:module/ApiContainerProcessingBean!com.temenos.tafj.sb.APIProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/ApiContainerProcessingBean!com.temenos.tafj.sb.APIProcessingBeanLocal
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/ApiContainerProcessingBean!com.temenos.tafj.sb.APIProcessingBeanRemote
+	java:app/TAFJJEE_EJB/ApiContainerProcessingBean!com.temenos.tafj.sb.APIProcessingBeanRemote
+	java:module/ApiContainerProcessingBean!com.temenos.tafj.sb.APIProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/ApiContainerProcessingBean!com.temenos.tafj.sb.APIProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/ApiContainerProcessingBean!com.temenos.tafj.sb.APIProcessingBeanRemote
+
+2021-10-20 21:55:45,253 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'DebuggerAcceptorBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/DebuggerAcceptorBean!com.temenos.tafj.ee.bean.common.DebuggerAcceptorBean
+	java:app/TAFJJEE_EJB/DebuggerAcceptorBean!com.temenos.tafj.ee.bean.common.DebuggerAcceptorBean
+	java:module/DebuggerAcceptorBean!com.temenos.tafj.ee.bean.common.DebuggerAcceptorBean
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/DebuggerAcceptorBean!com.temenos.tafj.ee.bean.common.DebuggerAcceptorBean
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/DebuggerAcceptorBean
+	java:app/TAFJJEE_EJB/DebuggerAcceptorBean
+	java:module/DebuggerAcceptorBean
+
+2021-10-20 21:55:45,253 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'ManagementMessageBuilder' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/ManagementMessageBuilder!com.temenos.tafj.ee.management.ManagementMessageBuilder
+	java:app/TAFJJEE_EJB/ManagementMessageBuilder!com.temenos.tafj.ee.management.ManagementMessageBuilder
+	java:module/ManagementMessageBuilder!com.temenos.tafj.ee.management.ManagementMessageBuilder
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/ManagementMessageBuilder!com.temenos.tafj.ee.management.ManagementMessageBuilder
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/ManagementMessageBuilder
+	java:app/TAFJJEE_EJB/ManagementMessageBuilder
+	java:module/ManagementMessageBuilder
+
+2021-10-20 21:55:45,256 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'AAINTProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/AAINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/AAINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/AAINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/AAINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/AAINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/AAINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/AAINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/AAINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/AAINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+
+2021-10-20 21:55:45,258 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'TCIBWEALTHProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TCIBWEALTHProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/TCIBWEALTHProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/TCIBWEALTHProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TCIBWEALTHProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TCIBWEALTHProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/TCIBWEALTHProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/TCIBWEALTHProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/TCIBWEALTHProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TCIBWEALTHProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+
+2021-10-20 21:55:45,264 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'StatefulApiProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/StatefulApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanStatefulRemote
+	java:app/TAFJJEE_EJB/StatefulApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanStatefulRemote
+	java:module/StatefulApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanStatefulRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/StatefulApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanStatefulRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/StatefulApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanStatefulRemote?stateful
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/StatefulApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanStatefulLocal
+	java:app/TAFJJEE_EJB/StatefulApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanStatefulLocal
+	java:module/StatefulApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanStatefulLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/StatefulApiProcessingBean!com.temenos.tafj.sb.APIProcessingBeanStatefulLocal?stateful
+
+2021-10-20 21:55:45,265 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'TWSProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TWSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/TWSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/TWSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TWSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TWSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/TWSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/TWSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/TWSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TWSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+
+2021-10-20 21:55:45,267 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'BROWSERProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/BROWSERProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/BROWSERProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/BROWSERProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/BROWSERProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/BROWSERProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/BROWSERProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/BROWSERProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/BROWSERProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/BROWSERProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+
+2021-10-20 21:55:45,269 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'AMLProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/AMLProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/AMLProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/AMLProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/AMLProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/AMLProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/AMLProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/AMLProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/AMLProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/AMLProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+
+2021-10-20 21:55:45,269 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'SWFProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/SWFProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/SWFProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/SWFProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/SWFProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/SWFProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/SWFProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/SWFProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/SWFProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/SWFProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+
+2021-10-20 21:55:45,273 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'CallAtProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+
+2021-10-20 21:55:45,275 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'TPSInstInProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TPSInstInProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/TPSInstInProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/TPSInstInProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/TPSInstInProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TPSInstInProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TPSInstInProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/TPSInstInProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/TPSInstInProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TPSInstInProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+
+2021-10-20 21:55:45,276 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'TCIBCORPProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TCIBCORPProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/TCIBCORPProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/TCIBCORPProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/TCIBCORPProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TCIBCORPProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TCIBCORPProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/TCIBCORPProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/TCIBCORPProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TCIBCORPProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+
+2021-10-20 21:55:45,277 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'TPSProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TPSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/TPSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/TPSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/TPSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TPSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TPSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/TPSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/TPSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TPSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+
+2021-10-20 21:55:45,278 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'IRISINTProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/IRISINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/IRISINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/IRISINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/IRISINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/IRISINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/IRISINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/IRISINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/IRISINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/IRISINTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+
+2021-10-20 21:55:45,278 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'TRunProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanRemote
+	java:app/TAFJJEE_EJB/TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanRemote
+	java:module/TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanRemote
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanLocal
+	java:app/TAFJJEE_EJB/TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanLocal
+	java:module/TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanLocal
+
+2021-10-20 21:55:45,280 INFO  [org.jboss.as.ejb3.deployment] (MSC service thread 1-8) WFLYEJB0473: JNDI bindings for session bean named 'IRISEXTProcessingBean' in deployment unit 'subdeployment "TAFJJEE_EJB.jar" of deployment "TAFJJEE_EAR.ear"' are as follows:
+
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/IRISEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:app/TAFJJEE_EJB/IRISEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:module/IRISEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/IRISEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal
+	java:global/TAFJJEE_EAR/TAFJJEE_EJB/IRISEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:app/TAFJJEE_EJB/IRISEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:module/IRISEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	java:jboss/exported/TAFJJEE_EAR/TAFJJEE_EJB/IRISEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+	ejb:TAFJJEE_EAR/TAFJJEE_EJB/IRISEXTProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote
+
+2021-10-20 21:55:45,304 INFO  [org.jboss.weld.deployer] (MSC service thread 1-8) WFLYWELD0003: Processing weld deployment TAFJEEMonitoring.war
+2021-10-20 21:55:45,629 INFO  [javax.enterprise.resource.webcontainer.jsf.config] (ServerService Thread Pool -- 85) Initializing Mojarra 2.3.5.SP2-redhat-00001 for context '/axis2'
+2021-10-20 21:55:45,643 INFO  [org.jboss.weld.Version] (MSC service thread 1-3) WELD-000900: 3.0.5 (redhat)
+2021-10-20 21:55:45,931 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'AMLTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,935 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'TCIBTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,944 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'TWSTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,950 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'OFSTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,954 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'TAFJPhantomListenerMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,958 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'SEATTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,960 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'CallAtTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,965 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'ARCMOBTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,972 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'TCIBCORPTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,975 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'AAEXTTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,982 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'BROWSERTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,984 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'TCIBWEALTHTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,986 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'TafjManagementListener' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,990 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 88) WFLYUT0021: Registered web context: '/BrowserWeb' for server 'default-server'
+2021-10-20 21:55:45,992 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'AAINTTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:45,998 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'TPSInstInTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:46,002 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'TPSTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:46,004 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'IRISEXTTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:46,005 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'IRISINTTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:46,005 INFO  [org.jboss.as.ejb3] (MSC service thread 1-2) WFLYEJB0042: Started message driven bean 'SWFTransactedMDB' with 'activemq-ra.rar' resource adapter
+2021-10-20 21:55:46,461 WARN  [org.jboss.weld.Bootstrap] (MSC service thread 1-2) WELD-000146: BeforeBeanDiscovery.addAnnotatedType(AnnotatedType<?>) used for class com.sun.faces.flow.FlowDiscoveryCDIHelper is deprecated from CDI 1.1!
+2021-10-20 21:55:46,575 INFO  [org.jboss.weld.Bootstrap] (Weld Thread Pool -- 6) WELD-000119: Not generating any bean definitions from com.temenos.tafj.sanitycheck.client.WebsphereJMXClient because of underlying class loading error: Type com.ibm.websphere.management.AdminClient from [Module "deployment.TAFJJEE_EAR.ear.TAFJSanitycheck.war" from Service Module Loader] not found.  If this is unexpected, enable DEBUG logging to see the full error.
+2021-10-20 21:55:46,842 SEVERE [javax.enterprise.resource.webcontainer.jsf.flow] (MSC service thread 1-2) Unable to obtain CDI 1.1 utilities for Mojarra
+2021-10-20 21:55:46,846 SEVERE [javax.enterprise.resource.webcontainer.jsf.application.view] (MSC service thread 1-2) Unable to obtain CDI 1.1 utilities for Mojarra
+2021-10-20 21:55:46,988 INFO  [io.undertow.websockets.jsr] (ServerService Thread Pool -- 106) UT026003: Adding annotated server endpoint class com.temenos.tafj.websocket.server.T24ApiServerEndpoint for path /wsT24API/endpoint
+2021-10-20 21:55:47,031 INFO  [javax.enterprise.resource.webcontainer.jsf.config] (ServerService Thread Pool -- 117) Initializing Mojarra 2.3.5.SP2-redhat-00001 for context '/TAFJConfiguration'
+2021-10-20 21:55:47,031 INFO  [javax.enterprise.resource.webcontainer.jsf.config] (ServerService Thread Pool -- 81) Initializing Mojarra 2.3.5.SP2-redhat-00001 for context '/TAFJEE'
+2021-10-20 21:55:47,033 INFO  [javax.enterprise.resource.webcontainer.jsf.config] (ServerService Thread Pool -- 98) Initializing Mojarra 2.3.5.SP2-redhat-00001 for context '/TAFJCobMonitor'
+2021-10-20 21:55:47,042 INFO  [javax.enterprise.resource.webcontainer.jsf.config] (ServerService Thread Pool -- 102) Initializing Mojarra 2.3.5.SP2-redhat-00001 for context '/TAFJTECMonitor'
+2021-10-20 21:55:47,049 INFO  [javax.enterprise.resource.webcontainer.jsf.config] (ServerService Thread Pool -- 121) Initializing Mojarra 2.3.5.SP2-redhat-00001 for context '/TAFJSanitycheck'
+2021-10-20 21:55:47,155 INFO  [io.jaegertracing.Configuration] (ServerService Thread Pool -- 106) Initialized tracer=JaegerTracer(version=Java-0.30.6.redhat-00001, serviceName=TAFJJEE_EAR.ear!TAFJWebSocket.war, reporter=RemoteReporter(sender=UdpSender(), closeEnqueueTimeout=1000), sampler=RemoteControlledSampler(maxOperations=2000, manager=HttpSamplingManager(hostPort=localhost:5778), sampler=ProbabilisticSampler(tags={sampler.type=probabilistic, sampler.param=0.001})), tags={hostname=DESKTOP-TSKPGDC, jaeger.version=Java-0.30.6.redhat-00001, ip=192.168.80.1}, zipkinSharedRpcSpan=false, expandExceptionLogs=false)
+2021-10-20 21:55:47,155 INFO  [io.jaegertracing.Configuration] (ServerService Thread Pool -- 90) Initialized tracer=JaegerTracer(version=Java-0.30.6.redhat-00001, serviceName=TAFJJEE_EAR.ear!TAFJEEMonitoring.war, reporter=RemoteReporter(sender=UdpSender(), closeEnqueueTimeout=1000), sampler=RemoteControlledSampler(maxOperations=2000, manager=HttpSamplingManager(hostPort=localhost:5778), sampler=ProbabilisticSampler(tags={sampler.type=probabilistic, sampler.param=0.001})), tags={hostname=DESKTOP-TSKPGDC, jaeger.version=Java-0.30.6.redhat-00001, ip=192.168.80.1}, zipkinSharedRpcSpan=false, expandExceptionLogs=false)
+2021-10-20 21:55:47,155 INFO  [io.jaegertracing.Configuration] (ServerService Thread Pool -- 123) Initialized tracer=JaegerTracer(version=Java-0.30.6.redhat-00001, serviceName=TAFJJEE_EAR.ear!TAFJRestServices.war, reporter=RemoteReporter(sender=UdpSender(), closeEnqueueTimeout=1000), sampler=RemoteControlledSampler(maxOperations=2000, manager=HttpSamplingManager(hostPort=localhost:5778), sampler=ProbabilisticSampler(tags={sampler.type=probabilistic, sampler.param=0.001})), tags={hostname=DESKTOP-TSKPGDC, jaeger.version=Java-0.30.6.redhat-00001, ip=192.168.80.1}, zipkinSharedRpcSpan=false, expandExceptionLogs=false)
+2021-10-20 21:55:47,162 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 90) WFLYUT0021: Registered web context: '/TAFJEEMonitoring' for server 'default-server'
+2021-10-20 21:55:47,162 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 106) WFLYUT0021: Registered web context: '/TAFJWebSocket' for server 'default-server'
+2021-10-20 21:55:47,559 INFO  [org.jboss.resteasy.resteasy_jaxrs.i18n] (ServerService Thread Pool -- 123) RESTEASY002225: Deploying javax.ws.rs.core.Application: class com.temenos.tafj.services.JAXRSConfiguration$Proxy$_$$_WeldClientProxy
+2021-10-20 21:55:47,641 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 123) WFLYUT0021: Registered web context: '/TAFJRestServices' for server 'default-server'
+2021-10-20 21:55:49,148 INFO  [org.primefaces.webapp.PostConstructApplicationEventListener] (ServerService Thread Pool -- 98) Running on PrimeFaces 8.0
+2021-10-20 21:55:49,148 INFO  [org.primefaces.webapp.PostConstructApplicationEventListener] (ServerService Thread Pool -- 102) Running on PrimeFaces 8.0
+2021-10-20 21:55:49,148 INFO  [org.primefaces.webapp.PostConstructApplicationEventListener] (ServerService Thread Pool -- 117) Running on PrimeFaces 8.0
+2021-10-20 21:55:49,148 INFO  [org.primefaces.webapp.PostConstructApplicationEventListener] (ServerService Thread Pool -- 81) Running on PrimeFaces 8.0
+2021-10-20 21:55:49,152 INFO  [io.jaegertracing.Configuration] (ServerService Thread Pool -- 81) Initialized tracer=JaegerTracer(version=Java-0.30.6.redhat-00001, serviceName=TAFJJEE_EAR.ear!TAFJEE.war, reporter=RemoteReporter(sender=UdpSender(), closeEnqueueTimeout=1000), sampler=RemoteControlledSampler(maxOperations=2000, manager=HttpSamplingManager(hostPort=localhost:5778), sampler=ProbabilisticSampler(tags={sampler.type=probabilistic, sampler.param=0.001})), tags={hostname=DESKTOP-TSKPGDC, jaeger.version=Java-0.30.6.redhat-00001, ip=192.168.80.1}, zipkinSharedRpcSpan=false, expandExceptionLogs=false)
+2021-10-20 21:55:49,152 INFO  [io.jaegertracing.Configuration] (ServerService Thread Pool -- 98) Initialized tracer=JaegerTracer(version=Java-0.30.6.redhat-00001, serviceName=TAFJJEE_EAR.ear!TAFJCobMonitor.war, reporter=RemoteReporter(sender=UdpSender(), closeEnqueueTimeout=1000), sampler=RemoteControlledSampler(maxOperations=2000, manager=HttpSamplingManager(hostPort=localhost:5778), sampler=ProbabilisticSampler(tags={sampler.type=probabilistic, sampler.param=0.001})), tags={hostname=DESKTOP-TSKPGDC, jaeger.version=Java-0.30.6.redhat-00001, ip=192.168.80.1}, zipkinSharedRpcSpan=false, expandExceptionLogs=false)
+2021-10-20 21:55:49,154 INFO  [io.jaegertracing.Configuration] (ServerService Thread Pool -- 117) Initialized tracer=JaegerTracer(version=Java-0.30.6.redhat-00001, serviceName=TAFJJEE_EAR.ear!TAFJConfiguration.war, reporter=RemoteReporter(sender=UdpSender(), closeEnqueueTimeout=1000), sampler=RemoteControlledSampler(maxOperations=2000, manager=HttpSamplingManager(hostPort=localhost:5778), sampler=ProbabilisticSampler(tags={sampler.type=probabilistic, sampler.param=0.001})), tags={hostname=DESKTOP-TSKPGDC, jaeger.version=Java-0.30.6.redhat-00001, ip=192.168.80.1}, zipkinSharedRpcSpan=false, expandExceptionLogs=false)
+2021-10-20 21:55:49,160 INFO  [io.jaegertracing.Configuration] (ServerService Thread Pool -- 102) Initialized tracer=JaegerTracer(version=Java-0.30.6.redhat-00001, serviceName=TAFJJEE_EAR.ear!TAFJTECMonitor.war, reporter=RemoteReporter(sender=UdpSender(), closeEnqueueTimeout=1000), sampler=RemoteControlledSampler(maxOperations=2000, manager=HttpSamplingManager(hostPort=localhost:5778), sampler=ProbabilisticSampler(tags={sampler.type=probabilistic, sampler.param=0.001})), tags={hostname=DESKTOP-TSKPGDC, jaeger.version=Java-0.30.6.redhat-00001, ip=192.168.80.1}, zipkinSharedRpcSpan=false, expandExceptionLogs=false)
+2021-10-20 21:55:49,162 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 98) WFLYUT0021: Registered web context: '/TAFJCobMonitor' for server 'default-server'
+2021-10-20 21:55:49,164 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 81) WFLYUT0021: Registered web context: '/TAFJEE' for server 'default-server'
+2021-10-20 21:55:49,168 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 102) WFLYUT0021: Registered web context: '/TAFJTECMonitor' for server 'default-server'
+2021-10-20 21:55:49,171 INFO  [org.primefaces.webapp.PostConstructApplicationEventListener] (ServerService Thread Pool -- 121) Running on PrimeFaces 8.0
+2021-10-20 21:55:49,176 INFO  [io.jaegertracing.Configuration] (ServerService Thread Pool -- 121) Initialized tracer=JaegerTracer(version=Java-0.30.6.redhat-00001, serviceName=TAFJJEE_EAR.ear!TAFJSanitycheck.war, reporter=RemoteReporter(sender=UdpSender(), closeEnqueueTimeout=1000), sampler=RemoteControlledSampler(maxOperations=2000, manager=HttpSamplingManager(hostPort=localhost:5778), sampler=ProbabilisticSampler(tags={sampler.type=probabilistic, sampler.param=0.001})), tags={hostname=DESKTOP-TSKPGDC, jaeger.version=Java-0.30.6.redhat-00001, ip=192.168.80.1}, zipkinSharedRpcSpan=false, expandExceptionLogs=false)
+2021-10-20 21:55:49,192 INFO  [org.jboss.resteasy.resteasy_jaxrs.i18n] (ServerService Thread Pool -- 117) RESTEASY002225: Deploying javax.ws.rs.core.Application: class com.temenos.configuration.boundary.JAXRSConfiguration$Proxy$_$$_WeldClientProxy
+2021-10-20 21:55:49,201 INFO  [org.jboss.resteasy.resteasy_jaxrs.i18n] (ServerService Thread Pool -- 121) RESTEASY002225: Deploying javax.ws.rs.core.Application: class com.temenos.tafj.sanitycheck.JAXRSConfiguration$Proxy$_$$_WeldClientProxy
+2021-10-20 21:55:49,216 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 121) WFLYUT0021: Registered web context: '/TAFJSanitycheck' for server 'default-server'
+2021-10-20 21:55:49,217 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 117) WFLYUT0021: Registered web context: '/TAFJConfiguration' for server 'default-server'
+2021-10-20 21:55:49,990 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 85) WFLYUT0021: Registered web context: '/axis2' for server 'default-server'
+2021-10-20 21:55:49,997 INFO  [org.jboss.as.server] (ServerService Thread Pool -- 45) WFLYSRV0010: Deployed "TAFJSpoolerPlugins.rar" (runtime-name : "TAFJSpoolerPlugins.rar")
+2021-10-20 21:55:49,998 INFO  [org.jboss.as.server] (ServerService Thread Pool -- 45) WFLYSRV0010: Deployed "TAFJJEE_EAR.ear" (runtime-name : "TAFJJEE_EAR.ear")
+2021-10-20 21:55:49,998 INFO  [org.jboss.as.server] (ServerService Thread Pool -- 45) WFLYSRV0010: Deployed "BrowserWeb.war" (runtime-name : "BrowserWeb.war")
+2021-10-20 21:55:49,999 INFO  [org.jboss.as.server] (ServerService Thread Pool -- 45) WFLYSRV0010: Deployed "axis2.war" (runtime-name : "axis2.war")
+2021-10-20 21:55:50,047 INFO  [org.jboss.as.server] (Controller Boot Thread) WFLYSRV0212: Resuming server
+2021-10-20 21:55:50,066 INFO  [org.jboss.as] (Controller Boot Thread) WFLYSRV0060: Http management interface listening on http://127.0.0.1:9990/management
+2021-10-20 21:55:50,070 INFO  [org.jboss.as] (Controller Boot Thread) WFLYSRV0051: Admin console listening on http://127.0.0.1:9990
+2021-10-20 21:55:50,072 INFO  [org.jboss.as] (Controller Boot Thread) WFLYSRV0025: JBoss EAP 7.2.0.GA (WildFly Core 6.0.11.Final-redhat-00001) started in 16753ms - Started 3487 of 3680 services (531 services are lazy, passive or on-demand)

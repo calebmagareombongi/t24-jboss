@@ -1,0 +1,48 @@
+2021-09-23 00:19:14,069 INFO  [org.jboss.as.server] (Thread-2) WFLYSRV0236: Suspending server with no timeout.
+2021-09-23 00:19:14,314 INFO  [org.jboss.as.ejb3] (Thread-2) WFLYEJB0493: EJB subsystem suspension complete
+2021-09-23 00:19:14,319 INFO  [org.jboss.as.server] (Thread-2) WFLYSRV0220: Server shutdown has been requested via an OS signal
+2021-09-23 00:19:14,435 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 134) WFLYUT0022: Unregistered web context: '/TAFJTECMonitor' from server 'default-server'
+2021-09-23 00:19:14,438 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 130) WFLYUT0022: Unregistered web context: '/TAFJEE' from server 'default-server'
+2021-09-23 00:19:14,445 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 136) WFLYUT0022: Unregistered web context: '/TAFJCobMonitor' from server 'default-server'
+2021-09-23 00:19:14,445 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 149) WFLYUT0022: Unregistered web context: '/TAFJWebSocket' from server 'default-server'
+2021-09-23 00:19:14,446 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 150) WFLYUT0022: Unregistered web context: '/TAFJSanitycheck' from server 'default-server'
+2021-09-23 00:19:14,445 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 154) WFLYUT0022: Unregistered web context: '/TAFJConfiguration' from server 'default-server'
+2021-09-23 00:19:14,449 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 148) WFLYUT0022: Unregistered web context: '/TAFJRestServices' from server 'default-server'
+2021-09-23 00:19:14,449 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 147) WFLYUT0022: Unregistered web context: '/TAFJEEMonitoring' from server 'default-server'
+2021-09-23 00:19:14,453 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 155) WFLYUT0022: Unregistered web context: '/BrowserWeb' from server 'default-server'
+2021-09-23 00:19:14,458 INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 152) WFLYUT0022: Unregistered web context: '/axis2' from server 'default-server'
+2021-09-23 00:19:14,458 INFO  [org.jboss.as.mail.extension] (MSC service thread 1-6) WFLYMAIL0002: Unbound mail session [java:jboss/mail/Default]
+2021-09-23 00:19:14,492 INFO  [org.wildfly.extension.messaging-activemq] (ServerService Thread Pool -- 129) WFLYMSGAMQ0006: Unbound messaging object to jndi name java:jboss/exported/jms/RemoteConnectionFactory
+2021-09-23 00:19:14,567 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-5) WFLYJCA0010: Unbound data source [java:/jdbc/t24Axis2DS]
+2021-09-23 00:19:14,569 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-2) WFLYUT0019: Host default-host stopping
+2021-09-23 00:19:14,734 INFO  [org.jboss.as.connector.deployment] (MSC service thread 1-6) WFLYJCA0011: Unbound JCA ConnectionFactory [java:/eis/PrintHold]
+2021-09-23 00:19:14,734 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-3) WFLYJCA0099: Unbound non-transactional data source: java:/jdbc/t24LockingDS
+2021-09-23 00:19:14,735 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-2) WFLYJCA0099: Unbound non-transactional data source: java:/jdbc/t24RODS
+2021-09-23 00:19:14,736 INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-7) WFLYJCA0010: Unbound data source [java:/jdbc/t24DS]
+2021-09-23 00:19:14,736 INFO  [org.wildfly.extension.messaging-activemq] (MSC service thread 1-5) WFLYMSGAMQ0006: Unbound messaging object to jndi name java:jboss/DefaultJMSConnectionFactory
+2021-09-23 00:19:14,741 INFO  [org.jboss.as.connector.deployment] (MSC service thread 1-6) WFLYJCA0011: Unbound JCA ConnectionFactory [java:/JmsXA]
+2021-09-23 00:19:14,742 INFO  [org.wildfly.extension.messaging-activemq] (ServerService Thread Pool -- 128) WFLYMSGAMQ0006: Unbound messaging object to jndi name java:/ConnectionFactory
+2021-09-23 00:19:14,803 INFO  [org.apache.activemq.artemis.ra] (ServerService Thread Pool -- 149) AMQ151003: resource adaptor stopped
+2021-09-23 00:19:14,824 INFO  [org.jboss.as.connector.deployers.jdbc] (MSC service thread 1-5) WFLYJCA0019: Stopped Driver service with driver-name = h2
+2021-09-23 00:19:14,824 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-5) WFLYSRV0208: Stopped subdeployment (runtime-name: TAFJJEE_EJB.jar) in 485ms
+2021-09-23 00:19:14,828 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-5) WFLYSRV0208: Stopped subdeployment (runtime-name: TAFJJEE_MDB.jar) in 478ms
+2021-09-23 00:19:14,830 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-5) WFLYSRV0208: Stopped subdeployment (runtime-name: TAFJEEMonitoring.war) in 483ms
+2021-09-23 00:19:14,832 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-5) WFLYSRV0208: Stopped subdeployment (runtime-name: TAFJRestServices.war) in 490ms
+2021-09-23 00:19:14,834 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-5) WFLYSRV0208: Stopped subdeployment (runtime-name: TAFJWebSocket.war) in 493ms
+2021-09-23 00:19:14,844 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-2) WFLYSRV0208: Stopped subdeployment (runtime-name: TAFJConfiguration.war) in 491ms
+2021-09-23 00:19:14,863 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-2) WFLYUT0008: Undertow HTTPS listener https suspending
+2021-09-23 00:19:14,870 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-2) WFLYUT0007: Undertow HTTPS listener https stopped, was bound to 0.0.0.0:8443
+2021-09-23 00:19:14,870 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-5) WFLYSRV0028: Stopped deployment TAFJSpoolerPlugins.rar (runtime-name: TAFJSpoolerPlugins.rar) in 517ms
+2021-09-23 00:19:14,877 INFO  [org.jboss.as.clustering.infinispan] (ServerService Thread Pool -- 149) WFLYCLINF0003: Stopped client-mappings cache from ejb container
+2021-09-23 00:19:14,885 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-5) WFLYSRV0208: Stopped subdeployment (runtime-name: TAFJTECMonitor.war) in 532ms
+2021-09-23 00:19:14,904 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-6) WFLYSRV0208: Stopped subdeployment (runtime-name: TAFJCobMonitor.war) in 559ms
+2021-09-23 00:19:14,978 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-3) WFLYSRV0208: Stopped subdeployment (runtime-name: TAFJEE.war) in 630ms
+2021-09-23 00:19:14,992 INFO  [org.apache.activemq.artemis.core.server] (ServerService Thread Pool -- 155) AMQ221002: Apache ActiveMQ Artemis Message Broker version 2.6.3.redhat-00014 [8204f353-80cf-11eb-8115-61e38b57a7e2] stopped, uptime 3 hours 10 minutes
+2021-09-23 00:19:14,995 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-5) WFLYUT0008: Undertow HTTP listener default suspending
+2021-09-23 00:19:14,996 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-5) WFLYUT0007: Undertow HTTP listener default stopped, was bound to 0.0.0.0:8085
+2021-09-23 00:19:14,999 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-2) WFLYUT0004: Undertow 2.0.15.Final-redhat-00001 stopping
+2021-09-23 00:19:15,040 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-1) WFLYSRV0208: Stopped subdeployment (runtime-name: TAFJSanitycheck.war) in 689ms
+2021-09-23 00:19:15,062 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-1) WFLYSRV0028: Stopped deployment TAFJJEE_EAR.ear (runtime-name: TAFJJEE_EAR.ear) in 717ms
+2021-09-23 00:19:15,213 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-8) WFLYSRV0028: Stopped deployment axis2.war (runtime-name: axis2.war) in 865ms
+2021-09-23 00:19:16,143 INFO  [org.jboss.as.server.deployment] (MSC service thread 1-4) WFLYSRV0028: Stopped deployment BrowserWeb.war (runtime-name: BrowserWeb.war) in 1796ms
+2021-09-23 00:19:16,151 INFO  [org.jboss.as] (MSC service thread 1-2) WFLYSRV0050: JBoss EAP 7.2.0.GA (WildFly Core 6.0.11.Final-redhat-00001) stopped in 1805ms

@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Execute servlet</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="../include.xhtml" />
+
+<h:body>
+	<h:form id="executeForm">
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>Execute servlet</h1>
+
+		<h3>You can post command to the ExecQueue by submitting your
+			command in the field below.</h3>
+		<h3>e.g. to execute TSM service within the application server
+			post command START.TSM</h3>
+		<h3 />
+
+		<p:panel id="page" styleClass="info">
+
+			<p:panel id="tenantSelection" styleClass="info"
+				rendered="#{executeView.isMultitenant()}" header="Multitenant system">
+				<h:panelGrid id="tenantGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+					<h:outputText value="Tenant ID:" />
+					<p:selectOneMenu id="tenantId" value="#{executeView.tenantId}"
+						valueChangeListener="#{executeView.selectTenant}"
+						onchange="submit()">
+						<f:selectItem itemLabel="Select tenant" itemValue="" />
+						<f:selectItems value="#{executeView.tenantIds}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="executeCommand" styleClass="info"
+				header="Execute phantom" rendered="#{executeView.renderPanel()}">
+				<h:panelGrid id="executeGrid" columns="3" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<h:outputText value="Command:" />
+					<h:inputText value="#{executeView.command}" size="50" />
+
+					<p:commandButton id="execute" value="Execute command"
+						action="#{executeView.executeCommand}" update="msgs,trunLogs"
+						style="width:140px">
+						<p:confirm header="Confirmation" message="Execute command?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</h:panelGrid>
+
+				<h:panelGrid id="msgGrid" columns="1" style="margin-bottom:10px"
+					cellpadding="5">
+					<p:messages id="msgs" showDetail="false">
+						<p:autoUpdate />
+					</p:messages>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="trunLogs" header="Execution logs" styleClass="info"
+				rendered="#{executeView.renderPanel()}">
+				<h:panelGrid id="logEntriesGrid" columns="1"
+					style="margin-bottom:10px" cellpadding="5">
+
+					<p:commandButton id="refreshLog" global="true" value="Refresh logs"
+						action="#{executeView.refreshLogs()}"
+						update="logEntriesTable,logFileName" style="width:140px">
+					</p:commandButton>
+
+					<h:outputText id="logFileName"
+						value="Log file: #{executeView.getCurrentFile()}" />
+
+					<p:dataTable id="logEntriesTable" var="entry"
+						value="#{executeView.logs}">
+						<p:column filterBy="#{entry}" filterMatchMode="contains">
+							<h:outputText value="#{entry}" />
+						</p:column>
+					</p:dataTable>
+
+				</h:panelGrid>
+			</p:panel>
+		</p:panel>
+
+
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+
+
+	</h:form>
+</h:body>
+</html>

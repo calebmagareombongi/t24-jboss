@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>TAFJEE - Interaction</title>
+<link href="/TAFJEE/css/configuration.css" rel="stylesheet" type="text/css" />
+<link href="/TAFJEE/css/prettify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="/TAFJEE/js/prettify.js"></script>
+</head>
+
+<ui:include src="../include.xhtml" />
+
+<body onload="prettyPrint()">
+	<script src="/TAFJEE/js/header.js"></script>	
+	<br/>
+	<h1>TAFJEE entry points</h1>
+	<h2 id="SYNCEJB">Synchronous invocation - EJB</h2>
+	As EJB lookup requires specific parameters such as initial context name and port, EJB invocation depends on the application server version.
+	<br/>
+	<typ>TAFJJEEClientFactory</typ> arguments are the application server version, see <typ>AppServerProvider</typ>, the server hostname and the application server port for EJB lookup.	
+	<br/>
+	<br/>
+	In case of unsupported application server version please refer to the <a href="#CUSTOMEJB">custom EJB invocation</a> section.
+	<pre class="prettyprint">
+//Get an EJB client from a JBoss7eap deployment on server 10.21.2.99
+TAFJJEEClient client = TAFJJEEClientFactory.getEjbClient(AppServerProvider.JBOSS7EAP, "10.21.2.99", "8080");
+    	
+//Process an OFS request, method argument is the OFS request
+String response = client.processOFS("ENQUIRY.SELECT,,INPUTT/123456,%CURRENCY");
+		
+//Invoke a subroutine, method arguments are the Subroutine name and an array of subroutine parameters 
+String[] response = client.callAt("EXCHRATE", new String[] { "1", "CHF", "500", "GBP", "", "", "", "", "", "" }); 	
+
+//Execute a program in background. A TRunCallObject instance is used to setup the invocation parameters (command and optional user input datas).
+//It returns a TRunCallObject which contains the response status (0 success / 1 failure) and eventual program output. 
+import com.temenos.tafj.sb.TRunCallObject;
+//Execute program and get response back
+TRunCallObject response = client.trun(new TRunCallObject("PROGRAM.NAME ARG1 ARG2"));
+	</pre>	
+<table border="0">
+	<tr>
+		<td>
+			<img src="/TAFJEE/images/EJBInteraction.png" border="0"/>
+		</td>
+		<td valign="top">
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+The client application classpath must contain <b>TAFJJEE_EJBClient.jar</b>.
+<br/>
+<br/>
+The client application classpath must contain the <b>application server client libraries</b> to process the EJB lookup.
+<br/>
+Please refer to the <a href="#EJBCP">EJB classpath setup</a> section to get more details.
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+TAFJJEE_EJBClient.jar can be extracted from <b>TAFJJEE_EAR.ear/APP-INF/lib</b>.
+		</td>
+	</tr>	
+	</table>	
+	<br/>
+	<h2 id="CUSTOMEJB">Custom EJB invocation</h2>	
+	Custom EJB invocation allows a specific initial context configuration and an override of the default EJBs name used during lookup: <b>OFSProcessingBean</b> and <b>CallAtProcessingBean</b>.
+	<br/>	
+	<br/>
+	<typ>TAFJJEEClientFactory</typ> arguments are the initial context name to invoke, the context provider URL and a map of properties to be applied on the initial context.
+	<br/>	
+<pre class="prettyprint">
+//TAFJJEEClientFactory method to get a custom EJB client
+public static TAFJJEEClient getEjbClient(String INITIAL_CONTEXT_FACTORY, String PROVIDER_URL, Map&lt;Object, Object&gt; contextProperties)
+
+//TAFJJEEClient methods to parametrize the OFS, CALLAT and tRun bean name
+public void setOFSBeanName(String beanName);
+
+public void setCALLATBeanName(String beanName);
+
+public void setTRunBeanName(String beanName);
+</pre>	
+The sample below illustrate a JBoss 7 EAP custom invocation.
+<pre class="prettyprint">
+//Create the map of specific properties necessary to lookup an initial context from the application server
+Map&lt;Object, Object&gt; map = new HashMap&lt;Object, Object&gt;();
+map.put("jboss.naming.client.ejb.context", true);
+
+//Factory invocation, the initial context name and URL are provided with the map of specific properties
+TAFJJEEClient client = TAFJJEEClientFactory.getEjbClient("org.jboss.naming.remote.client.InitialContextFactory", "http-remoting://localhost:8080", map);
+
+//TAFJJEEClient setup - specify the EJBs name to be used during lookup - note the cast from TAFJJEEClient to EJBClient
+((com.temenos.tafj.jee.client.EJBClient)client).setOFSBeanName("TAFJJEE_EAR/TAFJJEE_EJB//OFSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote");
+((com.temenos.tafj.jee.client.EJBClient)client).setCALLATBeanName("TAFJJEE_EAR/TAFJJEE_EJB//CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanRemote");
+((com.temenos.tafj.jee.client.EJBClient)client).setTRunBeanName("TAFJJEE_EAR/TAFJJEE_EJB//TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanRemote");
+
+//Classic OFS processing
+String response = client.processOFS("ENQUIRY.SELECT,,INPUTT/123456,%CURRENCY");
+//Classic subroutine invocation		 
+String[] response = client.callAt("EXCHRATE", new String[] { "1", "CHF", "500", "GBP", "", "", "", "", "", "" }); 	
+//Classic tRun execution		
+TRunCallObject response = client.trun(new TRunCallObject("PROGRAM.NAME ARG1 ARG2"));
+</pre>	
+<br/>
+	<h2 id="EJBCP">Client application classpath setup</h2>	
+	The section below provides some application server client libaries examples. Please refer to the application server documentation for more details about its client libraries for remote invocation.
+	<br/>	
+	These jars could be added manually to the client application classpath or with maven whenever the dependencies are available in the maven repository. 
+	<br />	 
+	<br />
+	<h3>JBoss</h3>
+	<ul>	
+		<li>JBoss 7 EAP </li>
+		<pre class="prettyprint">
+<span class="nocode">Maven dependency: </span>
+&lt;dependency&gt;
+	&lt;groupId&gt;org.wildfly&lt;/groupId&gt;
+	&lt;artifactId&gt;wildfly-ejb-client-bom&lt;/artifactId&gt;
+	&lt;version&gt;10.1.0.Final&lt;/version&gt;
+	&lt;type>pom&lt;/type&gt;
+&lt;/dependency&gt;
+		</pre>
+	</ul>	
+	<h3>Weblogic</h3>
+	<ul>	
+		<li>Weblogic 12.2.1 </li>
+		<pre class="prettyprint">
+$WEBLO_HOME/wlserver/server/lib/wlthint3client.jar
+		</pre>	
+	</ul>
+	<h3>Websphere</h3>
+	<ul>
+		<li>WAS 9 </li>
+		<pre class="prettyprint">			
+$WAS_HOME/runtimes/com.ibm.ws.ejb.thinclient_9.0.jar
+$WAS_HOME/runtimes/com.ibm.ws.orb_9.0.jar
+		</pre>
+	</ul>	
+	<br/>
+	<b>To be able to do remote EJB invocation in a Websphere environment from a thin client you would need to generate EJBs stubs for the TAFJ EJB client library and add it to the client application classpath.</b>
+	<br/>
+	<br/>
+	Please refer to <a href="http://www-01.ibm.com/support/docview.wss?uid=swg21393419">Create Stub command</a> i.e.  ${was.home}/bin/<i>createEJBStubs TAFJJEE_EJB.jar -newfile TAFJJEE_EJB_Stubs.jar -cp $CLASSPATH</i>
+	<br/>
+	<br/>
+	<br/>
+<table>
+	<tr>
+		<td width="10%" align="left"><a href="webservice.xhtml"><img src="/TAFJEE/images/prev.jpg" border="0"/>Previous</a></td>
+		<td width="80%" align="center">&nbsp;</td>
+		<td width="10%" align="right"><a href="asynchronous.xhtml">Next<img src="/TAFJEE/images/next.jpg" border="0"/></a></td>
+	</tr>	
+</table>
+</body>
+</html>

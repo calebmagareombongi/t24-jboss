@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>TAFJRestServices</display-name>
+
+	<env-entry>
+		<env-entry-name>callAtEjbLookup</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>java:global/TAFJJEE_EAR/TAFJJEE_EJB/CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal</env-entry-value>
+	</env-entry>
+
+	<env-entry>
+		<env-entry-name>ofsEjbLookup</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>java:global/TAFJJEE_EAR/TAFJJEE_EJB/OFSProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal</env-entry-value>
+	</env-entry>
+
+	<env-entry>
+		<env-entry-name>trunEjbLookup</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>java:global/TAFJJEE_EAR/TAFJJEE_EJB/TRunProcessingBean!com.temenos.tafj.sb.TRunProcessingBeanLocal</env-entry-value>
+	</env-entry>
+	
+	<env-entry>
+		<env-entry-name>managementEjbLookup</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>java:global/TAFJJEE_EAR/TAFJJEE_EJB/TafjManagementBean!com.temenos.tafj.sb.JSessionManagementBeanLocal</env-entry-value>
+	</env-entry>
+						
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>TAFJRestServices</web-resource-name>
+			<url-pattern>/resources/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>TAFJAdmin</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-role>
+		<role-name>TAFJAdmin</role-name>
+	</security-role>
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>TAFJRealm</realm-name>
+	</login-config>
+
+</web-app>

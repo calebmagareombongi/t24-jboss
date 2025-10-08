@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:viewAction action="#{configurationView.loadProperties}" />
+</f:metadata>
+
+<h:head>
+	<title>Configuration</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="include.xhtml" />
+
+<h:body>
+	<h:form id="propertiesForm">
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>TAFJEE Configuration</h1>
+
+		<h3>Properties displayed below are ONLY reflecting
+			TAFJ_CONFIGURATION table entries matching the runtime configuration
+			defined through system property 'tafj.configuration'.</h3>
+		<h3>It might NOT reflect the current runtime configuration state
+			which has been loaded at application startup.</h3>
+		<div class="red">Application server must be restarted to make
+			use of a configuration change.</div>
+		<h3 />
+
+
+
+		<p:panel id="propertiesPanel">
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton title="Save modifications" icon="ui-icon-disk"
+						update="saveModification,propertiesTable,:propertiesForm:headerPanel"
+						id="saveModification"
+						disabled="#{!configurationView.hasPendingChange()}"
+						styleClass="#{configurationView.hasPendingChange() ? 'pendingchange' : 'nochange'}"
+						actionListener="#{configurationView.applyChange}">
+						<p:confirm header="Confirmation" message="Save modifications?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+					<p:commandButton title="Reload properties" icon="ui-icon-refresh"
+						update="propertiesTable,saveModification,:propertiesForm:headerPanel"
+						actionListener="#{configurationView.loadProperties}"
+						styleClass="nochange">
+						<p:confirm header="Confirmation" message="Reload properties?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+					<p:commandButton title="Add new property" icon="ui-icon-plus"
+						update=":propertiesForm:propertyDetail"
+						oncomplete="PF('propertyDialog').show()"
+						actionListener="#{configurationView.newProperty}"
+						styleClass="nochange">
+					</p:commandButton>
+				</f:facet>
+			</p:toolbar>
+			<p:panelGrid id="headerPanel" columns="3"
+				styleClass="panelGridCenter" layout="grid">
+				<p:column colspan="2">
+					<h:outputLabel for="configId" value="Configuration ID:"
+						styleClass="purple" />
+					<h:outputText id="configId"
+						value="#{configurationView.getConfigurationId()}"
+						styleClass="purple" />
+				</p:column>
+				<p:column colspan="2">
+					<h:outputLabel for="configVersion" value="Configuration Version:"
+						styleClass="purple" />
+					<h:outputText id="configVersion"
+						value="#{configurationView.getCurrentConfigurationDate()}"
+						styleClass="purple" />
+				</p:column>
+				<p:column colspan="2">
+					<h:outputLabel for="user" value="User:" styleClass="purple" />
+					<h:outputText id="user"
+						value="#{configurationView.getPrincipalName()}"
+						styleClass="purple" />
+				</p:column>
+			</p:panelGrid>
+			<p:panelGrid id="tenantPanel" columns="1"
+				styleClass="panelGridCenter" layout="grid"
+				rendered="#{configurationView.isMultiTenant()}">
+				<p:column colspan="2">
+					<p:link value="Tenant IDs:" outcome="tenant" styleClass="purple" />
+					<h:outputText id="tenantId"
+						value="#{configurationView.getTenantIds()}" styleClass="purple" />
+				</p:column>
+			</p:panelGrid>
+			<p:dataTable id="propertiesTable" var="property"
+				value="#{configurationView.properties}" resizableColumns="true"
+				sortBy="#{property.compositeKey}"
+				rowStyleClass="#{property.styleClass}">
+
+				<p:column headerText="Configuration ID" sortBy="#{property.source}"
+					filterBy="#{property.source}" filterMatchMode="contains"
+					rendered="#{configurationView.isMultiSource()}">
+					<h:outputText value="#{property.source}" />
+				</p:column>
+
+				<p:column headerText="Key" sortBy="#{property.key}"
+					filterBy="#{property.key}" filterMatchMode="contains">
+					<h:outputText value="#{property.key}" />
+				</p:column>
+
+				<p:column headerText="Value" sortBy="#{property.value}"
+					filterBy="#{property.value}" filterMatchMode="contains">
+					<h:outputText value="#{property.value}" />
+				</p:column>
+
+				<p:column headerText="Options">
+					<p:commandButton title="View Detail" icon="ui-icon-search"
+						update=":propertiesForm:propertyDetail"
+						oncomplete="PF('propertyDialog').show()">
+						<f:setPropertyActionListener value="#{property}"
+							target="#{configurationView.selectedProperty}" />
+					</p:commandButton>
+					<p:commandButton title="Edit" icon="ui-icon-pencil"
+						update=":propertiesForm:propertyDetail"
+						oncomplete="PF('propertyDialog').show()"
+						actionListener="#{configurationView.editProperty(property)}"
+						rendered="#{!property.immutable}">
+					</p:commandButton>
+					<p:commandButton title="Delete" icon="ui-icon-trash"
+						actionListener="#{configurationView.deleteProperty(property)}"
+						update="propertiesTable,:propertiesForm:saveModification"
+						rendered="#{!property.immutable}">
+						<p:confirm header="Confirmation" message="Delete property?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:dialog header="Property" widgetVar="propertyDialog"
+				showEffect="fade" hideEffect="fade" resizable="false" modal="true">
+
+				<p:ajax event="close" listener="#{configurationView.handleClose}" />
+
+				<p:outputPanel id="propertyDetail" style="text-align:left;"
+					border="0">
+
+					<p:messages id="messagesInPropertyDialog" />
+
+					<h:panelGrid columns="2" cellpadding="5" border="0">
+						<h:outputLabel for="configurationId" value="Configuration ID:"
+							rendered="#{configurationView.isMultiSource()}" />
+						<h:outputText id="configurationId"
+							value="#{configurationView.selectedProperty.source}"
+							rendered="#{configurationView.isMultiSource() and !configurationView.selectedProperty.isNewProperty()}" />
+						<p:selectOneMenu id="configurationIds"
+							value="#{configurationView.selectedProperty.source}"
+							rendered="#{configurationView.isMultiSource() and configurationView.selectedProperty.isNewProperty()}">
+							<f:selectItems value="#{configurationView.propertySourceNames}" />
+						</p:selectOneMenu>
+						<h:outputLabel for="key" value="Key:" />
+						<h:outputText id="key"
+							value="#{configurationView.selectedProperty.key}"
+							rendered="#{!configurationView.selectedProperty.isNewProperty()}" />
+						<h:inputText id="keyIn"
+							value="#{configurationView.selectedProperty.key}"
+							rendered="#{configurationView.selectedProperty.isNewProperty()}" />
+						<h:outputLabel for="value" value="Value:" />
+						<h:outputText id="value"
+							value="#{configurationView.selectedProperty.value}"
+							rendered="#{!configurationView.selectedProperty.isEditable()}" />
+						<h:inputText id="valueIn"
+							value="#{configurationView.selectedProperty.value}"
+							rendered="#{configurationView.selectedProperty.isEditable()}" />
+						<h:outputLabel for="description" value="Description:"
+							rendered="#{!configurationView.selectedProperty.isEditable()}" />
+						<h:outputText id="description"
+							value="#{configurationView.selectedProperty.description}"
+							rendered="#{!configurationView.selectedProperty.isEditable()}" />
+						<h:outputLabel for="type" value="Type:"
+							rendered="#{!configurationView.selectedProperty.isEditable()}" />
+						<h:outputText id="type"
+							value="#{configurationView.selectedProperty.type}"
+							rendered="#{!configurationView.selectedProperty.isEditable()}" />
+						<h:outputText for="default" value="Default value:"
+							rendered="#{!configurationView.selectedProperty.isEditable()}" />
+						<h:outputText id="default"
+							value="#{configurationView.selectedProperty.defaultValue}"
+							rendered="#{!configurationView.selectedProperty.isEditable()}" />
+					</h:panelGrid>
+					<h:panelGrid columns="2" cellpadding="5" border="0"
+						rendered="#{configurationView.selectedProperty.isEditable()}">
+						<p:commandButton id="confirm" value="Confirm"
+							update="propertiesTable,messagesInPropertyDialog,:propertiesForm:saveModification"
+							actionListener="#{configurationView.updateProperty}"
+							oncomplete="if (args &amp;&amp; !args.validationFailed) PF('propertyDialog').hide()" />
+						<p:commandButton id="cancel" value="Cancel"
+							update="propertiesTable,:propertiesForm:saveModification"
+							actionListener="#{configurationView.updateProperty}"
+							oncomplete="PF('propertyDialog').hide()" />
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Yes" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</p:panel>
+	</h:form>
+</h:body>
+</html>

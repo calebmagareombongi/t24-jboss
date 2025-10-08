@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>TAFJEE - Interaction</title>
+<link href="/TAFJEE/css/configuration.css" rel="stylesheet" type="text/css" />
+<link href="/TAFJEE/css/prettify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="/TAFJEE/js/prettify.js"></script>
+</head>
+<ui:include src="../include.xhtml" />
+<body onload="prettyPrint()">
+	<script src="/TAFJEE/js/header.js"></script>
+	<br/>
+	<h1>TAFJEE entry points</h1>
+	<h2 id="WEB">Asynchronous invocation - JMS</h2>	
+	JMS can be used to process OFS request and invoke subroutine asynchronously. TAFJ is shipped with a standalone application, <b>JMSInjector</b>, which provides some utilities to send and receive message.
+	<br/>
+	<br/>
+	The section below provides some code sample to write a simple JMS client application. As the code parts related to the JMS resources lookup are application server specific, there is a main exemple and some change depending on the application server version. 		
+	<br/>
+	<img src="/TAFJEE/images/JMSInteraction.png" border="0"/>
+	<br/>	
+	The client application classpath must contain the <b>application server client libraries</b> to process the JMS resources lookup.
+	<br />
+	<br/>	
+	To make the code sample as concise as possible, all unnecessary parts have been omitted (null check, exception handling...). The main purpose is to describe the JMS client behavior:			
+	<ul>	
+	<li>Lookup the JMS resources from the initial context.</li>
+	<li>Get a JMS connection through the ConnectionFactory.</li>
+	<li>Create a JMS session.</li>
+	<li>Create a MessageProducer to send message to the targeted queue.</li> 
+	<li>Send the OFS request or invoke the subroutine by creating a Text message.</li>
+	<li>Eventually create a Message Receiver to receive a response.</li>
+	</ul>
+	<br />	
+<h3>JBoss 7 EAP</h3>
+Same as above example except parts related to initial context and JMS resources lookup.
+<pre class="prettyprint">
+	...
+	env.put(Context.INITIAL_CONTEXT_FACTORY, "org.jboss.naming.remote.client.InitialContextFactory");
+	env.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");
+	...
+	ConnectionFactory jmsCF = (ConnectionFactory) initialContext.lookup("jms/RemoteConnectionFactory");
+	Destination queue = (Destination) initialContext.lookup("jms/queue/t24OFSQueue");
+	Destination replyQueue = (Destination) initialContext.lookup("jms/queue/t24OFSReplyQueue");
+	...
+</pre>
+<h3>Weblogic 12.2.1</h3>
+Same as above example except parts related to initial context and JMS resources lookup.
+<pre class="prettyprint">
+	...
+	env.put(Context.INITIAL_CONTEXT_FACTORY, "weblogic.jndi.WLInitialContextFactory");
+	env.put(Context.PROVIDER_URL, "t3://localhost:7001");
+	...
+	ConnectionFactory jmsCF = (ConnectionFactory) initialContext.lookup("jms/ConnectionFactory");
+	Destination queue = (Destination) initialContext.lookup("jms/t24OFSQueue");
+	Destination replyQueue = (Destination) initialContext.lookup("jms/t24OFSReplyQueue");
+	...
+</pre>
+<h3>Websphere 9.0</h3>
+Same as above example except parts related to initial context and JMS resources lookup. Please note that in this particular case a specific IBM connection factory object is used.
+<pre class="prettyprint">
+	import com.ibm.websphere.sib.api.jms.JmsConnectionFactory;
+	import com.ibm.websphere.sib.api.jms.JmsFactoryFactory;
+	...
+	env.put(Context.INITIAL_CONTEXT_FACTORY, "com.ibm.websphere.naming.WsnInitialContextFactory");
+	env.put("org.omg.CORBA.ORBClass", "com.ibm.CORBA.iiop.ORB");
+	env.put(Context.PROVIDER_URL, "corbaloc:iiop:localhost:2809");
+	...
+	JmsConnectionFactory jmsCF = JmsFactoryFactory.getInstance().createQueueConnectionFactory();
+	jmsCF.setBusName("T24Bus");
+	jmsCF.setProviderEndpoints("localhost:7276:BootstrapBasicMessaging");
+	...
+	Destination queue = (Destination) initialContext.lookup("jms/t24OFSQueue");
+	Destination replyQueue = (Destination) initialContext.lookup("jms/t24OFSReplyQueue");
+	...
+</pre>
+<br/>
+<br/>
+<br/>
+<table>
+	<tr>
+		<td width="10%" align="left"><a href="ejb.xhtml"><img src="/TAFJEE/images/prev.jpg" border="0"/>Prev</a></td>
+		<td width="80%" align="center">&nbsp;</td>
+		<td width="10%" align="right">&nbsp;</td>
+	</tr>	
+</table>
+</body>
+</html>

@@ -1,0 +1,547 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Configuration views</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="include.xhtml" />
+
+<h:body>
+
+	<h:form>
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>TAFJEE Sanity check</h1>
+
+		<p:accordionPanel multiple="true" activeIndex="0,1,2" id="mainpanel">
+			<p:tab title="EAR file configuration">
+
+				<p:tabView id="earFileDetail">
+
+					<p:tab title="Channels"
+						titleStyleClass="#{sanitycheck.getTabStyleClass('Channels')}">
+						<p:dataTable id="channelTable" value="#{sanitycheck.parser.MDBs}"
+							tableStyle="width:auto" resizeMode="expand"
+							rowStyleClass="#{mdb.higherEventSeverityChannel.styleClass}"
+							resizableColumns="true" var="mdb" draggableColumns="true">
+
+							<p:column headerText="MDB name">
+								<h:outputText value="#{mdb.beanName}" />
+							</p:column>
+							<p:column headerText="Destination">
+								<h:outputText value="#{mdb.destinationName}" />
+							</p:column>
+							<p:column headerText="Reply queue">
+								<h:outputText value="#{mdb.replyQueueName}" />
+							</p:column>
+							<p:column headerText="Connection factory">
+								<h:outputText value="#{mdb.connectionFactoryName}" />
+							</p:column>
+							<p:column headerText="MDB Transaction mode">
+								<h:outputText value="#{mdb.transactionManagementMode}" />
+							</p:column>
+							<p:column headerText="Formatter">
+								<h:outputText value="#{mdb.formatter}" />
+							</p:column>
+							<p:column headerText="Pool properties">
+								<h:outputText value="#{mdb.formattedPoolInfo}" />
+							</p:column>
+							<p:column headerText="EJB name">
+								<h:outputText value="#{mdb.ejbName}" />
+							</p:column>
+							<p:column headerText="EJB transaction mode">
+								<h:outputText
+									value="#{mdb.ejbConfiguration.transactionManagementMode}" />
+							</p:column>
+							<p:column headerText="Pool properties">
+								<h:outputText value="#{mdb.ejbConfiguration.formattedPoolInfo}" />
+							</p:column>
+							<p:column headerText="OFS source">
+								<h:outputText value="#{mdb.ejbConfiguration.ofsSource}" />
+							</p:column>
+							<p:column headerText="OFS timeout">
+								<h:outputText value="#{mdb.ejbConfiguration.ofsTimeout}" />
+							</p:column>
+							<p:column headerText="Data source">
+								<h:outputText value="#{mdb.ejbConfiguration.dataSource}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+
+					<p:tab title="MDBs"
+						titleStyleClass="#{sanitycheck.getTabStyleClass('MDBs')}">
+
+						<p:selectBooleanCheckbox id="detailedViewMDB"
+							value="#{sanityFilterView.detailedView}"> detailed view
+							<p:ajax update="mdbTable" />
+						</p:selectBooleanCheckbox>
+
+						<p:dataTable id="mdbTable" value="#{sanitycheck.parser.MDBs}"
+							tableStyle="width:auto" resizeMode="expand"
+							rowStyleClass="#{mdb.higherEventSeverity.styleClass}"
+							resizableColumns="true" var="mdb" draggableColumns="true">
+							<p:column headerText="MDB name">
+								<h:outputText value="#{mdb.beanName}" />
+							</p:column>
+							<p:column headerText="Destination">
+								<h:outputText value="#{mdb.destinationName}" />
+							</p:column>
+							<p:column headerText="Reply queue">
+								<h:outputText value="#{mdb.replyQueueName}" />
+							</p:column>
+							<p:column headerText="Connection factory">
+								<h:outputText value="#{mdb.connectionFactoryName}" />
+							</p:column>
+							<p:column headerText="MDB Transaction mode">
+								<h:outputText value="#{mdb.transactionManagementMode}" />
+							</p:column>
+							<p:column headerText="Formatter">
+								<h:outputText value="#{mdb.formatter}" />
+							</p:column>
+							<p:column headerText="Ejb link">
+								<h:outputText value="#{mdb.ejbName}" />
+							</p:column>
+							<p:column headerText="Pool properties">
+								<h:outputText value="#{mdb.formattedPoolInfo}" />
+							</p:column>
+							<p:column headerText="Resource(s)"
+								rendered="#{sanityFilterView.detailedView}">
+								<p:dataList rendered="#{not empty mdb.resourceRefs}"
+									value="#{mdb.resourceRefs}" var="resRefMDB">
+									<h:outputText value="#{resRefMDB.name}" />
+								</p:dataList>
+							</p:column>
+							<p:column headerText="Propertie(s)"
+								rendered="#{sanityFilterView.detailedView}">
+								<h:outputText rendered="#{not empty mdb.maxThreadName}"
+									value="#{mdb.maxThreadName} " />
+								<h:outputText rendered="#{not empty mdb.maxThread}"
+									value="#{mdb.maxThread}" />
+								<p:dataList rendered="#{not empty mdb.envEntries}"
+									value="#{mdb.envEntries}" var="envEntryMDB">
+									<h:outputText value="#{envEntryMDB.nameTrunc} " />
+									<h:outputText value="#{envEntryMDB.value}" />
+								</p:dataList>
+								<p:dataList rendered="#{not empty mdb.containerTransactions}"
+									value="#{mdb.containerTransactions}" var="ctxMDB">
+									<h:outputText value="#{ctxMDB.methodName} " />
+									<h:outputText value="#{ctxMDB.transactionAttribute} " />
+									<h:outputText value="#{ctxMDB.transactionTimeout.timeout} " />
+									<h:outputText value="#{ctxMDB.transactionTimeout.timeoutUnit} " />
+								</p:dataList>
+							</p:column>
+							<p:column headerText="Test"
+								rendered="#{sanitycheck.enableTestButton}">
+								<p:commandButton
+									action="#{sanitycheck.sendTestMessage(mdb.connectionFactoryName,mdb.destinationName)}"
+									value="Send Message" update="mdbTable">
+								</p:commandButton>
+							</p:column>
+							<p:column headerText="Event(s)"
+								rendered="#{sanityFilterView.detailedView}">
+								<p:dataList rendered="#{not empty mdb.events}"
+									value="#{mdb.events}" var="event">
+									<h:outputText value="#{event.category} " />
+									<h:outputText value="#{event.code}" />
+								</p:dataList>
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+
+					<p:tab title="EJBs"
+						titleStyleClass="#{sanitycheck.getTabStyleClass('EJBs')}">
+
+						<p:selectBooleanCheckbox id="detailedViewEJB"
+							value="#{sanityFilterView.detailedView}"> detailed view
+							<p:ajax update="ejbTable" />
+						</p:selectBooleanCheckbox>
+
+						<p:dataTable id="ejbTable" value="#{sanitycheck.parser.EJBs}"
+							tableStyle="width:auto" resizeMode="expand"
+							rowStyleClass="#{ejb.higherEventSeverity.styleClass}"
+							resizableColumns="true" var="ejb" draggableColumns="true">
+							<p:column headerText="EJB name">
+								<h:outputText value="#{ejb.beanName}" />
+							</p:column>
+							<p:column headerText="EJB transaction mode">
+								<h:outputText value="#{ejb.transactionManagementMode}" />
+							</p:column>
+							<p:column headerText="Pool properties">
+								<h:outputText value="#{ejb.formattedPoolInfo}" />
+							</p:column>
+							<p:column headerText="OFS source">
+								<h:outputText value="#{ejb.ofsSource}" />
+							</p:column>
+							<p:column headerText="OFS timeout">
+								<h:outputText value="#{ejb.ofsTimeout}" />
+							</p:column>
+							<p:column headerText="Data source">
+								<h:outputText value="#{ejb.dataSource}" />
+							</p:column>
+							<p:column headerText="Resource(s)"
+								rendered="#{sanityFilterView.detailedView}">
+								<p:dataList rendered="#{not empty ejb.resourceRefs}"
+									value="#{ejb.resourceRefs}" var="resRef">
+									<h:outputText value="#{resRef.name}" />
+								</p:dataList>
+							</p:column>
+							<p:column headerText="Propertie(s)"
+								rendered="#{sanityFilterView.detailedView}">
+								<p:dataList rendered="#{not empty ejb.envEntries}"
+									value="#{ejb.envEntries}" var="envEntry">
+									<h:outputText value="#{envEntry.nameTrunc} " />
+									<h:outputText value="#{envEntry.value}" />
+								</p:dataList>
+								<p:dataList rendered="#{not empty ejb.containerTransactions}"
+									value="#{ejb.containerTransactions}" var="ctxEJB">
+									<h:outputText value="#{ctxEJB.methodName} " />
+									<h:outputText value="#{ctxEJB.transactionAttribute} " />
+									<h:outputText value="#{ctxEJB.transactionTimeout.timeout} " />
+									<h:outputText value="#{ctxEJB.transactionTimeout.timeoutUnit} " />
+								</p:dataList>
+							</p:column>
+							<p:column headerText="Test"
+								rendered="#{sanitycheck.enableTestButton}">
+								<p:commandButton
+									action="#{sanitycheck.callEjb(ejb.beanName,ejb.className)}"
+									value="Call EJB" update="ejbTable"
+									rendered="#{ejb.className eq 'com.temenos.tafj.sb.OFSProcessingBean'}">
+								</p:commandButton>
+							</p:column>
+							<p:column headerText="Event(s)"
+								rendered="#{sanityFilterView.detailedView}">
+								<p:dataList rendered="#{not empty ejb.events}"
+									value="#{ejb.events}" var="event">
+									<h:outputText value="#{event.category} " />
+									<h:outputText value="#{event.code}" />
+								</p:dataList>
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+
+			<p:tab title="Application server configuration" id="appserver">
+
+				<h:outputLabel for="portTxt" id="port" value="Port: "
+					rendered="#{sanitycheck.portNumber}" />
+				<p:inputText id="portTxt" value="#{sanitycheck.port}" size="10"
+					rendered="#{sanitycheck.portNumber}"
+					onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;">
+				</p:inputText>			
+				<p:spacer width="20" rendered="#{sanitycheck.enableHostName}"></p:spacer>
+				<h:outputLabel for="hostTxt" id="host" value="Hostname: "
+					rendered="#{sanitycheck.enableHostName}" />
+				<p:inputText id="hostTxt" value="#{sanitycheck.hostName}" size="12"
+					rendered="#{sanitycheck.enableHostName}">
+				</p:inputText>
+				
+				<p:spacer width="20" rendered="#{sanitycheck.enableRmiConnector}"></p:spacer>
+
+				<h:outputLabel for="rmiConnectorCheckBox" id="rmiConnector"
+					value="Use RMI connector: "
+					rendered="#{sanitycheck.enableRmiConnector}" />
+				<p:selectBooleanCheckbox id="rmiConnectorCheckBox"
+					rendered="#{sanitycheck.enableRmiConnector}"
+					value="#{sanitycheck.rmiConnector}">
+					<p:ajax event="change" update="securedConnector" />
+				</p:selectBooleanCheckbox>
+
+				<h:panelGroup id="securedConnector"
+					rendered="#{sanitycheck.enableRmiConnector}">
+
+					<p:spacer width="20"></p:spacer>
+
+					<h:outputLabel for="userTxt" id="user" value="User: " />
+					<p:inputText id="userTxt" value="#{sanitycheck.user}" size="20"
+						disabled="#{!sanitycheck.rmiConnector}">
+					</p:inputText>
+
+					<p:spacer width="20"></p:spacer>
+
+					<h:outputLabel for="pwdTxt" id="pwd" value="Password: " />
+					<p:password id="pwdTxt" value="#{sanitycheck.password}" size="20"
+						disabled="#{!sanitycheck.rmiConnector}">
+					</p:password>
+
+				</h:panelGroup>
+
+				<p:spacer width="20"></p:spacer>
+
+				<p:commandButton value="validate configuration" id="getconf"
+					action="#{sanitycheck.runValidation()}"
+					update="validationDetail appserverDetail earFileDetail messages">
+				</p:commandButton>
+
+				<p:messages id="messages" showDetail="true" closable="true">
+					<p:autoUpdate />
+				</p:messages>
+
+				<p:blockUI block="mainpanel" trigger="getconf" />
+
+				<ui:fragment>
+					<br />
+					<br />
+				</ui:fragment>
+
+				<p:tabView id="appserverDetail">
+
+					<p:tab title="Data sources"
+						titleStyleClass="#{sanitycheck.getTabStyleClass('Data sources')}">
+						<p:dataTable
+							value="#{sanitycheck.parser.configuration.dataSources}" var="ds"
+							rowStyleClass="#{ds.higherEventSeverity.styleClass}"
+							tableStyle="width:auto">
+							<p:column sortBy="#{ds.name}" headerText="DS name">
+								<h:outputText value="#{ds.name}" />
+							</p:column>
+							<p:column headerText="Connection URL">
+								<h:outputText value="#{ds.connectionURL}" />
+							</p:column>
+							<p:column sortBy="#{ds.jndiName}" headerText="Jndi name">
+								<h:outputText value="#{ds.jndiName}" />
+							</p:column>
+							<p:column headerText="Transactional">
+								<h:outputText value="#{ds.jta}" />
+							</p:column>
+							<p:column headerText="Max pool size">
+								<h:outputText value="#{ds.maxPoolSize}" />
+							</p:column>
+							<p:column headerText="Min pool size">
+								<h:outputText value="#{ds.minPoolSize}" />
+							</p:column>
+							<p:column headerText="Statement timeout">
+								<h:outputText value="#{ds.statementTimeout}" />
+							</p:column>
+							<p:column headerText="ActiveCount"
+								rendered="#{sanityFilterView.monitoringInfo}">
+								<h:outputText value="#{ds.activeCount}" />
+							</p:column>
+							<p:column headerText="AvailableCount"
+								rendered="#{sanityFilterView.monitoringInfo}">
+								<h:outputText value="#{ds.availableCount}" />
+							</p:column>
+							<p:column headerText="AverageBlockingTime"
+								rendered="#{sanityFilterView.monitoringInfo}">
+								<h:outputText value="#{ds.averageBlockingTime}" />
+							</p:column>
+							<p:column headerText="AverageCreationTime"
+								rendered="#{sanityFilterView.monitoringInfo}">
+								<h:outputText value="#{ds.averageCreationTime}" />
+							</p:column>
+							<p:column headerText="CreatedCount"
+								rendered="#{sanityFilterView.monitoringInfo}">
+								<h:outputText value="#{ds.createdCount}" />
+							</p:column>
+							<p:column headerText="DestroyedCount"
+								rendered="#{sanityFilterView.monitoringInfo}">
+								<h:outputText value="#{ds.destroyedCount}" />
+							</p:column>
+							<p:column headerText="InUseCount"
+								rendered="#{sanityFilterView.monitoringInfo}">
+								<h:outputText value="#{ds.inUseCount}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+
+					<p:tab title="JMS"
+						titleStyleClass="#{sanitycheck.getTabStyleClass('JMS')}">
+						<p:dataTable id="jmsTable"
+							value="#{sanitycheck.parser.configuration.JMSObjects}" var="jms"
+							rowStyleClass="#{jms.higherEventSeverity.styleClass}"
+							tableStyle="width:auto">
+							<p:column sortBy="#{jms.name}" headerText="Name">
+								<h:outputText value="#{jms.name}" />
+							</p:column>
+							<p:column sortBy="#{jms.type}" headerText="Type">
+								<h:outputText value="#{jms.type}" />
+							</p:column>
+							<p:column sortBy="#{jms.jndiName}" headerText="Jndi name">
+								<p:dataList rendered="#{not empty jms.jndiName}"
+									value="#{jms.jndiName}" var="name">
+									<h:outputText value="#{name}" />
+								</p:dataList>
+							</p:column>
+							<p:column headerText="Consumer total"
+								rendered="#{sanityFilterView.monitoringInfo}">
+								<h:outputText value="#{jms.consumersTotalCount}" />
+							</p:column>
+							<p:column headerText="Consumer current"
+								rendered="#{sanityFilterView.monitoringInfo}">
+								<h:outputText value="#{jms.consumersCurrentCount}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+
+					<p:tab title="Thread pools"
+						titleStyleClass="#{sanitycheck.getTabStyleClass('Thread pools')}">
+						<p:dataTable id="threadTable"
+							value="#{sanitycheck.parser.configuration.threadsPool}" var="tp"
+							rowStyleClass="#{tp.higherEventSeverity.styleClass}"
+							tableStyle="width:auto">
+							<p:column headerText="Thread pool name">
+								<h:outputText value="#{tp.name}" />
+							</p:column>
+							<p:column headerText="Min pool size">
+								<h:outputText value="#{tp.minPoolSize}" />
+							</p:column>
+							<p:column headerText="Max pool size">
+								<h:outputText value="#{tp.maxPoolSize}" />
+							</p:column>
+							<p:column headerText="Default">
+								<h:outputText value="#{tp.isDefault}" />
+							</p:column>
+							<p:column headerText="Scope" rendered="#{not empty tp.scope}">
+								<h:outputText value="#{tp.scope}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+
+					<p:tab title="Timeout"
+						titleStyleClass="#{sanitycheck.getTabStyleClass('Timeout')}">
+						<p:dataTable id="timeoutTable"
+							value="#{sanitycheck.parser.configuration.timeoutProperties}"
+							var="txp" rowStyleClass="#{txp.higherEventSeverity.styleClass}"
+							tableStyle="width:auto">
+							<p:column headerText="Timeout type">
+								<h:outputText value="#{txp.name}" />
+							</p:column>
+							<p:column headerText="Transaction timeout">
+								<h:outputText value="#{txp.timeOut}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+
+					<p:tab title="JVM"
+						titleStyleClass="#{sanitycheck.getTabStyleClass('JVM')}">
+						<p:dataTable id="jvmTable"
+							value="#{sanitycheck.parser.configuration.jvmParameters}"
+							var="jvmparam"
+							rowStyleClass="#{jvmparam.higherEventSeverity.styleClass}"
+							tableStyle="width:auto">
+							<p:column headerText="Input arguments">
+								<h:outputText value="#{jvmparam.name}" />
+							</p:column>
+							<p:column headerText="" rendered="#{not empty jvmparam.value}">
+								<h:outputText value="#{jvmparam.value}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+
+			<p:tab title="Validation" id="validation">
+
+				<ui:fragment>
+					<br />
+					<br />
+				</ui:fragment>
+
+				<p:tabView id="validationDetail">
+
+					<p:tab title="Events">
+
+						<p:dataTable id="validationEvent"
+							value="#{sanitycheck.checker.validationEvents}"
+							rowStyleClass="#{event.severity.styleClass}"
+							resizableColumns="true" resizeMode="expand"
+							tableStyle="width:auto" var="event" widgetVar="eventsTable"
+							emptyMessage="No event found with given criteria"
+							filteredValue="#{sanityFilterView.fileteredEvents}"
+							sortBy="#{event.severity.priority}" draggableColumns="true">
+
+							<p:column sortBy="#{event.severity.priority}"
+								headerText="Severity" filterBy="#{event.severity.name()}"
+								filterMatchMode="in">
+								<f:facet name="filter">
+									<p:selectCheckboxMenu label="Severity"
+										onchange="PF('eventsTable').filter()">
+										<f:selectItems value="#{sanitycheck.validationEventSeverity}" />
+									</p:selectCheckboxMenu>
+								</f:facet>
+								<h:outputText value="#{event.severity.name()}" />
+							</p:column>
+
+							<p:column sortBy="#{event.category.name()}" headerText="Category"
+								filterBy="#{event.category.name()}" filterMatchMode="in">
+								<f:facet name="filter">
+									<p:selectCheckboxMenu label="Type"
+										onchange="PF('eventsTable').filter()">
+										<f:selectItems value="#{sanitycheck.validationEventCategory}" />
+									</p:selectCheckboxMenu>
+								</f:facet>
+								<h:outputText value="#{event.category.name()}" />
+							</p:column>
+
+							<p:column sortBy="#{event.code.name()}" headerText="Code">
+								<h:outputText value="#{event.code.name()}" />
+							</p:column>
+
+							<p:column filterBy="#{event.channelName}"
+								filterMatchMode="contains" sortBy="#{event.channelName}"
+								headerText="Channel">
+								<h:outputText value="#{event.channelName}" />
+							</p:column>
+
+							<p:column headerText="Channel info">
+								<h:outputText value="#{event.detail}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:tab>
+
+
+					<p:tab title="Help">
+
+						<p:dataTable id="validationFix"
+							value="#{sanitycheck.checker.validationEventsToFix}"
+							rowStyleClass="#{event.severity.styleClass}"
+							resizableColumns="true" resizeMode="expand"
+							tableStyle="width:auto" var="event"
+							filteredValue="#{sanityFilterView.fileteredFix}"
+							draggableColumns="true">
+
+							<p:column sortBy="#{event.category.name()}" headerText="Category">
+								<h:outputText value="#{event.category.name()}" />
+							</p:column>
+							<p:column filterBy="#{event.channelName}"
+								filterMatchMode="contains" sortBy="#{event.channelName}"
+								headerText="Channel">
+								<h:outputText value="#{event.channelName}" />
+							</p:column>
+							<p:column headerText="Detail">
+								<h:outputText value="#{event.code.detail}"
+									sortBy="#{event.code.detail}" />
+							</p:column>
+							<p:column headerText="Help">
+								<p:lightBox styleClass="imagebox">
+									<h:outputLink
+										value="images/#{event.code.fix.getImage(sanitycheck.appServer)}">
+										<h:outputText
+											value="#{event.code.fix.getDetail(sanitycheck.appServer)}" />
+									</h:outputLink>
+								</p:lightBox>
+							</p:column>
+						</p:dataTable>
+
+					</p:tab>
+
+				</p:tabView>
+
+			</p:tab>
+		</p:accordionPanel>
+	</h:form>
+
+</h:body>
+
+</html>

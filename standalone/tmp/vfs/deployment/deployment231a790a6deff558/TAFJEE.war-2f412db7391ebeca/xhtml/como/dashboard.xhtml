@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Como servlet</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="../include.xhtml" />
+
+<h:body>
+	<h:form id="comoForm">
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>Como servlet</h1>
+
+		<h3>You can browse como content.</h3>
+		<h3 />
+
+		<p:messages id="msgs" />
+
+
+		<p:panel id="page" styleClass="info">
+
+			<p:panel id="tenantSelection" styleClass="info"
+				rendered="#{comoView.isMultitenant()}" header="Multitenant system">
+				<h:panelGrid id="tenantGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+					<h:outputText value="Tenant ID:" />
+					<p:selectOneMenu id="tenantId" value="#{comoView.tenantId}"
+						valueChangeListener="#{comoView.selectTenant}" onchange="submit()">
+						<f:selectItem itemLabel="Select tenant" itemValue="" />
+						<f:selectItems value="#{comoView.tenantIds}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="logPaths" styleClass="info"
+				header="Configuration and paths"
+				rendered="#{comoView.renderPanel()}">
+				<h:panelGrid id="logPathGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<h:outputText value="Como folder:" />
+					<h:outputText value="#{comoView.getComoInfo()}" />
+
+				</h:panelGrid>
+			</p:panel>
+
+
+			<p:panel id="comoTable" header="Available comos" styleClass="info"
+				rendered="#{comoView.renderPanel()}">
+				<h:panelGrid id="comoGrid" columns="1" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<p:commandButton id="loadComos" global="true" value="Reload comos"
+						action="#{comoView.loadComos()}" update="comoTable"
+						style="width:140px">
+					</p:commandButton>
+
+					<p:dataTable value="#{comoView.comos}" var="como"
+						rendered="#{!comoView.noComosFound()}">
+						<p:column headerText="Como" sortBy="#{como.getFileName()}">
+							<h:outputText value="#{como.getFileName()}" />
+						</p:column>
+						<p:column headerText="Last modified"
+							sortBy="#{como.getFormattedDate()}">
+							<h:outputText value="#{como.getFormattedDate()}" />
+						</p:column>
+						<p:column headerText="Size">
+							<h:outputText value="#{como.getFileSize()}" />
+						</p:column>
+						<p:column>
+							<p:commandButton id="viewComo" global="true" value="View"
+								action="#{comoView.viewComo(como)}" update=":comoForm:page"
+								style="width:80px">
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+
+					<h:outputText value="No comos found"
+						rendered="#{comoView.noComosFound()}" />
+
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="comoFileContent" header="Como file" styleClass="info"
+				rendered="#{comoView.renderComo()}">
+				<h:panelGrid id="comoEntriesGrid" columns="1"
+					style="margin-bottom:10px" cellpadding="5">
+
+					<h:outputText value="Como name: #{comoView.getCurrentFile()}" />
+					
+					<h:outputText value="Como file path: #{comoView.getCurrentFilePath()}" />
+
+					<p:commandButton id="closeComo" global="true" value="Close como"
+						action="#{comoView.closeComo()}" update=":comoForm:page"
+						style="width:120px">
+					</p:commandButton>
+
+					<p:dataTable id="comoEntriesTable" var="entry"
+						value="#{comoView.comoEntries}">
+						<p:column filterBy="#{entry}" filterMatchMode="contains">
+							<h:outputText value="#{entry}" />
+						</p:column>
+					</p:dataTable>
+
+				</h:panelGrid>
+			</p:panel>
+		</p:panel>
+
+
+	</h:form>
+</h:body>
+</html>

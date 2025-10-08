@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<head>
+<title>TAFJEE - Home</title>
+<link href="/TAFJEE/css/configuration.css" rel="stylesheet" type="text/css" />
+</head>
+
+<ui:include src="xhtml/include.xhtml" />
+
+<h:body>
+	<script src="/TAFJEE/js/header.js"></script>
+	<br />
+	<h1>Welcome!</h1>
+	Welcome to TAFJ servlets. If you can see this page you have
+	successfully deployed TAFJ Web Application.
+	<br />
+	<h2>Configuration</h2>
+	<ul>
+		<li><a href="/TAFJConfiguration/dashboard.xhtml">Properties
+				Setup </a> <br />Configure tafj properties<br /></li>
+		<br />
+	</ul>
+	<h2>Diagnostic</h2>
+	<ul>
+		<li><a href="/TAFJEE/xhtml/tdiag/dashboard.xhtml">tDiag</a> <br />
+			Get details about your TAFJ environment <br /></li>
+		<br />
+		<li><a href="/TAFJEE/xhtml/tshow/dashboard.xhtml">tShow</a> <br />
+			Get routine compilation details <br /></li>
+		<br />
+		<li><a href="/TAFJSanitycheck/dashboard.xhtml">Sanity Check</a> <br />
+			Run environment validation <br /></li>
+		<br />
+		<li><a href="/TAFJConfiguration/runtime.xhtml">Runtime
+				Properties </a> <br />Get details about current runtime properties<br /></li>
+		<br />
+	</ul>
+	<h2>Execution</h2>
+	<ul>
+		<li><a href="/TAFJEE/xhtml/execute/dashboard.xhtml">Execute
+				Servlet</a> <br />Post message to ExecQueue <br /></li>
+		<br />
+		<li><a href="/TAFJEE/xhtml/webservices/dashboard.xhtml">Entry
+				Points</a> <br />Webservices invocation and entry points <br /></li>
+		<br />
+		<li><a href="/TAFJEE/xhtml/dbtools/dashboard.xhtml">DBTools</a> <br />Execute
+			DBTools command<br /></li>
+		<br />
+		<li><a href="/TAFJEE/xhtml/trun/dashboard.xhtml">tRun</a> <br />Execute
+			a tRun command<br /></li>
+		<br />
+	</ul>
+	<h2>Management</h2>
+	<ul>
+		<li><a href="/TAFJEE/xhtml/management/dashboard.xhtml">TAFJEE
+				Sessions Management</a> <br />Management bean configuration and
+			sessions management <br /></li>
+		<br />
+	</ul>
+	<h2>Troubleshooting</h2>
+	<ul>
+		<li><a href="/TAFJEEMonitoring/monitoring">Technical Monitor</a> <br />Monitor
+			your TAFJEE application <br /></li>
+		<br />
+		<li><a href="/TAFJEE/xhtml/logger/dashboard.xhtml">Log Files</a>
+			<br />Change log level and view log files <br /></li>
+		<br />
+		<li><a href="/TAFJCobMonitor/dashboard.xhtml">COB Monitor</a> <br />View
+			cob progress <br /></li>
+		<br />
+		<li><a href="/TAFJTECMonitor/dashboard.xhtml">TEC Monitor</a> <br />View
+			TEC Metrics<br /></li>
+		<br />
+		<li><a href="/TAFJEE/xhtml/como/dashboard.xhtml">Como Files</a> <br />View
+			como files <br /></li>
+		<br />
+	</ul>
+	<script src="/TAFJEE/js/footer.js"></script>
+</h:body>
+</html>
+

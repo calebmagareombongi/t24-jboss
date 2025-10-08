@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>TAFJTECMonitor</display-name>
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml</param-value>
+	</context-param>
+	<!-- <context-param> <param-name>javax.faces.application.CONFIG_FILES</param-name> 
+		<param-value>/WEB-INF/faces-config.xml</param-value> </context-param> -->
+	<context-param>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>client</param-value>
+	</context-param>
+	<!-- enable cliend window mode -->
+	<context-param>
+    	<param-name>javax.faces.CLIENT_WINDOW_MODE</param-name>
+    	<param-value>url</param-value>
+	</context-param>
+
+	<env-entry>
+		<env-entry-name>callAtEjbLookup</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>java:global/TAFJJEE_EAR/TAFJJEE_EJB/CallAtProcessingBean!com.temenos.tafj.sb.OFSProcessingBeanLocal</env-entry-value>
+	</env-entry>
+ 
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>TAFJTECMonitor</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>TAFJAdmin</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-role>
+		<role-name>TAFJAdmin</role-name>
+	</security-role>
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>TAFJRealm</realm-name>
+	</login-config>
+	
+
+
+</web-app>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>TAFJEEMonitoring</display-name>
+	
+	<!-- Data sources declaration -->
+	<!-- Not used by application but required to use javamelody.datasources 
+		parameter -->
+	<!-- This parameter is optional but allows refining the DS list to be monitored 
+		/ excluded -->
+	<resource-ref>
+		<description>Used to get connections from T24 jdbc pool</description>
+		<res-ref-name>jdbc/t24DataSource</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	
+	<!-- java melody monitoring parameters -->
+	<context-param>
+		<param-name>javamelody.update-check-disabled</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- turn off javamelody when set to true -->
+	<context-param>
+		<param-name>javamelody.disabled</param-name>
+		<param-value>false</param-value>
+	</context-param>
+
+	<!-- turn off system actions : GC, kill thread, thread dump, jmx access 
+		etc... when set to false -->
+	<context-param>
+		<param-name>javamelody.system-actions-enabled</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- statistic storage directory -->
+	<!-- If the name of the directory starts with '/' (or on Windows, with drive 
+		specifier followed by '\') -->
+	<!-- it is considered as an absolute path, otherwise it is considered as 
+		relative to the temporary directory java.io.tmpdir -->
+	<!-- <context-param> <param-name>javamelody.storage-directory</param-name> 
+		<param-value>/TAFJ/javamelody-storage-dir</param-value> </context-param> -->
+
+	<!-- turn off sql monitoring when set to true -->
+	<context-param>
+		<param-name>javamelody.no-database</param-name>
+		<param-value>false</param-value>
+	</context-param>
+
+	<!-- datasources to be monitored -->
+	<!-- they could be retrieved dynamically through jndi lookup but we might 
+		want to exclude some -->
+	<!-- i.e. locking data source, WAS internal derby DS for EJBTimer or locking 
+		DS -->
+	<context-param>
+		<param-name>javamelody.datasources</param-name>
+		<param-value>java:comp/env/jdbc/t24DataSource</param-value>
+	</context-param>
+
+	<!-- hotspot detection - DEV only <context-param> <param-name>javamelody.sampling-seconds</param-name> 
+		<param-value>10</param-value> </context-param> <context-param> <param-name>javamelody.sampling-excluded-packages</param-name> 
+		<param-value>java,sun,com.sun,javax,org.apache,org.hibernate,oracle,org.postgresql,org.eclipse,org.jboss,com.arjuna,org.jnp</param-value> 
+		</context-param> -->
+
+	<!-- specific TAFJJEE feature used to override the default log level which 
+		is set to WARNING -->
+	<!-- we only want to display ERROR messages by default -->
+	<!-- could also be used to turn off the functionality but not advisable 
+		to report lowest log level messages -->
+	<!-- this is not the intended purpose of the functionality and could be 
+		really verbose -->
+	<!-- valid values are ERROR - WARNING - INFO - DEBUG - OFF -->
+	<context-param>
+		<param-name>javamelody.log-threshold-level</param-name>
+		<param-value>ERROR</param-value>
+	</context-param>
+
+	<!-- counters override default counters setup - we don't want to display 
+		the default one "http,sql,error,log" as we don't need http monitoring -->
+	<!-- specific TAFJEE feature -->
+	<!-- if no-database=true no sql counter displayed - if log-threshold-level=OFF 
+		no log counter displayed -->
+	<context-param>
+		<param-name>javamelody.displayed-counters</param-name>
+		<param-value>sql,log,ejb</param-value>
+	</context-param>
+	
+	<filter>
+		<filter-name>monitoring</filter-name>
+		<filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>monitoring</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- not used until we need to monitor Http sessions <listener> <listener-class>net.bull.javamelody.SessionListener</listener-class> 
+		</listener> -->
+
+
+	<!-- Security template - basic authentication - configuration to secure 
+		the webApp -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>TAFJEEMonitoring</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>TAFJAdmin</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>TAFJEEMonitoring</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>TAFJUser</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-role>
+		<role-name>TAFJAdmin</role-name>
+	</security-role>
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>TAFJRealm</realm-name>
+	</login-config>
+
+
+</web-app>

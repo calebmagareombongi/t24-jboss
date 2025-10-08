@@ -1,0 +1,1 @@
+document.write('\<table><tr height="100%"><td align="left"><typ>Webapp version:R20.SP10.0</typ></td></tr></table>');

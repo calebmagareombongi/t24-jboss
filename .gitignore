@@ -1,0 +1,7 @@
+standalone/tmp/
+standalone/log/
+standalone/data/
+standalone/configuration/logging.properties
+*/.DS_Store
+*.log
+

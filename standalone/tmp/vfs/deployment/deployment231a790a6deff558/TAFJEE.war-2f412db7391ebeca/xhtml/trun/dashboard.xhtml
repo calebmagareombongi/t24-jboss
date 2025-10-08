@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>tRun Execution</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="../include.xhtml" />
+
+<h:body>
+	<h:form id="trunForm">
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>tRun Execution</h1>
+
+
+		<h3>Program must be authorized through TRunProcessingBean ejb-jar
+			setup or 'temn.tafj.appserver.trun.allowed.commands' property.</h3>
+
+		<h3 />
+
+		<p:messages id="msgs" />
+
+		<p:remoteCommand name="pullResult" update="page"
+			actionListener="#{trunView.pullResult}" />
+
+		<p:panel id="page" styleClass="info">
+
+			<p:panel id="tenantSelection" styleClass="info"
+				rendered="#{trunView.isMultitenant()}" header="Multitenant system">
+				<h:panelGrid id="tenantGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+					<h:outputText value="Tenant ID:" />
+					<p:selectOneMenu id="tenantId" value="#{trunView.tenantId}"
+						valueChangeListener="#{trunView.selectTenant}"
+						onchange="submit()">>
+						<f:selectItem itemLabel="Select tenant" itemValue="" />
+						<f:selectItems value="#{trunView.tenantIds}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="input" header="tRun execution parameters"
+				styleClass="info" rendered="#{trunView.renderPanel()}">
+
+				<h:panelGrid id="trunGrid" columns="2" style="margin-bottom:10px"
+					cellpadding="5">
+
+					<h:outputText value="Command: " />
+					<p:inputText id="command" disabled="#{trunView.inProgress}"
+						value="#{trunView.command}" size="200">
+					</p:inputText>
+
+					<h:outputText value="Input data(s): " />
+					<h:panelGrid id="inputGrid" columns="2" style="margin-bottom:10px"
+						cellpadding="5">
+						<h:commandButton value="add" disabled="#{trunView.inProgress}"
+							action="#{trunView.addInputData}" />
+						<h:dataTable value="#{trunView.inputDatas}" var="input">
+							<h:column>
+								<h:inputText id="command" disabled="#{trunView.inProgress}"
+									value="#{input.value}">
+								</h:inputText>
+							</h:column>
+							<h:column>
+								<h:commandButton value="remove"
+									disabled="#{trunView.inProgress}"
+									action="#{trunView.removeInputData(input)}" />
+							</h:column>
+						</h:dataTable>
+					</h:panelGrid>
+
+					<h:outputText value="Override default timeout:" />
+					<p:selectBooleanCheckbox value="#{trunView.overrideDefaultTimeout}"
+						disabled="#{trunView.inProgress}">
+						<p:ajax update="timeout" />
+					</p:selectBooleanCheckbox>
+
+					<h:outputText value="Timeout (s):" />
+					<p:inputText value="#{trunView.timeout}" id="timeout"
+						disabled="#{!trunView.overrideDefaultTimeout || trunView.inProgress}"
+						onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+						size="5" />
+
+					<h:panelGrid id="buttonGrid" columns="3" style="margin-bottom:10px">
+						<h:outputText />
+						<p:commandButton id="executeTRun" global="true" value="Execute"
+							actionListener="#{trunView.executeTRunAsync}"
+							oncomplete="pullResult();" disabled="#{trunView.inProgress}"
+							update="msgs,trunGrid,responseGrid" style="width:80px">
+						</p:commandButton>
+						<p:commandButton id="reset" value="Reset"
+							actionListener="#{trunView.resetPageData}"
+							disabled="#{trunView.inProgress}"
+							update="msgs,trunGrid,responseGrid" style="width:80px">
+						</p:commandButton>
+
+					</h:panelGrid>
+
+				</h:panelGrid>
+			</p:panel>
+
+
+			<p:panel id="output" header="tRun Execution report" styleClass="info"
+				rendered="#{trunView.renderPanel()}">
+				<h:panelGrid id="responseGrid" columns="2"
+					style="margin-bottom:10px" cellpadding="5">
+					<h:outputText value="Command: " />
+					<h:outputText value="#{trunView.commandReport}" />
+
+					<h:outputText value="Input data(s): " />
+					<h:dataTable value="#{trunView.inputDatasReport}" var="input">
+						<h:column>
+							<h:outputText value="#{input}" />
+						</h:column>
+					</h:dataTable>
+
+					<h:outputText value="Response:" />
+					<h:outputText value="#{trunView.responseReport}"
+						styleClass="#{trunView.statusReportStyleClass}" />
+
+					<h:outputText value="Status:" />
+					<h:outputText value="#{trunView.statusReport}"
+						styleClass="#{trunView.statusReportStyleClass}" />
+
+					<h:outputText value="Output: " />
+					<h:dataTable value="#{trunView.outputDatasReport}" var="output">
+						<h:column>
+							<h:outputText value="#{output}" />
+						</h:column>
+					</h:dataTable>
+
+					<h:outputText value="Start time:" />
+					<h:outputText value="#{trunView.startTime}" />
+
+					<h:outputText value="End time:" />
+					<h:outputText value="#{trunView.endTime}" />
+
+				</h:panelGrid>
+			</p:panel>
+		</p:panel>
+
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+
+	</h:form>
+</h:body>
+</html>

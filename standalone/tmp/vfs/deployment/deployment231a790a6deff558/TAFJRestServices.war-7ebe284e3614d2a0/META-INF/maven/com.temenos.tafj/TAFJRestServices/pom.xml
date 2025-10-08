@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.temenos.tafj</groupId>
+		<artifactId>TAFJ</artifactId>
+		<version>20.22.0</version>
+		<relativePath>../TAFJBuild/pom.xml</relativePath>
+	</parent>
+
+	<name>TAFJRestServices</name>
+	<description></description>
+	<artifactId>TAFJRestServices</artifactId>
+	<packaging>war</packaging>
+
+	<build>
+		<finalName>TAFJRestServices</finalName>		
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJLogging</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJCommon</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJCore</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJClient</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJJEE_EJBClient</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.json</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- weblogic json media type support -->
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- xml support <dependency> <groupId>org.glassfish.jersey.media</groupId> 
+			<artifactId>jersey-media-jaxb</artifactId> </dependency> -->
+
+
+	</dependencies>
+
+</project>

@@ -1,0 +1,653 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>Configuration views</title>
+	<h:outputStylesheet library="css" name="sanity.css" />
+</h:head>
+
+<ui:include src="include.xhtml" />
+
+<h:body>
+
+	<h:form>
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>TAFJEE Sanity check</h1>
+
+		<ui:fragment>
+			<br />
+			<br />
+		</ui:fragment>
+
+		<h2>EAR file configuration</h2>
+
+		<h:selectBooleanCheckbox id="flatView" value="#{sanitycheck.flatView}">Flat view			
+			<f:ajax execute="flatView" render="mdbTable ejbSection" />
+		</h:selectBooleanCheckbox>
+
+		<h:selectBooleanCheckbox id="detailedView"
+			value="#{sanitycheck.detailedView}">Show Details			
+			<f:ajax execute="detailedView" render="mdbTable ejbTable" />
+		</h:selectBooleanCheckbox>
+
+		<h3>MDBs</h3>
+
+		<h:dataTable id="mdbTable" value="#{sanitycheck.parser.MDBs}"
+			var="mdb" styleClass="ejb-table" headerClass="ejb-table-header"
+			rowClasses="ejb-table-odd-row,ejb-table-even-row"
+			columnClasses="ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-number,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string">
+
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">MDB name</f:facet>				
+    				#{mdb.beanName}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Destination</f:facet>
+    				#{mdb.destinationName}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Reply queue</f:facet>
+    				#{mdb.replyQueueName}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Connection factory</f:facet>
+    				#{mdb.connectionFactoryName}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">MDB Transaction mode</f:facet>
+    				#{mdb.transactionManagementMode}
+    			</h:column>
+
+
+			<h:column>
+				<f:facet name="header">Formatter</f:facet>
+    				#{mdb.formatter}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Ejb link</f:facet>
+    				#{mdb.ejbName}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Pool properties</f:facet>
+    				#{mdb.formattedPoolInfo}
+    			</h:column>
+
+
+			<h:column rendered="#{sanitycheck.detailedView}">
+				<f:facet name="header">Resource(s)</f:facet>
+				<h:dataTable value="#{mdb.resourceRefs}" var="resRefMDB">
+					<h:column>
+						<h:outputText value="#{resRefMDB.name}" />
+					</h:column>
+					<!-- 
+					<h:column>
+						<h:outputText value="#{resRefMDB.typeTrunc}" />
+					</h:column>
+					 -->
+				</h:dataTable>
+			</h:column>
+
+			<h:column rendered="#{sanitycheck.detailedView}">
+				<f:facet name="header">Propertie(s)</f:facet>
+				<h:dataTable value="#{mdb.envEntries}" var="envEntryMDB">
+					<h:column>
+						<h:outputText value="#{envEntryMDB.nameTrunc}" />
+					</h:column>
+					<h:column>
+						<h:outputText value="#{envEntryMDB.value}" />
+					</h:column>
+				</h:dataTable>
+				<h:dataTable value="#{mdb.containerTransactions}" var="ctxMDB">
+					<h:column>
+						<h:outputText value="#{ctxMDB.methodName}" />
+					</h:column>
+					<h:column>
+						<h:outputText value="#{ctxMDB.transactionAttribute}" />
+					</h:column>
+					<h:column>
+						<h:outputText value="#{ctxMDB.transactionTimeout.timeout}" />
+					</h:column>
+					<h:column>
+						<h:outputText value="#{ctxMDB.transactionTimeout.timeoutUnit}" />
+					</h:column>
+				</h:dataTable>
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Test</f:facet>
+				<h:commandButton
+					action="#{sanitycheck.sendTestMessage(mdb.connectionFactoryName,mdb.destinationName)}"
+					value="Send Message">
+					<f:ajax execute="mdbTable" render="mdbTable" />
+				</h:commandButton>
+			</h:column>
+
+			<h:column rendered="#{sanitycheck.flatView}">
+				<f:facet name="header">EJB name</f:facet>
+    				#{mdb.ejbName}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.flatView}">
+				<f:facet name="header">EJB transaction mode</f:facet>
+    				#{mdb.ejbConfiguration.transactionManagementMode}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.flatView}">
+				<f:facet name="header">Pool properties</f:facet>
+    				#{mdb.ejbConfiguration.formattedPoolInfo}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.flatView}">
+				<f:facet name="header">OFS source</f:facet>
+    				#{mdb.ejbConfiguration.ofsSource}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.flatView}">
+				<f:facet name="header">OFS timeout</f:facet>
+    				#{mdb.ejbConfiguration.ofsTimeout}
+    		</h:column>
+
+			<h:column rendered="#{sanitycheck.flatView}">
+				<f:facet name="header">Data source</f:facet>
+    				#{mdb.ejbConfiguration.dataSource}
+    		</h:column>
+
+			<h:column
+				rendered="#{sanitycheck.detailedView &amp;&amp; sanitycheck.flatView}">
+				<f:facet name="header">Resource(s)</f:facet>
+				<h:dataTable value="#{mdb.ejbConfiguration.resourceRefs}"
+					var="resRef">
+					<h:column>
+						<h:outputText value="#{resRef.name}" />
+					</h:column>
+					<!-- 
+					<h:column>
+						<h:outputText value="#{resRef.typeTrunc}" />
+					</h:column>
+					 -->
+				</h:dataTable>
+			</h:column>
+
+			<h:column
+				rendered="#{sanitycheck.detailedView  &amp;&amp; sanitycheck.flatView}">
+				<f:facet name="header">Propertie(s)</f:facet>
+				<h:dataTable value="#{mdb.ejbConfiguration.envEntries}"
+					var="envEntry">
+					<h:column>
+						<h:outputText value="#{envEntry.nameTrunc}" />
+					</h:column>
+					<h:column>
+						<h:outputText value="#{envEntry.value}" />
+					</h:column>
+				</h:dataTable>
+				<h:dataTable value="#{mdb.ejbConfiguration.containerTransactions}"
+					var="ctxEJB">
+					<h:column>
+						<h:outputText value="#{ctxEJB.methodName}" />
+					</h:column>
+					<h:column>
+						<h:outputText value="#{ctxEJB.transactionAttribute}" />
+					</h:column>
+					<h:column>
+						<h:outputText value="#{ctxEJB.transactionTimeout.timeout}" />
+					</h:column>
+					<h:column>
+						<h:outputText value="#{ctxEJB.transactionTimeout.timeoutUnit}" />
+					</h:column>
+				</h:dataTable>
+			</h:column>
+
+			<h:column rendered="#{sanitycheck.flatView}">
+				<f:facet name="header">Test</f:facet>
+				<h:commandButton
+					action="#{sanitycheck.callEjb(mdb.ejbName,mdb.ejbConfiguration.className)}"
+					value="Call EJB"
+					rendered="#{not empty mdb.ejbName &amp;&amp; mdb.ejbConfiguration.className eq 'com.temenos.tafj.sb.OFSProcessingBean'}">
+					<f:ajax execute="mdbTable" render="mdbTable" />
+				</h:commandButton>
+			</h:column>
+		</h:dataTable>
+
+		<h:panelGroup id="ejbSection">
+
+			<ui:fragment rendered="#{not sanitycheck.flatView}">
+
+				<h3>EJBs</h3>
+
+				<h:dataTable id="ejbTable" value="#{sanitycheck.parser.EJBs}"
+					rendered="#{not sanitycheck.flatView}" var="ejb"
+					styleClass="ejb-table" headerClass="ejb-table-header"
+					rowClasses="ejb-table-odd-row,ejb-table-even-row"
+					columnClasses="ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string">
+
+					<h:column>
+						<f:facet name="header">EJB name</f:facet>
+    				#{ejb.beanName}
+    			</h:column>
+
+					<h:column>
+						<f:facet name="header">EJB transaction mode</f:facet>
+    				#{ejb.transactionManagementMode}
+    			</h:column>
+
+					<h:column>
+						<f:facet name="header">Pool properties</f:facet>
+    				#{ejb.formattedPoolInfo}
+    			</h:column>
+
+					<h:column>
+						<f:facet name="header">OFS source</f:facet>
+    				#{ejb.ofsSource}
+    			</h:column>
+
+					<h:column>
+						<f:facet name="header">OFS timeout</f:facet>
+    				#{ejb.ofsTimeout}
+    			</h:column>
+
+					<h:column>
+						<f:facet name="header">Data source</f:facet>
+    				#{ejb.dataSource}
+    			</h:column>
+
+					<h:column rendered="#{sanitycheck.detailedView}">
+						<f:facet name="header">Resource(s)</f:facet>
+						<h:dataTable value="#{ejb.resourceRefs}" var="resRef">
+							<h:column>
+								<h:outputText value="#{resRef.name}" />
+							</h:column>
+							<!-- 
+					<h:column>
+						<h:outputText value="#{resRef.typeTrunc}" />
+					</h:column>
+					 -->
+						</h:dataTable>
+					</h:column>
+
+					<h:column rendered="#{sanitycheck.detailedView}">
+						<f:facet name="header">Propertie(s)</f:facet>
+						<h:dataTable value="#{ejb.envEntries}" var="envEntry">
+							<h:column>
+								<h:outputText value="#{envEntry.nameTrunc}" />
+							</h:column>
+							<h:column>
+								<h:outputText value="#{envEntry.value}" />
+							</h:column>
+						</h:dataTable>
+						<h:dataTable value="#{ejb.containerTransactions}" var="ctxEJB">
+							<h:column>
+								<h:outputText value="#{ctxEJB.methodName}" />
+							</h:column>
+							<h:column>
+								<h:outputText value="#{ctxEJB.transactionAttribute}" />
+							</h:column>
+							<h:column>
+								<h:outputText value="#{ctxEJB.transactionTimeout.timeout}" />
+							</h:column>
+							<h:column>
+								<h:outputText value="#{ctxEJB.transactionTimeout.timeoutUnit}" />
+							</h:column>
+						</h:dataTable>
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">Test</f:facet>
+						<h:commandButton
+							action="#{sanitycheck.callEjb(ejb.beanName,ejb.className)}"
+							value="Call EJB"
+							rendered="#{ejb.className eq 'com.temenos.tafj.sb.OFSProcessingBean'}">
+							<f:ajax execute="ejbTable" render="ejbTable" />
+						</h:commandButton>
+					</h:column>
+				</h:dataTable>
+			</ui:fragment>
+		</h:panelGroup>
+
+		<ui:fragment>
+			<br />
+			<br />
+		</ui:fragment>
+
+
+		<h2>Application server configuration</h2>
+
+		<h:panelGroup id="configuration">
+
+
+			<h:outputLabel for="portInputText" id="port" value="Port: "
+				rendered="#{sanitycheck.portNumber}" />
+			<h:inputText id="portInputText" value="#{sanitycheck.port}" size="10"
+				rendered="#{sanitycheck.portNumber}"
+				onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;">
+			</h:inputText>
+
+			<h:commandButton value="validate configuration"
+				action="#{sanitycheck.runValidation()}">
+				<f:ajax execute="configuration"
+					render="dsTable threadTable timeoutTable jmsTable jvmTable eventTable validationFix" />
+			</h:commandButton>
+		</h:panelGroup>
+
+		<h3>Data sources</h3>
+
+		<h:dataTable id="dsTable"
+			value="#{sanitycheck.parser.configuration.dataSources}" var="ds"
+			styleClass="ejb-table" headerClass="ejb-table-header"
+			rowClasses="ejb-table-odd-row,ejb-table-even-row"
+			columnClasses="ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-number,ejb-table-column-number,ejb-table-column-number,ejb-table-column-number,ejb-table-column-number,ejb-table-column-number,ejb-table-column-number,ejb-table-column-number">
+
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">DS name</f:facet>				
+    				#{ds.name}
+    			</h:column>
+
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">Connection URL</f:facet>				
+    				#{ds.connectionURL}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Jndi name</f:facet>
+    				#{ds.jndiName}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Transactional</f:facet>
+    				#{ds.jta}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Max pool size</f:facet>
+    				#{ds.maxPoolSize}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Min pool size</f:facet>
+    				#{ds.minPoolSize}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Statement timeout</f:facet>
+    				#{ds.statementTimeout}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.monitoringInfo}">
+				<f:facet name="header">ActiveCount</f:facet>
+    				#{ds.activeCount}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.monitoringInfo}">
+				<f:facet name="header">AvailableCount</f:facet>
+    				#{ds.availableCount}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.monitoringInfo}">
+				<f:facet name="header">AverageBlockingTime</f:facet>
+    				#{ds.averageBlockingTime}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.monitoringInfo}">
+				<f:facet name="header">AverageCreationTime</f:facet>
+    				#{ds.averageCreationTime}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.monitoringInfo}">
+				<f:facet name="header">CreatedCount</f:facet>
+    				#{ds.createdCount}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.monitoringInfo}">
+				<f:facet name="header">DestroyedCount</f:facet>
+    				#{ds.destroyedCount}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.monitoringInfo}">
+				<f:facet name="header">InUseCount</f:facet>
+    				#{ds.inUseCount}
+    			</h:column>
+
+		</h:dataTable>
+
+		<h3>JMS</h3>
+
+		<h:dataTable id="jmsTable"
+			value="#{sanitycheck.parser.configuration.JMSObjects}" var="jms"
+			styleClass="ejb-table" headerClass="ejb-table-header"
+			rowClasses="ejb-table-odd-row,ejb-table-even-row"
+			columnClasses="ejb-table-column-string,ejb-table-column-string,ejb-table-column-string,ejb-table-column-number,ejb-table-column-number">
+
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">Name</f:facet>				
+    				#{jms.name}
+    			</h:column>
+
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">Type</f:facet>				
+    				#{jms.type}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Jndi name</f:facet>
+				<h:dataTable value="#{jms.jndiName}" var="name">
+					<h:column>
+						<h:outputText value="#{name}" />
+					</h:column>
+				</h:dataTable>
+			</h:column>
+
+			<h:column rendered="#{sanitycheck.monitoringInfo}">
+				<!-- column header -->
+				<f:facet name="header">Consumer total</f:facet>				
+    				#{jms.consumersTotalCount}
+    			</h:column>
+
+			<h:column rendered="#{sanitycheck.monitoringInfo}">
+				<!-- column header -->
+				<f:facet name="header">Consumer current</f:facet>				
+    				#{jms.consumersCurrentCount}
+    			</h:column>
+		</h:dataTable>
+
+		<h3>Threads pool</h3>
+
+		<h:dataTable id="threadTable"
+			value="#{sanitycheck.parser.configuration.threadsPool}" var="tp"
+			styleClass="ejb-table" headerClass="ejb-table-header"
+			rowClasses="ejb-table-odd-row,ejb-table-even-row"
+			columnClasses="ejb-table-column-string,ejb-table-column-number,ejb-table-column-number,ejb-table-column-boolean,ejb-table-column-string">
+
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">Thread pool name</f:facet>				
+    				#{tp.name}
+    			</h:column>
+
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">Min pool size</f:facet>				
+    				#{tp.minPoolSize}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Max pool size</f:facet>
+    				#{tp.maxPoolSize}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Default</f:facet>
+    				#{tp.isDefault}
+    			</h:column>
+
+			<h:column>
+				<f:facet name="header">Scope</f:facet>
+    				#{tp.scope}
+    			</h:column>
+
+		</h:dataTable>
+
+		<h3>Timeout</h3>
+
+
+		<h:dataTable id="timeoutTable"
+			value="#{sanitycheck.parser.configuration.timeoutProperties}"
+			var="txp" styleClass="ejb-table" headerClass="ejb-table-header"
+			rowClasses="ejb-table-odd-row,ejb-table-even-row"
+			columnClasses="ejb-table-column-string,ejb-table-column-number">
+
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">Timeout type</f:facet>				
+    				#{txp.name}
+    			</h:column>
+
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">Transaction timeout</f:facet>				
+    				#{txp.timeOut}
+    			</h:column>
+		</h:dataTable>
+
+		<h3>JVM</h3>
+
+		<h:dataTable id="jvmTable"
+			value="#{sanitycheck.parser.configuration.jvmParameters}"
+			var="jvmparam" styleClass="ejb-table" headerClass="ejb-table-header"
+			rowClasses="ejb-table-odd-row,ejb-table-even-row"
+			columnClasses="ejb-table-column-string">
+
+			<h:column>
+				<!-- column header -->
+				<f:facet name="header">Input arguments</f:facet>				
+    				#{jvmparam.name}
+    			</h:column>
+			<h:column rendered="#{not empty jvmparam.value}">
+				<f:facet name="header"></f:facet>				
+    				#{jvmparam.value}
+    			</h:column>
+
+		</h:dataTable>
+
+
+		<ui:fragment>
+			<br />
+			<br />
+		</ui:fragment>
+
+		<h2>Validation</h2>
+
+		<h3>Validation Event</h3>
+
+		<h:selectOneMenu id="severity" value="#{sanitycheck.eventSeverity}">
+			<f:selectItems value="#{sanitycheck.eventSeverityValues}" />
+			<f:ajax execute="severity" render="eventTable" />
+		</h:selectOneMenu>
+
+		<h:selectOneMenu id="type" value="#{sanitycheck.eventType}">
+			<f:selectItems value="#{sanitycheck.eventSeverityTypes}" />
+			<f:ajax execute="type" render="eventTable" />
+		</h:selectOneMenu>
+
+		<ui:fragment>
+			<br />
+			<br />
+		</ui:fragment>
+
+		<h:dataTable id="eventTable" value="#{sanitycheck.validationEvents}"
+			var="event" styleClass="ejb-table" headerClass="ejb-table-header"
+			rowClasses="ejb-table-odd-row,ejb-table-even-row">
+			<h:column>
+				<f:facet name="header" id="colSeverity">
+					<h:commandLink action="#{sanitycheck.checker.sortEventBySeverity}">
+    				Severity    				
+						<f:ajax execute="eventTable" render="eventTable" />
+					</h:commandLink>
+				</f:facet>				
+    				#{event.severity}
+    			</h:column>
+			<h:column>
+				<f:facet name="header" id="colType">
+					<h:commandLink action="#{sanitycheck.checker.sortEventByCategory}">
+    				Type
+						<f:ajax execute="eventTable" render="eventTable" />
+					</h:commandLink>
+				</f:facet>				
+    				#{event.category}
+    			</h:column>
+			<h:column>
+				<f:facet name="header" id="colCode">			
+					Code    					
+				</f:facet>
+    				#{event.code}
+    				</h:column>
+			<h:column>
+				<f:facet name="header">
+					<h:commandLink action="#{sanitycheck.checker.sortEventByChannel}">
+    				Channel
+    					<f:ajax execute="eventTable" render="eventTable" />
+					</h:commandLink>
+				</f:facet>
+    				#{event.channelName}
+    			</h:column>
+			<h:column>
+				<f:facet name="header">
+    				Detail    			
+				</f:facet>
+    				#{event.detail}
+    			</h:column>
+		</h:dataTable>
+
+		<h3>Fix</h3>
+
+		<h:dataTable id="validationFix"
+			value="#{sanitycheck.checker.validationEventsToFix}" var="event"
+			styleClass="ejb-table" headerClass="ejb-table-header"
+			rowClasses="ejb-table-odd-row,ejb-table-even-row">
+
+			<h:column>
+				<f:facet name="header">
+				Category
+				</f:facet>
+				#{event.category.name()}
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+				Channel
+				</f:facet>
+				#{event.channelName}
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+				Detail
+				</f:facet>
+				#{event.code.detail}
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+				Fix
+				</f:facet>				
+					#{event.code.fix.getDetail(sanitycheck.appServer)}
+			</h:column>
+		</h:dataTable>
+
+	</h:form>
+
+</h:body>
+
+</html>

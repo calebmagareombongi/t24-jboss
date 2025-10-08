@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Configuration</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="include.xhtml" />
+
+<h:body>
+	<h:form id="rt-propertiesForm">
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>TAFJEE runtime properties</h1>
+
+		<h3>Properties displayed below are reflecting the current runtime
+			configuration state defined through system properties and TAFJ
+			configuration.</h3>
+		<h3 />
+
+		<p:panel id="rt-propertiesPanel">
+			<p:panelGrid id="rt-headerPanel" columns="3"
+				styleClass="panelGridCenter" layout="grid">
+				<p:column colspan="2">
+					<h:outputLabel for="rt-configId" value="Configuration ID:"
+						styleClass="purple" />
+					<h:outputText id="rt-configId"
+						value="#{runtimeView.getConfigurationId()}" styleClass="purple" />
+				</p:column>
+				<p:column colspan="2">
+					<h:outputLabel for="rt-configVersion"
+						value="Configuration Version:" styleClass="purple" />
+					<h:outputText id="rt-configVersion"
+						value="#{runtimeView.getCurrentConfigurationDate()}"
+						styleClass="purple" />
+				</p:column>
+				<p:column colspan="2">
+					<h:outputLabel for="rt-configSource" value="Configuration Source:"
+						styleClass="purple" />
+					<h:outputText id="rt-configSource"
+						value="#{runtimeView.getConfigurationSource()}"
+						styleClass="purple" />
+				</p:column>
+			</p:panelGrid>
+
+			<p:panel id="tenantIds" rendered="#{runtimeView.isMultitenant()}">
+				<h:outputText value="Tenant id: " />
+				<p:selectOneMenu id="tenantId" value="#{runtimeView.tenantId}"
+					valueChangeListener="#{runtimeView.changeConfig}"
+					onchange="submit()" >
+					<f:selectItem itemLabel="Select tenant" itemValue="" />
+					<f:selectItems value="#{runtimeView.tenantIds}" />
+				</p:selectOneMenu>
+			</p:panel>
+
+
+			<p:dataTable id="rt-propertiesTable" var="property"
+				value="#{runtimeView.properties}" resizableColumns="true"
+				sortBy="#{property.key}">
+
+				<p:column headerText="Key" sortBy="#{property.key}"
+					filterBy="#{property.key}" filterMatchMode="contains">
+					<h:outputText value="#{property.key}" />
+				</p:column>
+
+				<p:column headerText="Value" filterBy="#{property.value}"
+					filterMatchMode="contains">
+					<h:outputText value="#{property.value}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>
+	</h:form>
+</h:body>
+</html>

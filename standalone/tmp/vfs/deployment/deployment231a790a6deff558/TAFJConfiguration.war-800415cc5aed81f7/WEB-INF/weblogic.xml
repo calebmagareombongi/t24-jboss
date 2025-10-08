@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-web-app>
+	<resource-description>
+		<res-ref-name>jdbc/t24DataSource</res-ref-name>
+		<jndi-name>jdbc/t24DS</jndi-name>
+	</resource-description>
+
+	<security-role-assignment>
+		<role-name>TAFJAdmin</role-name>
+		<principal-name>TAFJAdmin</principal-name>
+	</security-role-assignment>
+
+</weblogic-web-app>

@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>tDiag servlet</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="../include.xhtml" />
+
+<h:body>
+	<h:form id="tshowForm">
+
+		<h:graphicImage value="/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<h1>tDiag servlet</h1>
+
+		<h3>You can get information about your TAFJ environment. Please
+			refer to your TAFJ properties file and to TAFJ documentation for more
+			information about these properties.</h3>
+		<h3>Properties values being displayed in red are null or
+			undefined in the properties file and have been defaulted to their
+			default value.</h3>
+		<h3>Values being displayed in red and not related to the
+			properties file are pointing some inconsistency in the configuration
+			and need to be reviewed.</h3>
+		<h3 />
+
+		<p:panel id="page" styleClass="info">
+
+
+			<p:panel header="TAFJ installation details" styleClass="info">
+				<h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
+					<p:dataTable value="#{tdiagView.getInstallationDetails()}"
+						var="detail1">
+						<p:column>
+							<h:outputText value="#{detail1.getLabel()}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{detail1.getDescription()}"
+								styleClass="#{(detail1.isError()) ? 'red' : 'black'}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel header="
+								Environment details" styleClass="info">
+				<h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
+					<p:dataTable value="#{tdiagView.getEnvironmentDetails()}"
+						var="detail2">
+						<p:column>
+							<h:outputText value="#{detail2.getLabel()}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{detail2.getDescription()}"
+								styleClass="#{(detail2.isError()) ? 'red' : 'black'}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</p:panel>
+
+
+			<p:panel header="TAFJ Runtime properties" styleClass="info">
+				<h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
+					<p:dataTable value="#{tdiagView.getRuntimeProperties()}"
+						var="detail3">
+						<p:column>
+							<h:outputText value="#{detail3.getLabel()}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{detail3.getDescription()}"
+								styleClass="#{(detail3.isError()) ? 'red' : 'black'}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel header="T24 Monitoring properties (Splunk - TEC)"
+				styleClass="info">
+				<h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
+					<p:dataTable value="#{tdiagView.getMonitoringProperties()}"
+						var="detail4">
+						<p:column>
+							<h:outputText value="#{detail4.getLabel()}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{detail4.getDescription()}"
+								styleClass="#{(detail4.isError()) ? 'red' : 'black'}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel header="TAFJ Session Monitor properties (MW42)"
+				styleClass="info">
+				<h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
+					<p:dataTable value="#{tdiagView.getMW42Properties()}" var="detail5">
+						<p:column>
+							<h:outputText value="#{detail5.getLabel()}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{detail5.getDescription()}"
+								styleClass="#{(detail5.isError()) ? 'red' : 'black'}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</p:panel>
+
+
+		</p:panel>
+
+
+	</h:form>
+</h:body>
+</html>

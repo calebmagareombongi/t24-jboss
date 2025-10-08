@@ -1,0 +1,123 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.temenos.tafj</groupId>
+		<artifactId>TAFJ</artifactId>
+		<version>20.22.0</version>
+		<relativePath>../TAFJBuild/pom.xml</relativePath>
+	</parent>
+
+	<name>TAFJJEE_WAR_TAFJ</name>
+	<description></description>
+	<artifactId>TAFJJEE_WAR_TAFJ</artifactId>
+	<packaging>war</packaging>
+
+	<properties>
+		<sonar.exclusions>
+			src/main/webapp/js/prettify.js
+		</sonar.exclusions>
+	</properties>
+
+	<build>
+		<finalName>TAFJEE</finalName>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>releaseVersion</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.google.code.maven-replacer-plugin</groupId>
+						<artifactId>replacer</artifactId>
+						<executions>
+							<execution>
+								<id>updateCategoryXML</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>replace</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<file>${basedir}/src/main/webapp/js/footer.js</file>
+							<regex>true</regex>
+							<replacements>
+								<replacement>
+									<token>(&lt;typ&gt;)(Webapp version:)(.*)(&lt;/typ&gt;)</token>
+									<value>&lt;typ&gt;Webapp version:${TEMENOS.version}&lt;/typ&gt;</value>
+								</replacement>
+							</replacements>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>test-ear</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<packagingExcludes>WEB-INF/classes/com/temenos/tafj/services/*</packagingExcludes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJLogging</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TemenosSecurity</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJCommon</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJCore</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>TAFJJEE_EJBClient</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+	</dependencies>
+
+</project>

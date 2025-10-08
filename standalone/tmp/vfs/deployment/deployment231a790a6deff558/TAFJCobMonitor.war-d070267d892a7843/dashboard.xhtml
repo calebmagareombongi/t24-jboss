@@ -1,0 +1,263 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Cob Monitor</title>
+	<h:outputStylesheet library="css" name="configuration.css" />
+</h:head>
+
+<ui:include src="include.xhtml" />
+
+<h:body>
+	<h:form id="cobMonitor">
+		<h:graphicImage value="/resources/images/logo.png"
+			onclick="document.location.href='/TAFJEE/index.xhtml'" />
+
+		<p:accordionPanel multiple="true" activeIndex="0,1,2" id="mainpanel">
+			<p:tab title="Tenant id" id="tenantTab"
+				rendered="#{cobmonitorview.isMultitenant()}">
+				<p:selectOneMenu id="tenantId" value="#{cobmonitorview.tenantId}">
+					<f:selectItem itemLabel="Select tenant" itemValue="" />
+					<f:selectItems value="#{cobmonitorview.tenantIds}" />
+				</p:selectOneMenu>
+			</p:tab>
+
+			<p:tab title="COB Monitor">
+				<p:tabView id="monitor">
+					<p:tab title="COB Progress Meter" id="monitor">
+						<p:poll interval="30"
+							listener="#{cobmonitorview.getCobMonitorData()}"
+							update="panel app sys rep start online" />
+
+						<p:panelGrid columns="5" id="panel">
+							<p:chart type="metergauge" id="app"
+								model="#{cobmonitorview.meterGaugeApp}"
+								style="width:300px;height:250px" />
+							<p:chart type="metergauge" id="sys"
+								model="#{cobmonitorview.meterGaugeSys}"
+								style="width:300px;height:250px" />
+							<p:chart type="metergauge" id="rep"
+								model="#{cobmonitorview.meterGaugeRep}"
+								style="width:300px;height:250px" />
+							<p:chart type="metergauge" id="start"
+								model="#{cobmonitorview.meterGaugeStart}"
+								style="width:300px;height:250px" />
+							<p:chart type="metergauge" id="online"
+								model="#{cobmonitorview.meterGaugeOnline}"
+								style="width:300px;height:250px" />
+						</p:panelGrid>
+					</p:tab>
+
+
+					<p:tab title="COB Progress Bar" id="monitor1">
+						<p:poll interval="30"
+							listener="#{cobprogressview.getCobMonitorData()}"
+							update="CobProgressDetails App_1 App_2 App_3 Sys_1 Sys_2 Sys_3 Rep_1 Rep_2 Rep_3 Day_1 Day_2 Day_3 Onl_1 Onl_2 Onl_3 Cob_1 Cob_2 Cob_3" />
+						<p:panelGrid id="CobProgressDetails">
+							<p:row>
+								<p:column colspan="100" style="font-weight:bold">Stage</p:column>
+								<p:column colspan="100" style="font-weight:bold">Progress Update</p:column>
+								<p:column colspan="100" style="font-weight:bold">Processed</p:column>
+								<p:column colspan="100" style="font-weight:bold">Total</p:column>
+								<p:column colspan="100" style="font-weight:bold">% Completed</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="100">
+									<h:outputText value="#{cobprogressview.getStage('A')}" />
+								</p:column>
+								<p:column colspan="100" id="App_1">
+									<p:progressBar ajax="true"
+										value="#{cobprogressview.getCompleted('A')}" />
+								</p:column>
+								<p:column colspan="100" id="App_2">
+									<h:outputText align="right"
+										value="#{cobprogressview.getProcessed('A')}" />
+								</p:column>
+								<p:column colspan="100">
+									<h:outputText align="right"
+										value="#{cobprogressview.getTotal('A')}" />
+								</p:column>
+								<p:column colspan="100" id="App_3">
+									<h:outputText align="right"
+										value="#{cobprogressview.getCompleted('A')}" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="100">
+									<h:outputText value="#{cobprogressview.getStage('S')}" />
+								</p:column>
+								<p:column colspan="100" id="Sys_1">
+									<p:progressBar ajax="true"
+										value="#{cobprogressview.getCompleted('S')}" />
+								</p:column>
+								<p:column colspan="100" id="Sys_2">
+									<h:outputText value="#{cobprogressview.getProcessed('S')}" />
+								</p:column>
+								<p:column colspan="100">
+									<h:outputText value="#{cobprogressview.getTotal('S')}" />
+								</p:column>
+								<p:column colspan="100" id="Sys_3">
+									<h:outputText value="#{cobprogressview.getCompleted('S')}" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="100">
+									<h:outputText value="#{cobprogressview.getStage('R')}" />
+								</p:column>
+								<p:column colspan="100" id="Rep_1">
+									<p:progressBar ajax="true"
+										value="#{cobprogressview.getCompleted('R')}" />
+								</p:column>
+								<p:column colspan="100" id="Rep_2">
+									<h:outputText value="#{cobprogressview.getProcessed('R')}" />
+								</p:column>
+								<p:column colspan="100">
+									<h:outputText value="#{cobprogressview.getTotal('R')}" />
+								</p:column>
+								<p:column colspan="100" id="Rep_3">
+									<h:outputText value="#{cobprogressview.getCompleted('R')}" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="100">
+									<h:outputText value="#{cobprogressview.getStage('D')}" />
+								</p:column>
+								<p:column colspan="100" id="Day_1">
+									<p:progressBar ajax="true"
+										value="#{cobprogressview.getCompleted('D')}" />
+								</p:column>
+								<p:column colspan="100" id="Day_2">
+									<h:outputText value="#{cobprogressview.getProcessed('D')}" />
+								</p:column>
+								<p:column colspan="100">
+									<h:outputText value="#{cobprogressview.getTotal('D')}" />
+								</p:column>
+								<p:column colspan="100" id="Day_3">
+									<h:outputText value="#{cobprogressview.getCompleted('D')}" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="100">
+									<h:outputText value="#{cobprogressview.getStage('O')}" />
+								</p:column>
+								<p:column colspan="100" id="Onl_1">
+									<p:progressBar ajax="true"
+										value="#{cobprogressview.getCompleted('O')}" />
+								</p:column>
+								<p:column colspan="100" id="Onl_2">
+									<h:outputText value="#{cobprogressview.getProcessed('O')}" />
+								</p:column>
+								<p:column colspan="100">
+									<h:outputText value="#{cobprogressview.getTotal('O')}" />
+								</p:column>
+								<p:column colspan="100" id="Onl_3">
+									<h:outputText value="#{cobprogressview.getCompleted('O')}" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="100">COB</p:column>
+								<p:column colspan="100" id="Cob_1">
+									<p:progressBar ajax="true"
+										value="#{cobprogressview.getCompleted('C')}" />
+								</p:column>
+								<p:column colspan="100" id="Cob_2">
+									<h:outputText value="#{cobprogressview.getProcessed('C')}" />
+								</p:column>
+								<p:column colspan="100">
+									<h:outputText value="#{cobprogressview.getTotal('C')}" />
+								</p:column>
+								<p:column colspan="100" id="Cob_3">
+									<h:outputText value="#{cobprogressview.getCompleted('C')}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+			<p:tab title="COB Details">
+				<p:tabView id="General">
+					<p:tab title="General" id="details">
+						<p:poll interval="30"
+							listener="#{cobdetailsview.getCobDetailsData()}"
+							update="detailsframe agentdetailsframe" />
+						<p:panelGrid columns="2" id="detailsframe">
+							<h:outputText value="System Date" style="font-weight:bold" />
+							<h:outputText value="#{cobdetailsview.systemDate}" />
+							<h:outputText value="Company" style="font-weight:bold" />
+							<h:outputText value="#{cobdetailsview.company}" />
+							<h:outputText value="Running Status" style="font-weight:bold" />
+							<h:outputText value="#{cobdetailsview.runningStatus}" />
+							<h:outputText value="Current Batch" style="font-weight:bold" />
+							<h:outputText value="#{cobdetailsview.batchName}" />
+							<h:outputText value="Available agents" style="font-weight:bold" />
+							<h:outputText value="#{cobdetailsview.availableAgents}" />
+							<h:outputText value="Running Agents" style="font-weight:bold" />
+							<h:outputText value="#{cobdetailsview.runningAgents}" />
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Agent Details" id="agentdetails">
+						<p:dataTable id="agentdetailsframe"
+							value="#{cobdetailsview.agentDetailsList}" var="ag"
+							tableStyle="width:auto" resizeMode="expand"
+							resizableColumns="true" draggableColumns="true">
+
+							<p:column headerText="Agent Number">
+								<h:outputText value="#{ag.agentNumber}" />
+							</p:column>
+							<p:column headerText="Port Number">
+								<h:outputText value="#{ag.portNumber}" />
+							</p:column>
+							<p:column headerText="Server Name">
+								<h:outputText value="#{ag.serverName}" />
+							</p:column>
+							<p:column headerText="Status">
+								<h:outputText value="#{ag.status}" />
+							</p:column>
+							<p:column headerText="Last Contact">
+								<h:outputText value="#{ag.lastContact}" />
+							</p:column>
+							<p:column headerText="Current Job Name">
+								<h:outputText value="#{ag.jobName}" />
+							</p:column>
+							<p:column headerText="View Como">
+								<p:commandButton id="viewComo" global="true"
+									value="#{ag.comoName}"
+									action="#{cobdetailsview.getDisplayContent(ag)}"
+									update="cobMonitor">
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+				</p:tabView>
+			</p:tab>
+		</p:accordionPanel>
+
+		<p:panel id="comoFileContent" header="Como file" styleClass="info"
+			rendered="#{cobdetailsview.renderComo()}">
+			<h:panelGrid id="comoEntriesGrid" columns="1"
+				style="margin-bottom:10px" cellpadding="5">
+
+				<h:outputText value="Como name: #{cobdetailsview.getCurrentFile()}" />
+
+				<p:commandButton id="closeComo" global="true" value="Close como"
+					action="#{cobdetailsview.closeComo()}" update="cobMonitor"
+					style="width:120px">
+				</p:commandButton>
+
+				<p:dataTable id="comoEntriesTable" var="entry"
+					value="#{cobdetailsview.comoEntries}">
+					<p:column filterBy="#{entry}" filterMatchMode="contains">
+						<h:outputText value="#{entry}" />
+					</p:column>
+				</p:dataTable>
+			</h:panelGrid>
+		</p:panel>
+	</h:form>
+</h:body>
+
+</html>

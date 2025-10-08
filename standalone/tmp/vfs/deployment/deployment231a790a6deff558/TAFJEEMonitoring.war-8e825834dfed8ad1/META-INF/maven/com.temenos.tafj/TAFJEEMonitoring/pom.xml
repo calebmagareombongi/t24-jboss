@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.temenos.tafj</groupId>
+		<artifactId>TAFJ</artifactId>
+		<version>20.22.0</version>
+		<relativePath>../TAFJBuild/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>TAFJEEMonitoring</artifactId>
+	<packaging>war</packaging>
+	<name>TAFJEEMonitoring</name>
+
+	<properties>
+		<sonar.skip>true</sonar.skip>
+	</properties>
+
+	<build>
+		<finalName>TAFJEEMonitoring</finalName>
+	</build>
+
+</project>

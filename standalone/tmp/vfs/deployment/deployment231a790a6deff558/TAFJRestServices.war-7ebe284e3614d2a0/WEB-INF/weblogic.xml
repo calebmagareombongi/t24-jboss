@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-web-app>
+	
+	<security-role-assignment>
+         <role-name>TAFJAdmin</role-name>
+         <principal-name>TAFJAdmin</principal-name>
+    </security-role-assignment>
+  
+</weblogic-web-app>
