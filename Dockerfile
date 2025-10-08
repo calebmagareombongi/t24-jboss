@@ -1,14 +1,17 @@
-# Use official Red Hat JBoss EAP base image (or generic openjdk)
-FROM openjdk:11
+# Use official WildFly (JBoss) base image
+FROM quay.io/wildfly/wildfly:latest
 
-# Set working directory
-WORKDIR /opt/jboss
+# Copy your entire JBoss setup into the container
+COPY . /opt/jboss/wildfly/
 
-# Copy all files to container
-COPY . .
+# Set the working directory
+WORKDIR /opt/jboss/wildfly
 
-# Expose JBoss default port
+# Limit Java memory (important for free tiers)
+ENV JAVA_OPTS="-Xms256m -Xmx768m"
+
+# Expose the default port
 EXPOSE 8080
 
-# Start JBoss using your .bat equivalent for Linux
-CMD ["sh", "bin/standalone.sh", "-b", "0.0.0.0"]
+# Start WildFly and bind to external port (Render sets PORT automatically)
+CMD ["sh", "-c", "/opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -Djboss.http.port=${PORT:-8080}"]
