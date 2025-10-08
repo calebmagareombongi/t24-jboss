@@ -1,14 +1,20 @@
 # Use official WildFly (JBoss) base image
 FROM quay.io/wildfly/wildfly:latest
 
+# Switch to root user to allow permission changes
+USER root
+
 # Copy your entire JBoss setup into the container
 COPY . /opt/jboss/wildfly/
 
+# Fix file permissions for the startup script
+RUN chmod +x /opt/jboss/wildfly/bin/standalone.sh
+
+# Switch back to the default JBoss user for security
+USER jboss
+
 # Set the working directory
 WORKDIR /opt/jboss/wildfly
-
-# Ensure standalone.sh is executable
-RUN chmod +x /opt/jboss/wildfly/bin/standalone.sh
 
 # Limit Java memory (important for free tiers)
 ENV JAVA_OPTS="-Xms256m -Xmx768m"
