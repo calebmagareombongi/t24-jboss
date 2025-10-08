@@ -1,24 +1,24 @@
 # Use official WildFly (JBoss) base image
 FROM quay.io/wildfly/wildfly:latest
 
-# Switch to root to fix permissions
+# Switch to root to set permissions if needed
 USER root
 
-# Copy everything into the WildFly directory
-COPY . /opt/jboss/wildfly/
+# Copy WAR file(s) into WildFly deployments folder
+COPY *.war /opt/jboss/wildfly/standalone/deployments/
 
-# Give full ownership of everything to the 'jboss' user
+# Ensure permissions are correct
 RUN chown -R jboss:jboss /opt/jboss/wildfly && \
     chmod -R 755 /opt/jboss/wildfly
 
-# Switch back to jboss user for security
+# Switch back to 'jboss' for security
 USER jboss
 
-# Set the working directory
+# Set working directory
 WORKDIR /opt/jboss/wildfly
 
-# Limit Java memory (important for Render free tiers)
-ENV JAVA_OPTS="-Xms256m -Xmx128m"
+# Limit Java memory (important for Render free tier)
+ENV JAVA_OPTS="-Xms128m -Xmx256m"
 
 # Expose the default WildFly port
 EXPOSE 8080
