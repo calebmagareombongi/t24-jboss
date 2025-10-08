@@ -7,6 +7,9 @@ COPY . /opt/jboss/wildfly/
 # Set the working directory
 WORKDIR /opt/jboss/wildfly
 
+# Ensure standalone.sh is executable
+RUN chmod +x /opt/jboss/wildfly/bin/standalone.sh
+
 # Limit Java memory (important for free tiers)
 ENV JAVA_OPTS="-Xms256m -Xmx768m"
 
